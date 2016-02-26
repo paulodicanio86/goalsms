@@ -1,6 +1,4 @@
-import os
 import sys
-import site
 
 # virtual env
 activate_this = '/home/ec2-user/venv_sms_hunt/bin/activate_this.py'
