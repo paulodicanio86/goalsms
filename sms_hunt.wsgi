@@ -3,7 +3,7 @@ import sys
 import site
 
 # virtual env
-activate_this = '/var/www/sms_hunt/venv/bin/activate_this.py'
+activate_this = '/home/ec2-user/venv_sms_hunt/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 # Path of execution
