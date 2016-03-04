@@ -19,12 +19,6 @@ def hello():
     return ''
 
 
-@app.route('/add')
-def add_entry():
-    db.append('entry')
-    return 'received'
-
-
 @app.route('/show')
 def show_entries():
     return ','.join(db)
