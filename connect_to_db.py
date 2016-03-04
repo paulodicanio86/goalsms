@@ -4,60 +4,41 @@ import json
 from pprint import pprint
 from IPython import embed
 
+from db_functions import *
+from string_functions import *
+
 with open('db_connection.json') as data_file:
-    data = json.load(data_file)
-pprint(data)
+    data_config = json.load(data_file)
+pprint(data_config)
+
+db = MySQLdb.connect(host=data_config['host'],
+                     user=data_config['user'],
+                     passwd=data_config['password'],
+                     db=data_config['database'])
+
+columns = ['LastName', 'FirstName', 'Address', 'City']
+types = ['varchar(255)', 'varchar(255)', 'varchar(255)', 'varchar(255)']
+values_1 = ['Mohan', 'Dida', 'Good street', 'London']
+values_2 = ['Derek', 'Abba', 'Bad street', 'Hamburg']
 
 
-db = MySQLdb.connect(host = data['host'], user = data['user'], passwd = data['password'], db = data['database'])
+a = convert_column_types_to_string(columns, types)
+b = convert_columns_to_string(columns)
+c1 = convert_values_to_string(values_1)
+c2 = convert_values_to_string(values_2)
+c = join_rows([c1, c2])
 
-
-# Get data
-df = pd.read_sql("SELECT * FROM test;", con=db)
-#col = ['PersonID', 'LastName', 'FirstName', 'Address', 'City']
-col = df.columns
-
-
-# Append data
-data2 = [(2, 'Schaack', 'Paul', 'young man', 'Hamburgo')]
-df2 = pd.DataFrame(data2, columns=col)
+create_table('dada', db, a)
 embed()
-df2.to_sql('test',db, flavor='mysql', if_exists = 'append')
 
+insert_into_table('dada', db, b, c1)
+insert_into_table('dada', db, b, c1)
+insert_into_table('dada', db, b, c2)
+insert_into_table('dada', db, b, c)
 
-# Delete table
-cur = db.cursor()
-sql = 'DROP table test;'
-#cur.execute(sql)
+embed()
 
-
-# Create table
-cur = db.cursor()
-sql = '''CREATE TABLE test
-(
-PersonID int,
-LastName varchar(255),
-FirstName varchar(255),
-Address varchar(255),
-City varchar(255)
-);'''
-#cur.execute(sql)
-
-
-# Insert into table
-sql2 = '''INSERT INTO test(PersonID,
-         LastName, FirstName, Address, City)
-         VALUES (5, 'Mohan', 'Dida', 'Good street', 'London');'''
-#cur.execute(sql2)
-
-
+delete_table('dada', db)
 
 db.commit()
 db.close()
-
-
-
-
-
-
-
