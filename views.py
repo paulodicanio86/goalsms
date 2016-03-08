@@ -28,7 +28,6 @@ def hello():
     d = '{:%Y-%m-%d}'.format(datetime.now())
 
     text_row = [sender, content, d, dt]
-
     db = MySQLdb.connect(host=data_config['host'],
                          user=data_config['user'],
                          passwd=data_config['password'],
@@ -36,11 +35,11 @@ def hello():
 
     insert_array_to_table('dummy', db, get_dummy_table_columns(), text_row)
 
-    db2.append(sender)
-    db2.append(content)
-
     db.commit()
     db.close()
+
+    db2.append(sender)
+    db2.append(content)
 
     return ''
 
