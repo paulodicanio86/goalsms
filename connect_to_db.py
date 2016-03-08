@@ -1,6 +1,6 @@
-import MySQLdb
 import json
 from pprint import pprint
+import MySQLdb
 from IPython import embed
 
 from db_functions import *
@@ -16,24 +16,29 @@ db = MySQLdb.connect(host=data_config['host'],
                      passwd=data_config['password'],
                      db=data_config['database'])
 
+
+# delete_table('dummy', db)
+# make_dummy_table(db)
 # default tables
-make_active_table(db)
+b =
+make_valid_table(db)
 make_tour_name_table(db)
 make_tour_table(db)
 embed()
-delete_table('active', db)
+delete_table('valid', db)
 delete_table('tour_name_table', db)
 delete_table('tour_table', db)
 embed()
 
 
 # play around with other things
+a = """
 columns = ['LastName', 'FirstName', 'Address', 'City']
 types = ['varchar(255)', 'varchar(255)', 'varchar(255)', 'varchar(255)']
 
 a = convert_column_types_to_string(columns, types)
 create_table('dada', db, a)
-embed()
+#embed()
 
 values_1 = ['Mohan', 'Dida', 'Good street', 'London']
 values_2 = ['Derek', 'Abba', 'Bad street', 'Hamburg']
@@ -41,15 +46,15 @@ b = convert_columns_to_string(columns)
 c1 = convert_values_to_string(values_1)
 c2 = convert_values_to_string(values_2)
 c = join_rows([c1, c2])
-embed()
+#embed()
 
 insert_into_table('dada', db, b, c1)
 insert_into_table('dada', db, b, c1)
 insert_into_table('dada', db, b, c)
 
-embed()
-
+#embed()
 delete_table('dada', db)
+"""
 
 db.commit()
 db.close()
