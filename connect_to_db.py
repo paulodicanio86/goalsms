@@ -20,7 +20,6 @@ db = MySQLdb.connect(host=data_config['host'],
 # delete_table('dummy', db)
 # make_dummy_table(db)
 # default tables
-b =
 make_valid_table(db)
 make_tour_name_table(db)
 make_tour_table(db)
@@ -29,6 +28,11 @@ delete_table('valid', db)
 delete_table('tour_name_table', db)
 delete_table('tour_table', db)
 embed()
+
+
+
+
+
 
 
 # play around with other things

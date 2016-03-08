@@ -36,4 +36,4 @@ def make_dummy_table(db, name='dummy'):
 
 def get_dummy_table_columns():
     columns = ['phone_number', 'content', 'date', 'datetime']
-    return convert_columns_to_string(columns)
+    return columns

@@ -12,11 +12,6 @@ from make_default_tables import *
 with open('db_connection.json') as data_file:
     data_config = json.load(data_file)
 
-db = MySQLdb.connect(host=data_config['host'],
-                     user=data_config['user'],
-                     passwd=data_config['password'],
-                     db=data_config['database'])
-
 db2 = []
 
 
@@ -27,28 +22,35 @@ def start():
 
 @app.route('/sms', methods=['POST'])
 def hello():
-    sender = request.form['sender']
-    content = request.form['content']
+    sender = str(request.form['sender'])
+    content = str(request.form['content'])
+    dt = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+    d = '{:%Y-%m-%d}'.format(datetime.now())
 
-    DT = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-    D = '{:%Y-%m-%d}'.format(datetime.now())
+    text_row = [sender, content, d, dt]
 
-    text_row = [sender, content, D, DT]
-    text_row_str = convert_values_to_string(text_row)
+    db = MySQLdb.connect(host=data_config['host'],
+                         user=data_config['user'],
+                         passwd=data_config['password'],
+                         db=data_config['database'])
 
-    insert_into_table('dummy', db, get_dummy_table_columns(), text_row_str)
+    insert_array_to_table('dummy', db, get_dummy_table_columns(), text_row)
 
     db2.append(sender)
     db2.append(content)
-    return None
+
+    db.commit()
+    db.close()
+
+    return ''
 
 
 @app.route('/show')
 def show_entries():
-    return ','.join(db)
+    return ','.join(db2)
 
 
 @app.route('/clear')
 def clear():
-    db = []
+    db2 = []
     return 'cleared'

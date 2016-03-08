@@ -59,15 +59,15 @@ def insert_array_to_table(name, db, columns, rows):
     columns_str = convert_columns_to_string(columns)
     rows_str = ''
 
-    # if just one row is given fill it
-    if type(rows[0]) == str:
-        rows_str = convert_values_to_string(rows)
     # for several rows these need to be joined up first
-    elif type(rows[0]) == list:
+    if type(rows[0]) == list:
         row_array = []
         for row in rows:
             row_array.append(convert_values_to_string(row))
         rows_str = join_rows(row_array)
+    # if just one row is given fill it
+    else:
+        rows_str = convert_values_to_string(rows)
 
     insert_into_table(name, db, columns_str, rows_str)
 
