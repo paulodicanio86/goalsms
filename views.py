@@ -1,13 +1,13 @@
 from flask import request
 from datetime import datetime
 import json
-#import MySQLdb
+import MySQLdb
 
 from app import app
 
-#from db_functions import *
-#from string_functions import *
-#from make_default_tables import *
+from db_functions import *
+from string_functions import *
+from make_default_tables import *
 
 with open('/var/www/sms_hunt/db_connection.json') as data_file:
     data_config = json.load(data_file)
@@ -28,16 +28,16 @@ def hello():
     d = '{:%Y-%m-%d}'.format(datetime.now())
 
     text_row = [sender, content, d, dt]
-    #db = MySQLdb.connect(host=data_config['host'],
-    #                     user=data_config['user'],
-    #                     passwd=data_config['password'],
-    #                     db=data_config['database'])
+    db = MySQLdb.connect(host=data_config['host'],
+                         user=data_config['user'],
+                         passwd=data_config['password'],
+                         db=data_config['database'])
 
-    #insert_array_to_table('dummy', db, get_dummy_table_columns(), text_row)
+    insert_array_to_table('dummy', db, get_dummy_table_columns(), text_row)
 
-    #db.commit()
-    #db.close()
-    print(text_row)
+    db.commit()
+    db.close()
+    
     db2.append(sender)
     db2.append(content)
 
