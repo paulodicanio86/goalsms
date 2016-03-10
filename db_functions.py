@@ -1,12 +1,11 @@
-# import pandas as pd
+import pandas as pd
 from string_functions import *
 
 
 # Query db to select all
 def select_all(table_name, db):
     sql_query = 'SELECT * FROM {table_name};'.format(table_name=table_name)
-    # return pd.read_sql(sql_query, con=db)
-    return None
+    return pd.read_sql(sql_query, con=db)
 
 
 # Delete table
@@ -74,5 +73,4 @@ def insert_array_to_table(name, db, columns, rows):
 
 # Execute any SQL statement
 def execute_statement(statement, db):
-    # return pd.read_sql(statement, con=db)
-    return None
+    return pd.read_sql(statement, con=db)

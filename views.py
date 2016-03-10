@@ -1,8 +1,11 @@
 # import global functions
+
 import json
 import MySQLdb
+from os import path, sep
 from flask import request
 from datetime import datetime
+import pandas as pd
 
 # import local functions
 from app import app
@@ -12,10 +15,11 @@ from string_functions import *
 from make_default_tables import *
 
 # Open db connection strings
-with open('/var/www/sms_hunt/db_connection.json') as data_file:
+db_json = path.dirname(path.abspath(__file__))
+db_json = path.abspath(path.join(sep, db_json, 'db_connection.json'))
+
+with open(db_json) as data_file:
     data_config = json.load(data_file)
-# Have this for test purposes
-db2 = []
 
 
 @app.route('/')
@@ -46,18 +50,20 @@ def hello():
     db.commit()
     db.close()
 
-    # Have this for test purposes
-    db2.append(sender)
-    db2.append(content)
     return ''
 
 
 @app.route('/show')
 def show_entries():
-    return ','.join(db2)
+    # Establish database connection
+    db = MySQLdb.connect(host=data_config['host'],
+                         user=data_config['user'],
+                         passwd=data_config['password'],
+                         db=data_config['database'])
+    df = select_all('dummy', db)
 
+    # Commit and close database connection
+    db.commit()
+    db.close()
 
-@app.route('/clear')
-def clear():
-    db2 = []
-    return 'cleared'
+    return str(df)
