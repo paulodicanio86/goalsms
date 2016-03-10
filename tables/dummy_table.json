@@ -1,0 +1,15 @@
+{
+  "types": [
+    "VARCHAR(255)",
+    "VARCHAR(255)",
+    "DATE",
+    "DATETIME"
+  ],
+  "name": "dummy",
+  "columns": [
+    "phone_number",
+    "content",
+    "date",
+    "datetime"
+  ]
+}

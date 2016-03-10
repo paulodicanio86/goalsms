@@ -1,0 +1,15 @@
+{
+  "types": [
+    "INT",
+    "VARCHAR(255)"
+  ],
+  "name": "tour_name",
+  "columns": [
+    "tour_id",
+    "tour_name"
+  ],
+  "default_row": [
+    0,
+    "simple default tour"
+  ]
+}

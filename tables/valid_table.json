@@ -1,0 +1,21 @@
+{
+  "types": [
+    "VARCHAR(255)",
+    "INT",
+    "DATE",
+    "DATE"
+  ],
+  "name": "valid",
+  "columns": [
+    "phone_number",
+    "tour_id",
+    "valid_from",
+    "valid_to"
+  ],
+  "default_row": [
+    "00447776031697",
+    0,
+    "2016-03-31",
+    "2016-12-31"
+  ]
+}

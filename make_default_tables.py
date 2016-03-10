@@ -1,39 +1,54 @@
+import os
+import json
+from IPython import embed
 from db_functions import *
+from string_functions import encode_value
 
 
-def make_valid_table(db, name='valid'):
-    columns = ['phone_number', 'tour_id', 'valid_from', 'valid_to']
-    types = ['VARCHAR(255)', 'INT', 'DATE', 'DATE']
-    default_row = ['00447776031697', 0, '2016-03-31', '2016-12-31']
+def make_default_tables(db):
+    make_default_table(db, 'tables/valid_table.json')
+    make_default_table(db, 'tables/tour_name_table.json')
+    make_default_table(db, 'tables/dummy_table.json')
+    make_default_table(db, 'tables/tour_table.json')
 
+
+def make_default_table(db, file_name):
+    # Open json file
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.abspath(os.path.join(os.sep, file_path, file_name))
+
+    with open(file_path, 'r') as fp:
+        table_dic = json.load(fp)
+
+    # Extract fields, encoding unicode to str
+    name = table_dic['name'].encode('UTF8')
+    columns = [x.encode('UTF8') for x in table_dic['columns']]
+    types = [x.encode('UTF8') for x in table_dic['types']]
+
+    # Test if a default row is given and if yes then include
+    default_row = None
+    keys = [x.encode('UTF8') for x in table_dic.keys()]
+    if 'default_row' in keys:
+        default_row = [encode_value(x) for x in table_dic['default_row']]
+
+    # Make the actual table
     make_table(name, db, columns, types, default_row)
 
-
-def make_tour_name_table(db, name='tour_name_table'):
-    columns = ['tour_id', 'tour_name']
-    types = ['INT', 'VARCHAR(255)']
-    default_row = [0, 'simple default tour']
-
-    make_table(name, db, columns, types, default_row)
-
-
-def make_tour_table(db, name='tour_table'):
-    columns = ['tour_id', 'question_number', 'question', 'answer', 'help_1', 'help_2']
-    types = ['INT', 'INT', 'VARCHAR(255)', 'VARCHAR(255)', 'VARCHAR(255)', 'VARCHAR(255)']
-    row_1 = [0, 0, 'Welcome. 1+1?', '2', 'really?', 'two?']
-    row_2 = [0, 1, 'surname of the president of the US?', 'Obama', 'not Trump!', '']
-
-    make_table(name, db, columns, types)
-    insert_array_to_table(name, db, columns, [row_1, row_2])
+    # If several default rows are given then include all of them
+    if 'default_rows' in keys:
+        rows = []
+        for row in table_dic['default_rows']:
+            rows.append([encode_value(x) for x in row])
+        insert_array_to_table(name, db, columns, rows)
 
 
-def make_dummy_table(db, name='dummy'):
-    columns = ['phone_number', 'content', 'date', 'datetime']
-    types = ['VARCHAR(255)', 'VARCHAR(255)', 'DATE', 'DATETIME']
+def get_table_columns(file_name):
+    # Open json file
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.abspath(os.path.join(os.sep, file_path, file_name))
 
-    make_table(name, db, columns, types)
+    with open(file_path, 'r') as fp:
+        table_dic = json.load(fp)
 
-
-def get_dummy_table_columns():
-    columns = ['phone_number', 'content', 'date', 'datetime']
-    return columns
+    # Return columns
+    return [x.encode('UTF8') for x in table_dic['columns']]

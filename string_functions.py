@@ -5,11 +5,7 @@ def add_brackets(string):
 def convert_values_to_string(array_values):
     string = ''
     for element in array_values:
-        if type(element) == str: 
-            # to clean the message we need to remove ' and "
-            element = element.replace("'", "")
-            element = element.replace('"', '')
-
+        if type(element) == str:
             string += "'" + element + "', "
         else:
             string += str(element) + ", "
@@ -34,6 +30,23 @@ def convert_column_types_to_string(columns, types):
 
 def join_rows(array_rows):
     return ','.join(array_rows)
+
+
+def encode_value(value):
+    if type(value) == int:
+        return value
+    else:
+        return value.encode('UTF8')
+
+
+def validate_content(content):
+    # to clean the message we need to remove ' and "
+    content = content.replace("'", "")
+    content = content.replace('"', '')
+    content = content.replace(';', '')
+    content = content.replace('(', '')
+    content = content.replace(')', '')
+    return content
 
 
 def add_country_code(number, code):

@@ -16,24 +16,15 @@ db = MySQLdb.connect(host=data_config['host'],
                      passwd=data_config['password'],
                      db=data_config['database'])
 
-
-# delete_table('dummy', db)
-# make_dummy_table(db)
+delete_table('dummy', db)
 # default tables
-make_valid_table(db)
-make_tour_name_table(db)
-make_tour_table(db)
+make_default_tables(db)
 embed()
 delete_table('valid', db)
-delete_table('tour_name_table', db)
-delete_table('tour_table', db)
-embed()
-
-
-
-
-
-
+delete_table('tour_name', db)
+delete_table('tour', db)
+# delete_table('dummy', db)
+# embed()
 
 # play around with other things
 a = """
