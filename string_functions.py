@@ -5,7 +5,11 @@ def add_brackets(string):
 def convert_values_to_string(array_values):
     string = ''
     for element in array_values:
-        if type(element) == str:
+        if type(element) == str: 
+            # to clean the message we need to remove ' and "
+            element = element.replace("'", "")
+            element = element.replace('"', '')
+
             string += "'" + element + "', "
         else:
             string += str(element) + ", "
@@ -22,8 +26,6 @@ def convert_columns_to_string(array_values):
 
 def convert_column_types_to_string(columns, types):
     string = ''
-    if len(columns) == len(types):
-        print('equal length')
     for i, element in enumerate(columns):
         string += element + ' ' + types[i] + ", "
 
