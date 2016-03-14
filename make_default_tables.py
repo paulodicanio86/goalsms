@@ -30,9 +30,13 @@ def make_default_table(db, file_name):
     keys = [x.encode('UTF8') for x in table_dic.keys()]
     if 'default_row' in keys:
         default_row = [encode_value(x) for x in table_dic['default_row']]
+    # Test if a primary key is defined and add if yes
+    primary_key = None
+    if 'primary_key' in keys:
+        primary_key = table_dic['primary_key'].encode('UTF8')
 
     # Make the actual table
-    make_table(name, db, columns, types, default_row)
+    make_table(name, db, columns, types, default_row, primary_key)
 
     # If several default rows are given then include all of them
     if 'default_rows' in keys:

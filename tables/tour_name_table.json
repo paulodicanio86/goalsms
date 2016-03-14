@@ -8,6 +8,7 @@
     "tour_id",
     "tour_name"
   ],
+  "primary_key": "tour_id",
   "default_row": [
     0,
     "simple default tour"

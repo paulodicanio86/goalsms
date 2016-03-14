@@ -40,9 +40,9 @@ def insert_into_table(table_name, db, columns, values):
 
 
 # Make a table and fill with a default row
-def make_table(name, db, columns, types, default_row=None):
+def make_table(name, db, columns, types, default_row=None, primary_key=None):
     # create table - assuming it doesn't exist yet
-    column_types_str = convert_column_types_to_string(columns, types)
+    column_types_str = convert_column_types_to_string(columns, types, primary_key)
     create_table(name, db, column_types_str)
 
     # if a default row is given then fill it
@@ -56,7 +56,6 @@ def make_table(name, db, columns, types, default_row=None):
 # Insert array(s) into table
 def insert_array_to_table(name, db, columns, rows):
     columns_str = convert_columns_to_string(columns)
-    rows_str = ''
 
     # for several rows these need to be joined up first
     if type(rows[0]) == list:

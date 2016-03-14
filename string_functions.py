@@ -20,10 +20,13 @@ def convert_columns_to_string(array_values):
     return add_brackets(string[:-2])
 
 
-def convert_column_types_to_string(columns, types):
+def convert_column_types_to_string(columns, types, primary_key=None):
     string = ''
     for i, element in enumerate(columns):
         string += element + ' ' + types[i] + ", "
+
+    if primary_key:
+        string += 'PRIMARY KEY (' + str(primary_key) + '), '
 
     return add_brackets(string[:-2])
 

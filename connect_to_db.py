@@ -23,7 +23,7 @@ embed()
 delete_table('valid', db)
 delete_table('tour_name', db)
 delete_table('tour', db)
-# delete_table('dummy', db)
+#delete_table('dummy', db)
 # embed()
 
 # play around with other things
