@@ -10,6 +10,7 @@ import pandas as pd
 # import local functions
 from app import app
 
+from sms import Sms
 from db_functions import *
 from string_functions import *
 from make_default_tables import *
@@ -29,13 +30,10 @@ def start():
 
 @app.route('/sms', methods=['POST'])
 def hello():
-    # Get data from POST request and add date and datetime
-    sender = str(request.form['sender'])
-    # Validate number
-    sender = validate_number(sender)
-    content = str(request.form['content'])
-    # Validate message content and remove bad characters
-    content = validate_content(content)
+    # Get data from POST request, add to sms class and validate
+    sms = Sms(request.form['content'], request.form['sender'])
+    sms.validate_content()
+    sms.validate_sender()
 
     # Establish database connection
     db = MySQLdb.connect(host=data_config['host'],
@@ -43,31 +41,25 @@ def hello():
                          passwd=data_config['password'],
                          db=data_config['database'])
 
+    sms.validate_sms_and_get_tour(db)
     # Is the message valid?
-    df = select_number_from_valid_table(db, sender)
-    # Message is not valid:
-    if len(df) == 0:
+    if not sms.is_valid:
         return ''
-    # Message is valid. One or several tours exist
-    tour_id = df.tour_id.values
-
-    # Pick the first one, to be changed to when there are several valid tours [to be changed]
-    tour_id = tour_id[0]
-    message = [sender, content, tour_id]
+    # Get message meta data
+    message = sms.get_message_array()
 
     # Get date and datetime
     dt = datetime.now()
     dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
     d_str = '{:%Y-%m-%d}'.format(dt)
     #  store the message
-    text_row = [sender, content, d_str, dt_str]
+    text_row = [sms.sender, sms.content, d_str, dt_str]
     # Add message to dummy table
     insert_array_to_table('dummy', db, get_table_columns('tables/dummy_table.json'), text_row)
 
     # Commit and close database connection
     db.commit()
     db.close()
-
     return ''
 
 

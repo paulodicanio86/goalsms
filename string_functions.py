@@ -60,6 +60,7 @@ def add_country_code(number, code):
 
 
 def strip_number_str(number, code):
+    number = number.replace(' ', '')
     # +44777xxxxxxx cases
     if number[0] == '+':
         return number[1:]
