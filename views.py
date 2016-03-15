@@ -31,8 +31,10 @@ def start():
 def hello():
     # Get data from POST request and add date and datetime
     sender = str(request.form['sender'])
+    # Validate number
+    sender = validate_number(sender)
     content = str(request.form['content'])
-    # Validate message content here and remove bad characters
+    # Validate message content and remove bad characters
     content = validate_content(content)
 
     # Establish database connection
@@ -49,12 +51,16 @@ def hello():
     # Message is valid. One or several tours exist
     tour_id = df.tour_id.values
 
+    # Pick the first one, to be changed to when there are several valid tours [to be changed]
+    tour_id = tour_id[0]
+    message = [sender, content, tour_id]
+
     # Get date and datetime
     dt = datetime.now()
     dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
     d_str = '{:%Y-%m-%d}'.format(dt)
     #  store the message
-    text_row = [sender, content + ' tour_id = ' + str(tour_id[0]), d_str, dt_str]
+    text_row = [sender, content, d_str, dt_str]
     # Add message to dummy table
     insert_array_to_table('dummy', db, get_table_columns('tables/dummy_table.json'), text_row)
 

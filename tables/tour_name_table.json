@@ -9,8 +9,14 @@
     "tour_name"
   ],
   "primary_key": "tour_id",
-  "default_row": [
-    0,
-    "simple default tour"
+  "default_rows": [
+    [
+      0,
+      "simple default tour"
+    ],
+    [
+      1,
+      "second default tour"
+    ]
   ]
 }
