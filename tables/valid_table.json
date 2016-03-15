@@ -3,19 +3,31 @@
     "VARCHAR(255)",
     "INT",
     "DATE",
-    "DATE"
+    "DATE",
+    "INT"
   ],
   "name": "valid",
   "columns": [
     "phone_number",
     "tour_id",
     "valid_from",
-    "valid_to"
+    "valid_to",
+    "completed"
   ],
-  "default_row": [
-    "00447776031697",
-    0,
-    "2016-03-31",
-    "2016-12-31"
+  "default_rows": [
+    [
+      "447776031697",
+      0,
+      "2016-03-01",
+      "2016-03-31",
+      0
+    ],
+    [
+      "447776031697",
+      1,
+      "2016-01-01",
+      "2016-12-31",
+      0
+    ]
   ]
 }

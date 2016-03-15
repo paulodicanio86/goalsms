@@ -41,10 +41,20 @@ def hello():
                          passwd=data_config['password'],
                          db=data_config['database'])
 
-    # Get date and datetime to store the message
-    dt = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-    d = '{:%Y-%m-%d}'.format(datetime.now())
-    text_row = [sender, content, d, dt]
+    # Is the message valid?
+    df = select_number_from_valid_table(db, sender)
+    # Message is not valid:
+    if len(df) == 0:
+        return ''
+    # Message is valid. One or several tours exist
+    tour_id = df.tour_id.values
+
+    # Get date and datetime
+    dt = datetime.now()
+    dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
+    d_str = '{:%Y-%m-%d}'.format(dt)
+    #  store the message
+    text_row = [sender, content + ' tour_id = ' + str(tour_id[0]), d_str, dt_str]
     # Add message to dummy table
     insert_array_to_table('dummy', db, get_table_columns('tables/dummy_table.json'), text_row)
 

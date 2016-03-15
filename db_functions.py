@@ -2,10 +2,24 @@ import pandas as pd
 from string_functions import *
 
 
+# Execute any SQL statement
+def execute_statement(statement, db):
+    return pd.read_sql(statement, con=db)
+
+
 # Query db to select all
 def select_all(table_name, db):
     sql_query = 'SELECT * FROM {table_name};'.format(table_name=table_name)
-    return pd.read_sql(sql_query, con=db)
+    return execute_statement(sql_query, db)
+
+
+# Query db to select all
+def select_number_from_valid_table(db, phone_number, table_name='valid'):
+    sql_query = '''SELECT * FROM {table_name} WHERE PHONE_NUMBER='{phone_number}'
+                AND VALID_FROM <= CURDATE() AND CURDATE() <= VALID_TO and COMPLETED = 0;'''
+
+    sql_query = sql_query.format(table_name=table_name, phone_number=phone_number)
+    return execute_statement(sql_query, db)
 
 
 # Delete table
@@ -68,8 +82,3 @@ def insert_array_to_table(name, db, columns, rows):
         rows_str = convert_values_to_string(rows)
 
     insert_into_table(name, db, columns_str, rows_str)
-
-
-# Execute any SQL statement
-def execute_statement(statement, db):
-    return pd.read_sql(statement, con=db)
