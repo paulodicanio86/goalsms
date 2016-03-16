@@ -49,6 +49,10 @@ def validate_content(content):
     content = content.replace(';', '')
     content = content.replace('(', '')
     content = content.replace(')', '')
+    # remove white space
+    content = content.strip()
+    # make lower case
+    content = content.lower()
     return content
 
 

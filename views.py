@@ -11,6 +11,7 @@ import pandas as pd
 from app import app
 
 from sms import Sms
+from tour import *
 from db_functions import *
 from string_functions import *
 from make_default_tables import *
@@ -45,6 +46,9 @@ def hello():
     # Is the message valid?
     if not sms.is_valid:
         return ''
+
+    follow_tour(db, sms)
+
     # Get message meta data
     message = sms.get_message_array()
 
