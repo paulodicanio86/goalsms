@@ -1,0 +1,30 @@
+{
+  "types": [
+    "VARCHAR(255)",
+    "INT",
+    "INT",
+    "INT",
+    "DATETIME",
+    "INT",
+    "INT"
+  ],
+  "name": "active",
+  "columns": [
+    "phone_number",
+    "tour_id",
+    "question_number",
+    "total_questions",
+    "date_started",
+    "score",
+    "penalty_score"
+  ],
+  "default_row": [
+    "447776031698",
+    0,
+    0,
+    2,
+    "2016-03-15 12:08:38",
+    0,
+    0
+  ]
+}

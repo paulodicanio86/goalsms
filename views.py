@@ -14,7 +14,7 @@ from sms import Sms
 from tour import *
 from db_functions import *
 from string_functions import *
-from make_default_tables import *
+from make_default_tables import get_table_columns
 
 # Open db connection strings
 db_json_path = os.path.dirname(os.path.abspath(__file__))

@@ -13,12 +13,38 @@ def select_all(table_name, db):
     return execute_statement(sql_query, db)
 
 
-# Query db to select all
+# Query db to see if entry is in valid table
 def select_number_from_valid_table(db, phone_number, table_name='valid'):
     sql_query = '''SELECT * FROM {table_name} WHERE PHONE_NUMBER='{phone_number}'
                 AND VALID_FROM <= CURDATE() AND CURDATE() <= VALID_TO and COMPLETED = 0;'''
 
     sql_query = sql_query.format(table_name=table_name, phone_number=phone_number)
+    return execute_statement(sql_query, db)
+
+
+# Query db to see if entry is in active table
+def select_number_and_tour_from_active_table(db, phone_number, tour_id, table_name='active'):
+    sql_query = '''SELECT * FROM {table_name} WHERE PHONE_NUMBER='{phone_number}'
+                AND TOUR_ID = {tour_id};'''
+
+    sql_query = sql_query.format(table_name=table_name, phone_number=phone_number, tour_id=tour_id)
+    return execute_statement(sql_query, db)
+
+
+# Query db to get the maximum questions of a tour
+def get_total_number_of_questions(db, tour_id, table_name='tour'):
+    sql_query = '''SELECT MAX(question_number) AS total FROM {table_name} WHERE TOUR_ID={tour_id};'''
+
+    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id)
+    return execute_statement(sql_query, db)
+
+
+# Query db to get a question
+def get_question(db, tour_id, question_number, table_name='tour'):
+    sql_query = '''SELECT question FROM {table_name} WHERE tour_id = {tour_id}
+                AND question_number = {question_number};'''
+
+    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id, question_number=question_number)
     return execute_statement(sql_query, db)
 
 

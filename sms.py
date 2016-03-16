@@ -32,11 +32,16 @@ class Sms:
             self.is_valid = True
 
     def is_in_active_table(self, db):
-        return True
+        df = select_number_and_tour_from_active_table(db, self.sender, self.tour_id)
+        if len(df) == 0:
+            return False
+        else:
+            return True
 
     def get_message_array(self):
         return [self.sender, self.content, self.tour_id]
 
     def send(self):
         # Function to send a sms
-        send_sms(self.receiver, self.content)
+        print ('SMS SENT to ' + self.receiver + ' and content: ' + self.content)
+        # send_sms(self.receiver, self.content)
