@@ -7,13 +7,17 @@ from db_functions import *
 from sms import *
 from make_default_tables import get_table_columns
 
+welcome_text = 'Welcome to the tour: '
+
 
 class Tour:
     def __init__(self, tour_id, question):
         self.tour_id = tour_id
         self.tour_name = ''
         self.question = question
-        self.total_questions = -1
+
+        df = get_total_number_of_questions(tour_id)
+        self.total_questions = int(df['total'].values[0])
 
     def get_tour_name(self):  # Do we need this function?!
         self.tour_name = 'blabla'
@@ -21,9 +25,6 @@ class Tour:
     def add_tour_to_active_table(self, db, sms):
         dt = datetime.now()
         dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
-
-        df = get_total_number_of_questions(db, sms.tour_id)
-        self.total_questions = int(df['total'].values[0])
 
         values = [sms.sender, sms.tour_id, 0, self.total_questions, dt_str, 0, 0]
         insert_array_to_table('active', db, get_table_columns('tables/active_table.json'), values)
@@ -45,10 +46,13 @@ def follow_tour(db, sms):
             tour = Tour(sms.tour_id, 0)
             # Make tour active
             tour.add_tour_to_active_table(db, sms)
-            # Make a reply sms with the question
+            # Make a welcome sms and send
+            welcome_sms = Sms(content=welcome_text + tour.tour_name,
+                              receiver=sms.sender)
+            welcome_sms.send()
+            # Make a reply sms with the question and send
             reply_sms = Sms(content=tour.get_question(db),
                             receiver=sms.sender)
-            # Send reply sms
             reply_sms.send()
 
             print('scenario 1')
