@@ -10,7 +10,7 @@
   "name": "tour",
   "columns": [
     "tour_id",
-    "question_number",
+    "stage_number",
     "question",
     "answer",
     "help_1",

@@ -21,7 +21,7 @@ db_json_path = os.path.dirname(os.path.abspath(__file__))
 db_json_path = os.path.abspath(os.path.join(os.sep, db_json_path, 'db_connection.json'))
 
 with open(db_json_path) as db_connection_file:
-    data_config = json.load(db_connection_file)
+    db_config = json.load(db_connection_file)
 
 
 @app.route('/')
@@ -37,10 +37,10 @@ def hello():
     sms.validate_sender()
 
     # Establish database connection
-    db = MySQLdb.connect(host=data_config['host'],
-                         user=data_config['user'],
-                         passwd=data_config['password'],
-                         db=data_config['database'])
+    db = MySQLdb.connect(host=db_config['host'],
+                         user=db_config['user'],
+                         passwd=db_config['password'],
+                         db=db_config['database'])
 
     sms.validate_sms_and_get_tour(db)
     # Is the message valid?
@@ -70,10 +70,10 @@ def hello():
 @app.route('/show')
 def show_entries():
     # Establish database connection
-    db = MySQLdb.connect(host=data_config['host'],
-                         user=data_config['user'],
-                         passwd=data_config['password'],
-                         db=data_config['database'])
+    db = MySQLdb.connect(host=db_config['host'],
+                         user=db_config['user'],
+                         passwd=db_config['password'],
+                         db=db_config['database'])
     df = select_all('dummy', db)
 
     # Commit and close database connection

@@ -12,8 +12,8 @@
   "columns": [
     "phone_number",
     "tour_id",
-    "question_number",
-    "total_questions",
+    "stage_number",
+    "total_stages",
     "date_started",
     "score",
     "penalty_score"

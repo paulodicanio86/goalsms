@@ -23,7 +23,7 @@ def select_number_from_valid_table(db, phone_number, table_name='valid'):
 
 
 # Query db to see if entry is in active table
-def select_number_and_tour_from_active_table(db, phone_number, tour_id, table_name='active'):
+def get_tour_from_active_table(db, phone_number, tour_id, table_name='active'):
     sql_query = '''SELECT * FROM {table_name} WHERE PHONE_NUMBER='{phone_number}'
                 AND TOUR_ID = {tour_id};'''
 
@@ -31,20 +31,28 @@ def select_number_and_tour_from_active_table(db, phone_number, tour_id, table_na
     return execute_statement(sql_query, db)
 
 
-# Query db to get the maximum questions of a tour
-def get_total_number_of_questions(db, tour_id, table_name='tour'):
-    sql_query = '''SELECT MAX(question_number) AS total FROM {table_name} WHERE TOUR_ID={tour_id};'''
+# Query db to get the maximum stages of a tour
+def get_total_number_of_stages(db, tour_id, table_name='tour'):
+    sql_query = '''SELECT MAX(stage_number) AS total FROM {table_name} WHERE TOUR_ID={tour_id};'''
 
     sql_query = sql_query.format(table_name=table_name, tour_id=tour_id)
     return execute_statement(sql_query, db)
 
 
-# Query db to get a question
-def get_question(db, tour_id, question_number, table_name='tour'):
-    sql_query = '''SELECT question FROM {table_name} WHERE tour_id = {tour_id}
-                AND question_number = {question_number};'''
+# Query db to get all stages of a tour
+def get_all_stages(db, tour_id, table_name='tour'):
+    sql_query = '''SELECT * FROM {table_name} WHERE TOUR_ID={tour_id};'''
 
-    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id, question_number=question_number)
+    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id)
+    return execute_statement(sql_query, db)
+
+
+# Query db to get a stage
+def get_question(db, tour_id, stage_number, table_name='tour'):
+    sql_query = '''SELECT question FROM {table_name} WHERE tour_id = {tour_id}
+                AND stage_number = {stage_number};'''
+
+    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id, stage_number=stage_number)
     return execute_statement(sql_query, db)
 
 
