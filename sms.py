@@ -106,5 +106,5 @@ class Sms:
         if self.multiple_receivers:
             number = tuple(self.receiver)
 
-        # send_sms(number, self.content, sms_config)
-        a = 0  # redundant...
+        send_sms(number, self.content, sms_config)
+
