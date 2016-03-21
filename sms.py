@@ -88,7 +88,7 @@ class Sms:
             self.is_valid = True
 
     def is_in_active_table(self, db):
-        df = select_number_and_tour_from_active_table(db, self.sender, self.tour_id)
+        df = get_tour_from_active_table(db, self.sender, self.tour_id)
         if len(df) == 0:
             return False
         else:

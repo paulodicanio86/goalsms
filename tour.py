@@ -11,20 +11,23 @@ welcome_text = 'Welcome to the tour: '
 
 
 class Tour:
-    def __init__(self, tour_id, current_stage=None):
+    def __init__(self, db, tour_id, current_stage=None):
         self.tour_id = tour_id
         self.is_final_stage = False
+        self.total_stages = None
         self.current_stage = None
 
         self.tour_name = None
         self.all_stages = None
 
-        df = get_total_number_of_stages(self.tour_id)
+        df = get_total_number_of_stages(db, self.tour_id)
         self.total_stages = int(df['total'].values[0])
+        print(self.total_stages)
         self.set_stage(current_stage)
 
     def set_stage(self, number):
         self.current_stage = number
+        print(self.current_stage)
         if self.current_stage and self.current_stage == self.total_stages - 1:
             self.is_final_stage = True
 
@@ -32,18 +35,15 @@ class Tour:
         df = get_tour_from_active_table(db, phone_number, self.tour_id)
         self.set_stage(int(df['stage_number'].values[0]))
 
-    def get_tour_name(self):  # Do we need this function?!
-        self.tour_name = 'blabla'
-
-    def add_tour_to_active_table(self, db, sms, dt=None):
-        if dt:
+    def add_tour_to_active_table(self, db, sender, tour_id, dt=None):
+        if not dt:
             dt = datetime.now()
         dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
 
-        values = [sms.sender, sms.tour_id,
+        values = [sender, tour_id,
                   self.current_stage, self.total_stages,
                   dt_str, 0, 0]
-
+        print(values)
         insert_array_to_table('active', db,
                               get_table_columns('tables/active_table.json'),
                               values)
@@ -51,6 +51,11 @@ class Tour:
     def get_question(self, db):
         df = get_question(db, self.tour_id, self.current_stage)
         question_str = str(df['question'].values[0])
+        return question_str
+
+    def get_answer(self, db):
+        df = get_question(db, self.tour_id, self.current_stage)
+        question_str = str(df['answer'].values[0])
         return question_str
 
     def get_all_stages(self):
@@ -66,11 +71,11 @@ def follow_tour(db, sms):
 
         if start_keyword in sms.content:
             # Initiate tour
-            tour = Tour(sms.tour_id, 0)
+            tour = Tour(db, sms.tour_id, 0)
             # Make tour active
-            tour.add_tour_to_active_table(db, sms)
+            tour.add_tour_to_active_table(db, sms.sender, sms.tour_id)
             # Make a welcome sms and send
-            welcome_sms = Sms(content=welcome_text + tour.tour_name,
+            welcome_sms = Sms(content=welcome_text,
                               receiver=sms.sender)
             welcome_sms.send()
             # Make a reply sms with the question and send
@@ -87,16 +92,17 @@ def follow_tour(db, sms):
             return None
 
     # let us get the current stage of sms
-    tour = Tour(sms.tour_id)
+    tour = Tour(db, sms.tour_id)
     tour.get_stage_from_active_table(db, sms.sender)
     current_stage = tour.current_stage
     is_final_stage = tour.is_final_stage
+    print('stage: ', current_stage, is_final_stage)
 
     if sms.is_keyword:
         # it is a keyword! let us investigate which one and take the right action
         # ...
         print('scenario 3')
-    return None
+        return None
 
     # tour is active, it is not a keyword, it must be an answer.
     # Let us check whether the answer is right.
