@@ -57,6 +57,7 @@ class Sms:
         self.set_receiver(receiver)
         self.tour_id = None
         self.is_valid = False
+        self.is_start_sms = False
         self.is_keyword = False
 
     def set_receiver(self, receiver):
@@ -76,6 +77,8 @@ class Sms:
 
     def validate_content(self):
         self.content = validate_content(self.content)
+        if start_keyword in self.content:
+            self.is_start_sms = True
         if self.content in keywords:
             self.is_keyword = True
 
@@ -107,4 +110,3 @@ class Sms:
             number = tuple(self.receiver)
 
         send_sms(number, self.content, sms_config)
-

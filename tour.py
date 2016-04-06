@@ -17,14 +17,17 @@ class Tour:
 
         self.total_stages = None
         self.current_stage = None
-        self.is_final_stage = False
         self.set_stage(current_stage)
         self.all_stages = None
 
     def set_stage(self, number):
         self.current_stage = number
+
+    def is_final_stage(self):
         if self.current_stage and self.total_stages and self.current_stage == self.total_stages - 1:
-            self.is_final_stage = True
+            return True
+        else:
+            return False
 
     def get_stage_from_active_table(self, db, phone_number):
         df = get_tour_from_active_table(db, phone_number, self.tour_id)
@@ -67,9 +70,11 @@ def follow_tour(db, sms):
 
     if not sms.is_in_active_table(db):
 
-        if start_keyword in sms.content:
+        if sms.is_start_sms:
             # Initiate tour
             tour = Tour(sms.tour_id, 0)
+            # get total stages of tour
+            tour.get_total_stages(db)
             # Make tour active
             tour.add_tour_to_active_table(db, sms.sender, sms.tour_id)
             # Make a welcome sms and send
@@ -97,7 +102,7 @@ def follow_tour(db, sms):
     tour.get_stage_from_active_table(db, sms.sender)
 
     current_stage = tour.current_stage
-    is_final_stage = tour.is_final_stage
+    is_final_stage = tour.is_final_stage()
     # print('stage: ', current_stage, is_final_stage)
 
     if sms.is_keyword:
