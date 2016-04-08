@@ -56,6 +56,15 @@ def get_question(db, tour_id, stage_number, table_name='tour'):
     return execute_statement(sql_query, db)
 
 
+# Query db to get a stage
+def get_answer(db, tour_id, stage_number, table_name='tour'):
+    sql_query = '''SELECT answer FROM {table_name} WHERE tour_id = {tour_id}
+                AND stage_number = {stage_number};'''
+
+    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id, stage_number=stage_number)
+    return execute_statement(sql_query, db)
+
+
 # Delete table
 def delete_table(table_name, db):
     cursor = db.cursor()

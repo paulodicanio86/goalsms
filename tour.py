@@ -55,7 +55,7 @@ class Tour:
         return question_str
 
     def get_answer(self, db):
-        df = get_question(db, self.tour_id, self.current_stage)
+        df = get_answer(db, self.tour_id, self.current_stage)
         question_str = str(df['answer'].values[0])
         return question_str
 
@@ -94,17 +94,7 @@ def follow_tour(db, sms):
             print('scenario 2')
             return None
 
-    # let us get the current stage of sms
-    tour = Tour(sms.tour_id)
-    # get total stages of tour
-    tour.get_total_stages(db)
-    # get current stage from active table
-    tour.get_stage_from_active_table(db, sms.sender)
-
-    current_stage = tour.current_stage
-    is_final_stage = tour.is_final_stage()
-    # print('stage: ', current_stage, is_final_stage)
-
+    # is sms a keyword?
     if sms.is_keyword:
         # it is a keyword! let us investigate which one and take the right action
         # ...
@@ -116,5 +106,35 @@ def follow_tour(db, sms):
     # if not, send a hint. increase penalty score in active table
     # if yes, increase the question number in active table and send the next question.
     # ...
+
+    # let us get the current stage of sms
+    tour = Tour(sms.tour_id)
+    # get total stages of tour
+    tour.get_total_stages(db)
+    # get current stage from active table
+    tour.get_stage_from_active_table(db, sms.sender)
+
+    current_stage = tour.current_stage
+    is_final_stage = tour.is_final_stage()
+    print('stage: ', current_stage, is_final_stage)
+
+    question = tour.get_question(db)
+    right_answer = tour.get_answer(db)
+    answer = sms.content
+    print(question, right_answer, answer)
+
+    if right_answer.lower() == answer.lower():
+        print('correct answer')
+        # send message that it is correct. then increase stage number in active table and send new question
+    else:
+        # increase penalty, increase attempts score
+        # if attempts score < 3 send a message that the answer is wrong
+        # if attempts score = 3 and hints exists, send a hint
+        # if attempts score = 3 and no hint exists, send message you failed.
+        #     then increase stage number in active table and send new question
+        # if attempts score > 3 send message you failed.
+        #     then increase stage number in active table and send new question
+        print('wrong answer')
+
     print('scenario 4')
     return None
