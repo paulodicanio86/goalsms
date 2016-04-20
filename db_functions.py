@@ -32,7 +32,7 @@ def get_tour_from_active_table(db, phone_number, tour_id, table_name='active'):
 
 
 # Query db to get the maximum stages of a tour
-def get_total_number_of_stages(db, tour_id, table_name='tour'):
+def get_maximum_stage_number(db, tour_id, table_name='tour'):
     sql_query = '''SELECT MAX(stage_number) AS total FROM {table_name} WHERE TOUR_ID={tour_id};'''
 
     sql_query = sql_query.format(table_name=table_name, tour_id=tour_id)
@@ -81,6 +81,33 @@ def create_table(table_name, db, columns_types):
                            columns_types=columns_types)
     cursor.execute(sql_query)
     db.commit()
+
+
+# Update table
+def update_active_table(db, column_value, phone_number, tour_id):
+    table_name = "active"
+    column_name = "stage_number"
+    column_value = str(column_value)
+    condition_1 = "phone_number='" + str(phone_number) + "'"
+    condition_2 = "tour_id = " + str(tour_id)
+    update_row(table_name, db, column_name, column_value, condition_1, condition_2)
+
+
+# Update table
+def update_row(table_name, db, column_name, column_value, condition_1, condition_2):
+    cursor = db.cursor()
+
+    sql_query = '''SET SQL_SAFE_UPDATES = 0;
+                   UPDATE {table_name}
+                   SET {column_name}={column_value}
+                   WHERE {condition_1} and {condition_2};
+                   '''.format(table_name=table_name,
+                              column_name=column_name,
+                              column_value=column_value,
+                              condition_1=condition_1,
+                              condition_2=condition_2
+                              )
+    cursor.execute(sql_query)
 
 
 # Insert into table

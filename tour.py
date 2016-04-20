@@ -34,8 +34,8 @@ class Tour:
         self.set_stage(int(df['stage_number'].values[0]))
 
     def get_total_stages(self, db):
-        df = get_total_number_of_stages(db, self.tour_id)
-        self.total_stages = int(df['total'].values[0])
+        df = get_maximum_stage_number(db, self.tour_id)
+        self.total_stages = int(df['total'].values[0] + 1)
 
     def add_tour_to_active_table(self, db, sender, tour_id, dt=None):
         if not dt:
@@ -125,7 +125,19 @@ def follow_tour(db, sms):
 
     if right_answer.lower() == answer.lower():
         print('correct answer')
-        # send message that it is correct. then increase stage number in active table and send new question
+        if not tour.is_final_stage():
+            new_stage = tour.current_stage + 1
+            update_active_table(db, new_stage, sms.sender, tour.tour_id)
+            print('new stage reached')
+            # send message that it is correct and send new question
+        else:
+            new_stage = tour.current_stage + 1
+            update_active_table(db, new_stage, sms.sender, tour.tour_id)
+            print('game successfully finished')
+            # send message that it is over now.
+            # calculate final scores etc (also to be added to the db?).
+            # delete tour from active table
+
     else:
         # increase penalty, increase attempts score
         # if attempts score < 3 send a message that the answer is wrong
