@@ -86,19 +86,19 @@ def follow_tour(db, sms):
                             receiver=sms.sender)
             reply_sms.send()
 
-            print('scenario 1')
+            print('-------> start message has been received')
             return None
         else:
             # Do nothing in this case.
             # Maybe reply a message to ask if he wanted to start the tour?
-            print('scenario 2')
+            print('-------> A random message has been received')
             return None
 
     # is sms a keyword?
     if sms.is_keyword:
         # it is a keyword! let us investigate which one and take the right action
         # ...
-        print('scenario 3')
+        print('-------> we received a keyword message!')
         return None
 
     # tour is active, it is not a keyword, it must be an answer.
@@ -127,16 +127,23 @@ def follow_tour(db, sms):
         print('correct answer')
         if not tour.is_final_stage():
             new_stage = tour.current_stage + 1
+            tour.set_stage(new_stage)
             update_active_table(db, new_stage, sms.sender, tour.tour_id)
-            print('new stage reached')
+            print('-------> a right answer has been received. new stage reached')
             # send message that it is correct and send new question
+            reply_sms = Sms(content=tour.get_question(db),
+                            receiver=sms.sender)
+            reply_sms.send()
+
         else:
             new_stage = tour.current_stage + 1
+            tour.set_stage(new_stage)
             update_active_table(db, new_stage, sms.sender, tour.tour_id)
-            print('game successfully finished')
+            print('-------> game successfully finished')
             # send message that it is over now.
-            # calculate final scores etc (also to be added to the db?).
+            # calculate final scores etc (also to be added to the db?). get start and finish time - calculate delta!
             # delete tour from active table
+            delete_from_active_table(db, sms.sender, tour.tour_id)
 
     else:
         # increase penalty, increase attempts score
@@ -146,7 +153,6 @@ def follow_tour(db, sms):
         #     then increase stage number in active table and send new question
         # if attempts score > 3 send message you failed.
         #     then increase stage number in active table and send new question
-        print('wrong answer')
+        print('-------> a wrong answer has been received')
 
-    print('scenario 4')
     return None

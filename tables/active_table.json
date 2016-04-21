@@ -15,8 +15,8 @@
     "stage_number",
     "total_stages",
     "date_started",
-    "score",
-    "penalty_score"
+    "attempts",
+    "score"
   ],
   "default_row": [
     "447776031698",

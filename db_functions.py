@@ -83,7 +83,7 @@ def create_table(table_name, db, columns_types):
     db.commit()
 
 
-# Update table
+# Update active table
 def update_active_table(db, column_value, phone_number, tour_id):
     table_name = "active"
     column_name = "stage_number"
@@ -93,7 +93,7 @@ def update_active_table(db, column_value, phone_number, tour_id):
     update_row(table_name, db, column_name, column_value, condition_1, condition_2)
 
 
-# Update table
+# Update row
 def update_row(table_name, db, column_name, column_value, condition_1, condition_2):
     cursor = db.cursor()
 
@@ -104,6 +104,28 @@ def update_row(table_name, db, column_name, column_value, condition_1, condition
                    '''.format(table_name=table_name,
                               column_name=column_name,
                               column_value=column_value,
+                              condition_1=condition_1,
+                              condition_2=condition_2
+                              )
+    cursor.execute(sql_query)
+
+
+# Update active table
+def delete_from_active_table(db, phone_number, tour_id):
+    table_name = "active"
+    condition_1 = "phone_number='" + str(phone_number) + "'"
+    condition_2 = "tour_id = " + str(tour_id)
+    delete_row(table_name, db, condition_1, condition_2)
+
+
+# Delete row
+def delete_row(table_name, db, condition_1, condition_2):
+    cursor = db.cursor()
+
+    sql_query = '''SET SQL_SAFE_UPDATES = 0;
+                   DELETE FROM {table_name}
+                   WHERE {condition_1} and {condition_2};
+                   '''.format(table_name=table_name,
                               condition_1=condition_1,
                               condition_2=condition_2
                               )
