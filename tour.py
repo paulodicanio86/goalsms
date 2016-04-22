@@ -123,12 +123,17 @@ def follow_tour(db, sms):
     answer = sms.content
     print(question, right_answer, answer)
 
+    # save message here in message log
+    # blablabla
+
     if right_answer.lower() == answer.lower():
         print('correct answer')
+
+        update_active_table(db, 'attempts', 0, sms.sender, tour.tour_id)
         if not tour.is_final_stage():
             new_stage = tour.current_stage + 1
             tour.set_stage(new_stage)
-            update_active_table(db, new_stage, sms.sender, tour.tour_id)
+            update_active_table(db, 'stage_number', new_stage, sms.sender, tour.tour_id)
             print('-------> a right answer has been received. new stage reached')
             # send message that it is correct and send new question
             reply_sms = Sms(content=tour.get_question(db),
@@ -138,15 +143,23 @@ def follow_tour(db, sms):
         else:
             new_stage = tour.current_stage + 1
             tour.set_stage(new_stage)
-            update_active_table(db, new_stage, sms.sender, tour.tour_id)
+            update_active_table(db, 'stage_number', new_stage, sms.sender, tour.tour_id)
             print('-------> game successfully finished')
             # send message that it is over now.
             # calculate final scores etc (also to be added to the db?). get start and finish time - calculate delta!
+            df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
+            dt_start = pd.Timestamp(df['date_started'].values[0]).to_datetime()
+            delta = (datetime.now() - dt_start).total_seconds()
+            print(delta)
+
             # delete tour from active table
             delete_from_active_table(db, sms.sender, tour.tour_id)
 
     else:
-        # increase penalty, increase attempts score
+        # increase attempts score
+        df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
+        attempt = int(df['attempts'].values[0]) + 1
+        update_active_table(db, 'attempts', attempt, sms.sender, tour.tour_id)
         # if attempts score < 3 send a message that the answer is wrong
         # if attempts score = 3 and hints exists, send a hint
         # if attempts score = 3 and no hint exists, send message you failed.

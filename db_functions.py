@@ -84,9 +84,8 @@ def create_table(table_name, db, columns_types):
 
 
 # Update active table
-def update_active_table(db, column_value, phone_number, tour_id):
+def update_active_table(db, column_name, column_value, phone_number, tour_id):
     table_name = "active"
-    column_name = "stage_number"
     column_value = str(column_value)
     condition_1 = "phone_number='" + str(phone_number) + "'"
     condition_2 = "tour_id = " + str(tour_id)
