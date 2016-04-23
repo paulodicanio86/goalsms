@@ -5,7 +5,7 @@
     "DATE",
     "DATETIME"
   ],
-  "name": "dummy",
+  "name": "messages",
   "columns": [
     "phone_number",
     "content",

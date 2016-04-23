@@ -1,10 +1,8 @@
 # import global functions
-
 import json
 import MySQLdb
 import os
 from flask import request
-from datetime import datetime
 import pandas as pd
 
 # import local functions
@@ -14,7 +12,6 @@ from sms import Sms
 from tour import *
 from db_functions import *
 from string_functions import *
-from make_default_tables import get_table_columns
 
 # Open db connection strings
 db_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -47,19 +44,9 @@ def hello():
     if not sms.is_valid:
         return ''
 
+    # Follow a tour
+    sms.save_message_to_db(db, 'messages')
     follow_tour(db, sms)
-
-    # Get message meta data
-    message = sms.get_message_array()
-
-    # Get date and datetime
-    dt = datetime.now()
-    dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
-    d_str = '{:%Y-%m-%d}'.format(dt)
-    #  store the message
-    text_row = [sms.sender, sms.content, d_str, dt_str]
-    # Add message to dummy table
-    insert_array_to_table('dummy', db, get_table_columns('tables/dummy_table.json'), text_row)
 
     # Commit and close database connection
     db.commit()
@@ -74,7 +61,7 @@ def show_entries():
                          user=db_config['user'],
                          passwd=db_config['password'],
                          db=db_config['database'])
-    df = select_all('dummy', db)
+    df = select_all('messages', db)
 
     # Commit and close database connection
     db.commit()

@@ -2,10 +2,10 @@ import urllib  # URL functions
 import urllib2  # URL functions
 import os
 import json
+from datetime import datetime
 
-from string_functions import *
 from db_functions import *
-import pandas as pd
+from make_default_tables import get_table_columns
 
 # Open sms config string file
 sms_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -100,11 +100,21 @@ class Sms:
     def get_message_array(self):
         return [self.sender, self.content, self.tour_id]
 
+    def save_message_to_db(self, db, table_name='message'):
+        # Get date and datetime
+        dt = datetime.now()
+        dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
+        d_str = '{:%Y-%m-%d}'.format(dt)
+
+        text_row = [self.sender, self.content, d_str, dt_str]
+        # Add message to dummy table
+        insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
+
     def send(self):
         # Function to send a sms
         print ('SMS SENT to ' + self.receiver + ' and content: ' + self.content)
 
-        # check if one number or multiple, and turn multiple into tuple
+        # Check if one number or multiple, and turn multiple into tuple
         number = self.receiver
         if self.multiple_receivers:
             number = tuple(self.receiver)

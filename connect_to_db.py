@@ -16,7 +16,7 @@ db = MySQLdb.connect(host=data_config['host'],
                      passwd=data_config['password'],
                      db=data_config['database'])
 
-delete_table('dummy', db)
+delete_table('messages', db)
 delete_table('valid', db)
 delete_table('active', db)
 delete_table('tour_name', db)
