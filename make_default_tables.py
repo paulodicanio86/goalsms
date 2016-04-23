@@ -11,6 +11,7 @@ def make_default_tables(db):
     make_default_table(db, 'tables/messages_table.json')
     make_default_table(db, 'tables/tour_table.json')
     make_default_table(db, 'tables/active_table.json')
+    make_default_table(db, 'tables/finished_tours_table.json')
 
 
 def make_default_table(db, file_name):

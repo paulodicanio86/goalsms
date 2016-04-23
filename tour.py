@@ -49,6 +49,12 @@ class Tour:
                               get_table_columns('tables/active_table.json'),
                               values)
 
+    def save_to_db(self, db, sender, started_str, duration, score, table_name='finished_tours'):
+        text_row = [sender, self.tour_id, started_str, duration, score]
+        print(text_row)
+        # Add message to table
+        insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
+
     def get_question(self, db):
         df = get_question(db, self.tour_id, self.current_stage)
         question_str = str(df['question'].values[0])
@@ -138,11 +144,14 @@ def follow_tour(db, sms):
         else:
             # Calculate the duration of the game
             df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
-            dt_start = pd.Timestamp(df['date_started'].values[0]).to_datetime()
-            delta = (datetime.now() - dt_start).total_seconds()
-            print(delta)
 
-            # calculate the final score and save to database (finished tours?)
+            dt_start = pd.Timestamp(df['date_started'].values[0]).to_datetime()
+            dt_start_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt_start)
+            duration_int = int((datetime.now() - dt_start).total_seconds())
+
+            # Calculate the final score and save to database
+            score_int = int(df['score'].values[0])
+            tour.save_to_db(db, sms.sender, dt_start_str, duration_int, score_int)
 
             # send message that it is over now.
 

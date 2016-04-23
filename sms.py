@@ -107,7 +107,7 @@ class Sms:
         d_str = '{:%Y-%m-%d}'.format(dt)
 
         text_row = [self.sender, self.content, d_str, dt_str]
-        # Add message to dummy table
+        # Add message to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
 
     def send(self):

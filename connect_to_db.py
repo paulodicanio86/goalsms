@@ -21,6 +21,7 @@ delete_table('valid', db)
 delete_table('active', db)
 delete_table('tour_name', db)
 delete_table('tour', db)
+delete_table('finished_tours', db)
 # default tables
 make_default_tables(db)
 embed()
