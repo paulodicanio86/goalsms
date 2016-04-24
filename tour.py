@@ -7,7 +7,12 @@ from db_functions import *
 from sms import *
 from make_default_tables import get_table_columns
 
-welcome_text = 'Welcome to the tour: '
+welcome_text = "Welcome to the tour: "
+game_over_text = "Game is over"
+final_help_text = "This seems too difficult, you will receive the next question."
+help_1_int = 3
+help_2_int = 5
+next_stage_int = 7
 
 
 class Tour:
@@ -169,6 +174,9 @@ def proceed_to_next_stage(db, tour, sms):
         tour.save_to_db(db, sms.sender, dt_start_str, duration_int, score_int)
 
         # send message that it is over now.
+        reply_sms = Sms(content=game_over_text,
+                        receiver=sms.sender)
+        reply_sms.send()
 
         # Delete tour from active table
         delete_from_active_table(db, sms.sender, tour.tour_id)
@@ -191,13 +199,25 @@ def process_wrong_answer(db, tour, sms):
     help_1 = tour.get_help_1(db)
     help_2 = tour.get_help_2(db)
 
-    if attempt == 3 and help_1 != '':
-        # send help_1
+    if attempt == help_1_int and help_1 != '':
+        help_sms = Sms(content=help_1,
+                       receiver=sms.sender)
+        help_sms.send()
         print(help_1)
-    if attempt == 5 and help_2 != '':
-        # send help_2
+
+    if attempt == help_2_int and help_2 != '':
+        help_sms = Sms(content=help_2,
+                       receiver=sms.sender)
+        help_sms.send()
         print(help_2)
-    if attempt == 7:
+
+    if attempt >= next_stage_int:
         print('-------> new stage is moved onto automatically')
-        # send sms that the answer is wrong and will be moved to the next stage
+        # Send sms that the answer is wrong and the next stage will follow
+        help_sms = Sms(content=final_help_text,
+                       receiver=sms.sender)
+        help_sms.send()
+
         proceed_to_next_stage(db, tour, sms)
+
+    return None
