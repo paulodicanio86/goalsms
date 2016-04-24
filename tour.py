@@ -55,15 +55,22 @@ class Tour:
         # Add message to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
 
+    def get_tour_column(self, db, column_name):
+        df = get_tour_column(db, column_name, self.tour_id, self.current_stage)
+        result_str = str(df[column_name].values[0])
+        return result_str
+
     def get_question(self, db):
-        df = get_question(db, self.tour_id, self.current_stage)
-        question_str = str(df['question'].values[0])
-        return question_str
+        return self.get_tour_column(db, 'question')
 
     def get_answer(self, db):
-        df = get_answer(db, self.tour_id, self.current_stage)
-        question_str = str(df['answer'].values[0])
-        return question_str
+        return self.get_tour_column(db, 'answer')
+
+    def get_help_1(self, db):
+        return self.get_tour_column(db, 'help_1')
+
+    def get_help_2(self, db):
+        return self.get_tour_column(db, 'help_2')
 
     def get_all_stages(self):
         df = get_all_stages(self.tour_id)
@@ -71,33 +78,9 @@ class Tour:
 
 
 def follow_tour(db, sms):
-    # Check if sms is active and not a keyword
-    # If not then add to active table and send 1st message
+    # Check if sms is active. If not, start a tour
     if not sms.is_in_active_table(db):
-
-        # Is the sms triggering a start of a tour?
-        if sms.is_start_sms:
-            # Initiate tour, get stages and make active
-            tour = Tour(sms.tour_id, 0)
-            tour.get_total_stages(db)
-            tour.add_tour_to_active_table(db, sms.sender, sms.tour_id)
-
-            # Make a welcome sms and send
-            welcome_sms = Sms(content=welcome_text,
-                              receiver=sms.sender)
-            welcome_sms.send()
-            # Make a reply sms with the question and send
-            reply_sms = Sms(content=tour.get_question(db),
-                            receiver=sms.sender)
-            reply_sms.send()
-
-            print('-------> start message has been received')
-            return None
-        else:
-            # Do nothing in this case.
-            # Maybe reply a message to ask if he wanted to start the tour?
-            print('-------> A random message has been received')
-            return None
+        start_tour(db, sms)
 
     # Does the sms contain and trigger a keyword?
     if sms.is_keyword:
@@ -107,14 +90,12 @@ def follow_tour(db, sms):
         return None
 
     # The tour is active, the sms is not a keyword, hence it must be an answer.
-    # Make a tour object based on this sms
+    # Make a tour object based on this sms, get the total stages and current stage of the tour (from active table)
     tour = Tour(sms.tour_id)
-    # Get the total stages of the tour
     tour.get_total_stages(db)
-    # Get the current stage of the tour from the active table
     tour.get_stage_from_active_table(db, sms.sender)
 
-    # Let us check whether the answer is right
+    # Check whether the answer is right
     question = tour.get_question(db)
     right_answer = tour.get_answer(db)
     answer = sms.content
@@ -123,59 +104,100 @@ def follow_tour(db, sms):
 
     if right_answer.lower() == answer.lower():
         # A right answer has been received
-        print('correct answer')
-
-        # Reset the attempts counter
-        update_active_table(db, 'attempts', 0, sms.sender, tour.tour_id)
-
-        # If the tour is not at the end of the tour
-        if not tour.is_final_stage():
-            # Update tour stage and active table
-            new_stage = tour.current_stage + 1
-            tour.set_stage(new_stage)
-            update_active_table(db, 'stage_number', new_stage, sms.sender, tour.tour_id)
-
-            # Send the next question
-            reply_sms = Sms(content=tour.get_question(db),
-                            receiver=sms.sender)
-            reply_sms.send()
-            print('-------> a right answer has been received. new stage reached')
-
-        else:
-            # Calculate the duration of the game
-            df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
-
-            dt_start = pd.Timestamp(df['date_started'].values[0]).to_datetime()
-            dt_start_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt_start)
-            duration_int = int((datetime.now() - dt_start).total_seconds())
-
-            # Calculate the final score and save to database
-            score_int = int(df['score'].values[0])
-            tour.save_to_db(db, sms.sender, dt_start_str, duration_int, score_int)
-
-            # send message that it is over now.
-
-            # Delete tour from active table
-            delete_from_active_table(db, sms.sender, tour.tour_id)
-
-            print('-------> game successfully finished')
+        proceed_to_next_stage(db, tour, sms)
 
     else:
         # A wrong answer has been received
-        # Increase the number of attempts and score
-        df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
-        attempt = int(df['attempts'].values[0]) + 1
-        update_active_table(db, 'attempts', attempt, sms.sender, tour.tour_id)
-
-        score = int(df['score'].values[0]) + 1
-        update_active_table(db, 'score', score, sms.sender, tour.tour_id)
-
-        # if attempts score < 3 send a message that the answer is wrong
-        # if attempts score = 3 and hints exists, send a hint
-        # if attempts score = 3 and no hint exists, send message you failed.
-        #     then increase stage number in active table and send new question
-        # if attempts score > 3 send message you failed.
-        #     then increase stage number in active table and send new question
-        print('-------> a wrong answer has been received')
+        process_wrong_answer(db, tour, sms)
 
     return None
+
+
+def start_tour(db, sms):
+    # Is the sms triggering a start of a tour?
+    if sms.is_start_sms:
+        # Initiate tour, get stages and make active
+        tour = Tour(sms.tour_id, 0)
+        tour.get_total_stages(db)
+        tour.add_tour_to_active_table(db, sms.sender, sms.tour_id)
+
+        # Make a welcome sms and send
+        welcome_sms = Sms(content=welcome_text,
+                          receiver=sms.sender)
+        welcome_sms.send()
+        # Make a reply sms with the question and send
+        reply_sms = Sms(content=tour.get_question(db),
+                        receiver=sms.sender)
+        reply_sms.send()
+
+        print('-------> start message has been received')
+        return None
+    else:
+        # Do nothing in this case.
+        # Maybe reply a message to ask if he wanted to start the tour?
+        print('-------> A random message has been received')
+        return None
+
+
+def proceed_to_next_stage(db, tour, sms):
+    # Reset the attempts counter
+    update_active_table(db, 'attempts', 0, sms.sender, tour.tour_id)
+
+    # If the tour is not at the end of the tour
+    if not tour.is_final_stage():
+        # Update tour stage and active table
+        new_stage = tour.current_stage + 1
+        tour.set_stage(new_stage)
+        update_active_table(db, 'stage_number', new_stage, sms.sender, tour.tour_id)
+
+        # Send the next question
+        reply_sms = Sms(content=tour.get_question(db),
+                        receiver=sms.sender)
+        reply_sms.send()
+        print('-------> a right answer has been received. new stage reached')
+
+    else:
+        # Calculate the duration of the game
+        df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
+
+        dt_start = pd.Timestamp(df['date_started'].values[0]).to_datetime()
+        dt_start_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt_start)
+        duration_int = int((datetime.now() - dt_start).total_seconds())
+
+        # Calculate the final score and save to database
+        score_int = int(df['score'].values[0])
+        tour.save_to_db(db, sms.sender, dt_start_str, duration_int, score_int)
+
+        # send message that it is over now.
+
+        # Delete tour from active table
+        delete_from_active_table(db, sms.sender, tour.tour_id)
+
+        print('-------> game successfully finished')
+
+    return None
+
+
+def process_wrong_answer(db, tour, sms):
+    # Increase the number of attempts and score
+    df = get_tour_from_active_table(db, sms.sender, tour.tour_id)
+    attempt = int(df['attempts'].values[0]) + 1
+    update_active_table(db, 'attempts', attempt, sms.sender, tour.tour_id)
+
+    score = int(df['score'].values[0]) + 1
+    update_active_table(db, 'score', score, sms.sender, tour.tour_id)
+
+    print('-------> a wrong answer has been received')
+    help_1 = tour.get_help_1(db)
+    help_2 = tour.get_help_2(db)
+
+    if attempt == 3 and help_1 != '':
+        # send help_1
+        print(help_1)
+    if attempt == 5 and help_2 != '':
+        # send help_2
+        print(help_2)
+    if attempt == 7:
+        print('-------> new stage is moved onto automatically')
+        # send sms that the answer is wrong and will be moved to the next stage
+        proceed_to_next_stage(db, tour, sms)

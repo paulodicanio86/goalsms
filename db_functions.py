@@ -47,12 +47,15 @@ def get_all_stages(db, tour_id, table_name='tour'):
     return execute_statement(sql_query, db)
 
 
-# Query db to get a stage
-def get_question(db, tour_id, stage_number, table_name='tour'):
-    sql_query = '''SELECT question FROM {table_name} WHERE tour_id = {tour_id}
+# Query db to get column from a tour
+def get_tour_column(db, column_name, tour_id, stage_number, table_name='tour'):
+    sql_query = '''SELECT {column_name} FROM {table_name} WHERE tour_id = {tour_id}
                 AND stage_number = {stage_number};'''
 
-    sql_query = sql_query.format(table_name=table_name, tour_id=tour_id, stage_number=stage_number)
+    sql_query = sql_query.format(column_name=column_name,
+                                 table_name=table_name,
+                                 tour_id=tour_id,
+                                 stage_number=stage_number)
     return execute_statement(sql_query, db)
 
 

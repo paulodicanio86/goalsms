@@ -1,0 +1,17 @@
+{
+  "types": [
+    "VARCHAR(255)",
+    "INT",
+    "DATETIME",
+    "INT",
+    "INT"
+  ],
+  "name": "finished_tours",
+  "columns": [
+    "phone_number",
+    "tour_id",
+    "started",
+    "duration",
+    "score"
+  ]
+}
