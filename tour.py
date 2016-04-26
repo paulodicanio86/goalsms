@@ -7,12 +7,19 @@ from db_functions import *
 from sms import *
 from make_default_tables import get_table_columns
 
-welcome_text = "Welcome to the tour: "
-game_over_text = "Game is over"
-final_help_text = "This seems too difficult, you will receive the next question."
-help_1_int = 3
-help_2_int = 5
-next_stage_int = 7
+# Open sms content string file
+content_json_path = os.path.dirname(os.path.abspath(__file__))
+content_json_path = os.path.join(os.sep, content_json_path, 'content', 'sms_content.json')
+
+with open(content_json_path) as sms_content_file:
+    content = json.load(sms_content_file)
+
+welcome_text = content['welcome_text']  # "Welcome to the tour: "
+game_over_text = content['game_over_text']  # "Game is over"
+final_help_text = content['final_help_text']  # "This seems too difficult, you will receive the next question."
+help_1_int = content['help_1_int']  # 3
+help_2_int = content['help_2_int']  # 5
+next_stage_int = content['next_stage_int']  # 7
 
 
 class Tour:
@@ -86,6 +93,7 @@ def follow_tour(db, sms):
     # Check if sms is active. If not, start a tour
     if not sms.is_in_active_table(db):
         start_tour(db, sms)
+        return None
 
     # Does the sms contain and trigger a keyword?
     if sms.is_keyword:
@@ -136,12 +144,12 @@ def start_tour(db, sms):
         reply_sms.send()
 
         print('-------> start message has been received')
-        return None
+
     else:
         # Do nothing in this case.
         # Maybe reply a message to ask if he wanted to start the tour?
         print('-------> A random message has been received')
-        return None
+    return None
 
 
 def proceed_to_next_stage(db, tour, sms):
@@ -211,7 +219,7 @@ def process_wrong_answer(db, tour, sms):
         help_sms.send()
         print(help_2)
 
-    if attempt >= next_stage_int:
+    if (attempt >= next_stage_int) and (next_stage_int > 0):
         print('-------> new stage is moved onto automatically')
         # Send sms that the answer is wrong and the next stage will follow
         help_sms = Sms(content=final_help_text,
