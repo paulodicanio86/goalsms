@@ -1,17 +1,13 @@
-# import global functions
 import json
-import MySQLdb
 import os
-from flask import request
-import pandas as pd
 
-# import local functions
+import MySQLdb
+from flask import request
+
 from app import app
 
 from sms import Sms
-from tour import *
-from db_functions import *
-from string_functions import *
+from follow_tour import follow_tour
 
 # Open db connection strings
 db_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +40,7 @@ def hello():
     if not sms.is_valid:
         return ''
 
-    # Follow a tour
+    # Save sms and follow a tour
     sms.save_message_to_db(db, 'messages')
     follow_tour(db, sms)
 
@@ -56,6 +52,8 @@ def hello():
 
 @app.route('/show')
 def show_entries():
+    from db_functions import select_all
+
     # Establish database connection
     db = MySQLdb.connect(host=db_config['host'],
                          user=db_config['user'],

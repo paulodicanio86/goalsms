@@ -1,10 +1,12 @@
-import urllib  # URL functions
-import urllib2  # URL functions
+import urllib
+import urllib2
 import os
 import json
 from datetime import datetime
 
-from db_functions import *
+from string_functions import validate_content, validate_number
+from db_functions import (get_tour_from_active_table, insert_array_to_table,
+                          select_number_from_valid_table)
 from make_default_tables import get_table_columns
 
 # Open sms config string file

@@ -1,7 +1,9 @@
 import os
 import json
+
 from IPython import embed
-from db_functions import *
+
+from db_functions import make_table, insert_array_to_table
 from string_functions import encode_value
 
 
