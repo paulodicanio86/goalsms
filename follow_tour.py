@@ -68,7 +68,6 @@ def start_tour(db, sms):
         tour = Tour(sms.tour_id, 0)
         tour.get_total_stages(db)
         tour.add_tour_to_active_table(db, sms.sender, sms.tour_id)
-
         # Make a welcome sms and send
         welcome_sms = Sms(content=welcome_text,
                           receiver=sms.sender)
