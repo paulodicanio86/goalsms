@@ -2,7 +2,8 @@ from datetime import datetime
 
 from make_default_tables import get_table_columns
 from db_functions import (get_tour_from_active_table, get_maximum_stage_number,
-                          insert_array_to_table, get_tour_column, get_all_stages)
+                          get_tour_column, get_all_stages)
+from backend.db_functions import insert_array_to_table
 
 
 class Tour:

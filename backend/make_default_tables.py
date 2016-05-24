@@ -1,10 +1,7 @@
 import os
 import json
 
-from IPython import embed
-
-from db_functions import make_table, insert_array_to_table
-from string_functions import encode_value
+from db_functions import make_table, insert_array_to_table, encode_value
 
 
 def make_default_tables(db):

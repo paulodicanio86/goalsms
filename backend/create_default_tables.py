@@ -1,15 +1,12 @@
 import json
-from pprint import pprint
 import MySQLdb
 from IPython import embed
 
 from db_functions import *
-from string_functions import *
 from make_default_tables import *
 
 with open('db_connection.json') as data_file:
     data_config = json.load(data_file)
-pprint(data_config)
 
 db = MySQLdb.connect(host=data_config['host'],
                      user=data_config['user'],

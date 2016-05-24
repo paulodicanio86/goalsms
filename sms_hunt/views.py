@@ -4,10 +4,10 @@ import os
 import MySQLdb
 from flask import request
 
-from app import app
+from sms_hunt import app
 
 from sms import Sms
-from follow_tour import follow_tour
+from models import follow_tour
 
 # Open db connection strings
 db_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -22,8 +22,8 @@ def start():
     return 'Hello World!'
 
 
-@app.route('/sms', methods=['POST'])
-def hello():
+@app.route('/sms_tour', methods=['POST'])
+def sms_tour():
     # Get data from POST request, add to sms class and validate
     sms = Sms(request.form['content'], request.form['sender'])
     sms.validate_content()
@@ -51,7 +51,7 @@ def hello():
 
 
 @app.route('/show')
-def show_entries():
+def show_sms_entries():
     from db_functions import select_all
 
     # Establish database connection
