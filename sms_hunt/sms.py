@@ -4,11 +4,11 @@ import os
 import json
 from datetime import datetime
 
-from string_functions import validate_content, validate_number
-from db_functions import (get_tour_from_active_table,
-                          select_number_from_valid_table)
+from functions.string_functions import validate_content, validate_number
+from functions.db_functions import (get_tour_from_active_table,
+                                    select_number_from_valid_table)
 from backend.db_functions import insert_array_to_table
-from make_default_tables import get_table_columns
+from backend.make_default_tables import get_table_columns
 
 # Open sms config string file
 sms_json_path = os.path.dirname(os.path.abspath(__file__))

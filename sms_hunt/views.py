@@ -7,7 +7,7 @@ from flask import request
 from sms_hunt import app
 
 from sms import Sms
-from models import follow_tour
+from models_tour import follow_tour
 
 # Open db connection strings
 db_json_path = os.path.dirname(os.path.abspath(__file__))

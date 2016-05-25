@@ -6,8 +6,7 @@ import pandas as pd
 
 from sms import Sms
 from tour import Tour
-from db_functions import (get_tour_from_active_table, update_active_table, delete_from_active_table)
-
+from functions.db_functions import (get_tour_from_active_table, update_active_table, delete_from_active_table)
 
 # Open sms content string file
 content_json_path = os.path.dirname(os.path.abspath(__file__))
