@@ -20,7 +20,7 @@ delete_table('tour_name', db)
 delete_table('tour', db)
 delete_table('finished_tours', db)
 # default tables
-make_default_tables(db)
+make_default_tables_tour(db)
 embed()
 # delete_table('tour_name', db)
 # delete_table('tour', db)
