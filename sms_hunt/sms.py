@@ -12,7 +12,7 @@ from backend.make_default_tables import get_table_columns
 
 # Open sms config string file
 sms_json_path = os.path.dirname(os.path.abspath(__file__))
-sms_json_path = os.path.abspath(os.path.join(os.sep, sms_json_path, 'sms_config.json'))
+sms_json_path = os.path.abspath(os.path.join(os.sep, sms_json_path, os.pardir, 'sms_config.json'))
 
 with open(sms_json_path) as sms_config_file:
     sms_config = json.load(sms_config_file)

@@ -11,7 +11,7 @@ from models_tour import follow_tour
 
 # Open db connection strings
 db_json_path = os.path.dirname(os.path.abspath(__file__))
-db_json_path = os.path.abspath(os.path.join(os.sep, db_json_path, 'db_connection.json'))
+db_json_path = os.path.abspath(os.path.join(os.sep, db_json_path, os.pardir, 'db_connection.json'))
 
 with open(db_json_path) as db_connection_file:
     db_config = json.load(db_connection_file)
