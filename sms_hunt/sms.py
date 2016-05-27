@@ -30,7 +30,7 @@ start_keyword = sms_content['start_keyword']
 
 def send_sms(number, content, config):
     encoding = 'utf-8'
-    username = config['uname']
+    username = config['username']
     sender = config['sender']
     hash_code = config['hash']
     test_flag = config['test_flag']  # real messages have test_flag = 0
