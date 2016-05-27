@@ -33,9 +33,11 @@ resp =  getInboxes(data_config['uname'], data_config['hash'])
 
 resp2 =  getMessages(data_config['uname'], data_config['hash'], '9')
 resp3 =  getMessages(data_config['uname'], data_config['hash'], '10')
+resp4 =  getMessages(data_config['uname'], data_config['hash'], '988087')
 
 
 print (resp)
 print (resp2)
 print (resp3)
+print (resp4)
 

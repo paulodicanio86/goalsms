@@ -12,6 +12,6 @@ with open('sms_config.json') as data_file:
 # Multiple numbers can be specified if required
 # e.g. numbers = ('447xxx123456','447xxx654321')
 number = ('447776031697')
-content = 'hey test 1234!'
+content = 'hey test 1234 afasda!'
 
 send_sms(number, content, data_config)
