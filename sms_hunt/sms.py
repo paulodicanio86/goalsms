@@ -37,21 +37,22 @@ def send_sms(number, content, config):
     url = config['url_send']
 
     values = {'test': test_flag,
-              'uname': username,
+              'username': username,
               'hash': hash_code,
               'message': content,
               'from': sender,
-              'selectednums': number}
+              'numbers': number}
 
     post_data = urllib.urlencode(values)
-    request = urllib2.Request(url, post_data)
+    post_data = post_data.encode(encoding)
+    request = urllib2.Request(url)
 
     # print 'Attempt to send SMS ...'
     try:
-        response = urllib2.urlopen(request)
-        response_url = response.geturl()
-        if response_url == url:
-            print 'SMS sent!'
+        f = urllib2.urlopen(request, post_data)
+        fr = f.read()
+        # print 'SMS sent!'
+
     except urllib2.URLError, error:
         # print 'Send failed!'
         print error.reason
