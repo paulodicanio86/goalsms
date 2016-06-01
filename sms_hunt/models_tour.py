@@ -1,19 +1,11 @@
-import os
-import json
 from datetime import datetime
 
 import pandas as pd
 
+from sms_hunt import sms_content
 from sms import Sms
 from tour import Tour
 from functions.db_functions import (get_tour_from_active_table, update_active_table, delete_from_active_table)
-
-# Open sms content string file
-content_json_path = os.path.dirname(os.path.abspath(__file__))
-content_json_path = os.path.join(os.sep, content_json_path, 'content', 'sms_content.json')
-
-with open(content_json_path) as sms_content_file:
-    sms_content = json.load(sms_content_file)
 
 welcome_text = sms_content['welcome_text']
 game_over_text = sms_content['game_over_text']

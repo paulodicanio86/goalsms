@@ -1,28 +1,14 @@
 import urllib
 import urllib2
-import os
-import json
 from datetime import datetime
+
+from sms_hunt import sms_config, sms_content
 
 from functions.string_functions import validate_content, validate_number
 from functions.db_functions import (get_tour_from_active_table,
                                     select_number_from_valid_table)
 from backend.db_functions import insert_array_to_table
 from backend.make_default_tables import get_table_columns
-
-# Open sms config string file
-sms_json_path = os.path.dirname(os.path.abspath(__file__))
-sms_json_path = os.path.abspath(os.path.join(os.sep, sms_json_path, os.pardir, 'sms_config.json'))
-
-with open(sms_json_path) as sms_config_file:
-    sms_config = json.load(sms_config_file)
-
-# Open sms content string file
-content_json_path = os.path.dirname(os.path.abspath(__file__))
-content_json_path = os.path.join(os.sep, content_json_path, 'content', 'sms_content.json')
-
-with open(content_json_path) as sms_content_file:
-    sms_content = json.load(sms_content_file)
 
 keywords = sms_content['keywords']
 start_keyword = sms_content['start_keyword']

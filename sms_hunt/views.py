@@ -1,27 +1,56 @@
-import json
-import os
-
 import MySQLdb
-from flask import request
+import os
+from flask import request, send_from_directory, render_template, url_for
+# import stripe
 
-from sms_hunt import app
+from sms_hunt import app, db_config  # , stripe_keys
 
 from sms import Sms
 from models_tour import follow_tour
 
-# Open db connection strings
-db_json_path = os.path.dirname(os.path.abspath(__file__))
-db_json_path = os.path.abspath(os.path.join(os.sep, db_json_path, os.pardir, 'db_connection.json'))
 
-with open(db_json_path) as db_connection_file:
-    db_config = json.load(db_connection_file)
+# stripe.api_key = stripe_keys['secret_key']
 
 
+#######################################
+# / start page
+#######################################
 @app.route('/')
 def start():
-    return 'Hello World!'
+    return render_template('layout.html',
+                           title='Match SMS',
+                           company='Football SMS',
+                           year='2016'
+                           )
 
 
+#######################################
+# /about
+#######################################
+@app.route('/about/')
+def about():
+    return render_template('about.html',
+                           title='Match SMS',
+                           company='company',
+                           year='2016'
+                           )
+
+
+#######################################
+# /contact
+#######################################
+@app.route('/contact/')
+def contact():
+    return render_template('contact.html',
+                           title='Match SMS',
+                           company='company',
+                           year='2016'
+                           )
+
+
+#######################################
+# /sms_tour POST
+#######################################
 @app.route('/sms_tour', methods=['POST'])
 def sms_tour():
     # Get data from POST request, add to sms class and validate
@@ -49,10 +78,12 @@ def sms_tour():
     db.close()
     return ''
 
-
+#######################################
+# Not really needed....
+#######################################
 @app.route('/show')
 def show_sms_entries():
-    from db_functions import select_all
+    from backend.db_functions import select_all
 
     # Establish database connection
     db = MySQLdb.connect(host=db_config['host'],
@@ -66,3 +97,24 @@ def show_sms_entries():
     db.close()
 
     return str(df)
+
+
+#######################################
+# Error 404
+#######################################
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html',
+                           title='Match SMS',
+                           company='Football SMS',
+                           year='2016'), 404
+
+
+#######################################
+# Favicon (also done in layout.html)
+#######################################
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'ico/favicon.ico',
+                               mimetype='image/vnd.microsoft.icon')
