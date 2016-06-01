@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 
 import pandas as pd
 
@@ -63,6 +64,9 @@ def start_tour(db, sms):
         welcome_sms = Sms(content=welcome_text,
                           receiver=sms.sender)
         welcome_sms.send()
+
+        time.sleep(5)
+
         # Make a reply sms with the question and send
         reply_sms = Sms(content=tour.get_question(db),
                         receiver=sms.sender)

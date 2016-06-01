@@ -17,7 +17,7 @@ from models_tour import follow_tour
 #######################################
 @app.route('/')
 def start():
-    return render_template('layout.html',
+    return render_template('start.html',
                            title='Match SMS',
                            company='Football SMS',
                            year='2016'
