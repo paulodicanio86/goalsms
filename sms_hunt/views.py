@@ -1,15 +1,17 @@
 import MySQLdb
 import os
 from flask import request, send_from_directory, render_template, url_for
-# import stripe
+import stripe
 
-from sms_hunt import app, db_config  # , stripe_keys
+from sms_hunt import app, db_config, key_config, meta_data
 
 from sms import Sms
 from models_tour import follow_tour
 
-
-# stripe.api_key = stripe_keys['secret_key']
+stripe.api_key = key_config['stripe_secret_key']
+company = meta_data['company']
+year = meta_data['year']
+title = meta_data['title']
 
 
 #######################################
@@ -18,9 +20,9 @@ from models_tour import follow_tour
 @app.route('/')
 def start():
     return render_template('start.html',
-                           title='Match SMS',
-                           company='Football SMS',
-                           year='2016'
+                           title=title,
+                           company=company,
+                           year=year
                            )
 
 
@@ -30,9 +32,9 @@ def start():
 @app.route('/about/')
 def about():
     return render_template('about.html',
-                           title='Match SMS',
-                           company='company',
-                           year='2016'
+                           title=title,
+                           company=company,
+                           year=year
                            )
 
 
@@ -42,9 +44,9 @@ def about():
 @app.route('/contact/')
 def contact():
     return render_template('contact.html',
-                           title='Match SMS',
-                           company='company',
-                           year='2016'
+                           title=title,
+                           company=company,
+                           year=year
                            )
 
 
@@ -78,6 +80,7 @@ def sms_tour():
     db.close()
     return ''
 
+
 #######################################
 # Not really needed....
 #######################################
@@ -105,9 +108,9 @@ def show_sms_entries():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html',
-                           title='Match SMS',
-                           company='Football SMS',
-                           year='2016'), 404
+                           title=title,
+                           company=company,
+                           year=year), 404
 
 
 #######################################
