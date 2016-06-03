@@ -82,7 +82,7 @@ def sms_tour():
 
 
 #######################################
-# Not really needed....
+# For control purposes
 #######################################
 @app.route('/show')
 def show_sms_entries():

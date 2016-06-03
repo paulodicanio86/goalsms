@@ -13,15 +13,14 @@ db = MySQLdb.connect(host=data_config['host'],
                      passwd=data_config['password'],
                      db=data_config['database'])
 
-delete_table('messages', db)
-delete_table('valid', db)
-delete_table('active', db)
-delete_table('tour_name', db)
-delete_table('tour', db)
-delete_table('finished_tours', db)
-# default tables
-make_default_tables_tour(db)
-embed()
+# delete_table('messages', db)
+# delete_table('valid', db)
+# delete_table('active', db)
+# delete_table('tour_name', db)
+# delete_table('tour', db)
+# delete_table('finished_tours', db)
+# make_default_tables_tour(db)
+# embed()
 # delete_table('tour_name', db)
 # delete_table('tour', db)
 # delete_table('dummy', db)
@@ -29,6 +28,8 @@ embed()
 # delete_table('active', db)
 # embed()
 
+# delete_table('eurosms', db)
+# make_default_tables_eurosms(db)
 
 db.commit()
 db.close()

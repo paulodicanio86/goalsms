@@ -4,6 +4,10 @@ import json
 from db_functions import make_table, insert_array_to_table, encode_value
 
 
+def make_default_tables_eurosms(db):
+    make_default_table(db, 'tables/eurosms.json')
+
+
 def make_default_tables_tour(db):
     make_default_table(db, 'tables/valid_table.json')
     make_default_table(db, 'tables/tour_name_table.json')
