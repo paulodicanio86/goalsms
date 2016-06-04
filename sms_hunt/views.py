@@ -1,36 +1,83 @@
 import MySQLdb
 import os
-from flask import request, send_from_directory, render_template, url_for
+from flask import request, send_from_directory, render_template, url_for, redirect
 import stripe
 
 from sms_hunt import app, db_config, key_config, meta_data
 
 from sms import Sms
 from models_tour import follow_tour
+from functions.validation_functions import convert_entries, validate_entries
 
 stripe.api_key = key_config['stripe_secret_key']
+key = key_config['stripe_publishable_key']
 company = meta_data['company']
 year = meta_data['year']
 title = meta_data['title']
+
+variable_names = ['team', 'phone_number', 'email']
+country_code = '44'
 
 
 #######################################
 # / start page
 #######################################
 default_dic = {'valid': True,
-               'value': '',
-               'read_only': False
+               'value': ''
                }
 
+payment = {'amount_pence': 300,
+           'amount': 3.00,
+           'currency': 'gbp',
+           'currency_html': '&pound;'
+           }
+
+
 @app.route('/')
-def start():
+def start(team_dic=default_dic, phone_number_dic=default_dic, email_dic=default_dic):
     return render_template('start.html',
                            title=title,
                            company=company,
                            year=year,
-                           phone_number=default_dic,
-                           email=default_dic
+                           phone_number=phone_number_dic,
+                           email=email_dic,
+                           payment=payment,
+                           key=key
                            )
+
+
+#######################################
+# /verify
+#######################################
+@app.route('/verify', methods=['GET'])
+def verify_get():
+    return redirect(url_for('start'))
+
+
+@app.route('/verify', methods=['POST'])
+def verify_post():
+    # get the values from the post
+
+    values_dic = {}
+    valid_dic = {}
+
+    # fill, convert and validate entries
+    for entry in variable_names:
+        values_dic[entry] = request.form[entry]
+        values_dic[entry] = convert_entries(entry, values_dic[entry], country_code)
+        valid_dic[entry] = validate_entries(entry, values_dic[entry])
+
+    # reload if non-validated entries exist
+    if False in valid_dic.values():
+        false_values_dic = {}
+        for entry in variable_names:
+            false_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
+                                       'value': values_dic[entry]
+                                       }
+        return start(**false_values_dic)
+    else:
+        return str(values_dic)
+        #    return charge(payment=values, add_fee=get_boolean(request.form['add_fee']))
 
 
 #######################################
