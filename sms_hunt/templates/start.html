@@ -1,10 +1,64 @@
 {% extends "layout.html" %}
 {% block title %} - Welcome{% endblock %}
 {% block content %}
-    <div class="starter-template">
-        <h1>Pick your side!</h1>
+<div class="starter-template">
+    <h1>Pick your side!</h1>
 
-        <p class="lead">Receive goal alerts and match stats for all England, Wales and Northern Ireland Matches!<br>
-            Compatible with any phone.</p>
+    <p class="lead">Receive goal alerts and match stats for all England, Wales and Northern Ireland Matches!<br>
+        Compatible with any phone.</p>
+
+    <div class="details row">
+        <div class="col-md-5">
+        </div>
+
+        <div class="col-md-2">
+        <form class="form-horizontal" role="form" action="/verify" method="post">
+
+            <div class="phone_number row">
+                <div class="col-md-12 input-group">
+                    <select class="form-control">
+                        <option>England</option>
+                        <option>Northern Ireland</option>
+                        <option>Wales</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="phone_number row">
+                {% if phone_number.valid==True %}
+                <div class="form-group">
+                {% elif phone_number.valid==False %}
+                <div class="form-group has-error">
+                {% endif %}
+                    <div class="col-md-12 input-group">
+                        <input type="tel" class="form-control" id="phone_number_id"
+                               name="phone_number" placeholder="mobile number"
+                               value="{{ phone_number.value }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="email row">
+                {% if email.valid==True %}
+                <div class="form-group">
+                {% elif email.valid==False %}
+                <div class="form-group has-error">
+                {% endif %}
+                    <div class="col-md-12 input-group">
+                        <input type="email" class="form-control" id="email_id"
+                               name="email" placeholder="email"
+                               value="{{ email.value }}">
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+        </div>
+
+        <div class="col-md-5">
+        </div>
     </div>
+
+</div>
 {% endblock %}

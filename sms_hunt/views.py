@@ -17,12 +17,19 @@ title = meta_data['title']
 #######################################
 # / start page
 #######################################
+default_dic = {'valid': True,
+               'value': '',
+               'read_only': False
+               }
+
 @app.route('/')
 def start():
     return render_template('start.html',
                            title=title,
                            company=company,
-                           year=year
+                           year=year,
+                           phone_number=default_dic,
+                           email=default_dic
                            )
 
 
