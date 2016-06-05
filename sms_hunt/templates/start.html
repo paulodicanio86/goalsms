@@ -17,9 +17,9 @@
             <div class="team row">
                 <div class="col-md-12 input-group">
                     <select class="form-control" name="team" id="team_id">
-                        <option>England</option>
-                        <option>Northern Ireland</option>
-                        <option>Wales</option>
+                        {% for name in teams %}
+                        <option {% if name==team.value %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>

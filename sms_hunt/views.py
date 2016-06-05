@@ -17,7 +17,9 @@ title = meta_data['title']
 
 variable_names = ['team', 'phone_number', 'email']
 country_code = '44'
-
+teams = ['England', 'Northern Ireland', 'Wales']
+currency_html = '&pound;'
+currency = 'gbp'
 
 #######################################
 # / start page
@@ -28,8 +30,8 @@ default_dic = {'valid': True,
 
 payment = {'amount_pence': 300,
            'amount': 3.00,
-           'currency': 'gbp',
-           'currency_html': '&pound;'
+           'currency': currency,
+           'currency_html': currency_html
            }
 
 
@@ -39,10 +41,12 @@ def start(team_dic=default_dic, phone_number_dic=default_dic, email_dic=default_
                            title=title,
                            company=company,
                            year=year,
-                           phone_number=phone_number_dic,
-                           email=email_dic,
                            payment=payment,
-                           key=key
+                           key=key,
+                           teams=teams,
+                           team=team_dic,
+                           phone_number=phone_number_dic,
+                           email=email_dic
                            )
 
 
@@ -72,8 +76,8 @@ def verify_post():
         false_values_dic = {}
         for entry in variable_names:
             false_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
-                                       'value': values_dic[entry]
-                                       }
+                                                'value': values_dic[entry]
+                                                }
         return start(**false_values_dic)
     else:
         return str(values_dic)
