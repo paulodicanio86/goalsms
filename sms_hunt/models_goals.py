@@ -8,7 +8,7 @@ from backend.db_functions import insert_array_to_table, get_table_columns
 
 stripe.api_key = key_config['stripe_secret_key']
 table_name = 'eurosms'
-sign_up_sms_text = '{name}, you have successfully signed up for score updates from {team}'
+sign_up_sms_text = '{name}, you have successfully signed up for goal updates from {team}!'
 
 
 def add_data_and_send_sms(db, values_dic, name):
@@ -30,7 +30,6 @@ def add_data_and_send_sms(db, values_dic, name):
     sign_up_sms = Sms(content=sign_up_sms_text.format(name=name, team=str(values_dic['team'])),
                       receiver=str(values_dic['phone_number']))
     sign_up_sms.send()
-
     return None
 
 

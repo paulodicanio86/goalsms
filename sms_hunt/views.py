@@ -89,20 +89,20 @@ def verify_post():
     #    return redirect(url_for('failure'))
 
     # Establish database connection
-    # db = MySQLdb.connect(host=db_config['host'],
-    #                     user=db_config['user'],
-    #                     passwd=db_config['password'],
-    #                     db=db_config['database'])
+    db = MySQLdb.connect(host=db_config['host'],
+                         user=db_config['user'],
+                         passwd=db_config['password'],
+                         db=db_config['database'])
 
-    # add_data_and_send_sms(db, values_dic, name)
+    add_data_and_send_sms(db, values_dic, name)
 
     # Commit and close database connection
-    # db.commit()
-    # db.close()
+    db.commit()
+    db.close()
 
     # go to success page
-    return str(values_dic)
-    # return redirect(url_for('success'))
+    print(str(values_dic))
+    return redirect(url_for('success'))
 
 
 #######################################

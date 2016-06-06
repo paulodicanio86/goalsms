@@ -28,8 +28,8 @@ db = MySQLdb.connect(host=data_config['host'],
 # delete_table('active', db)
 # embed()
 
-delete_table('eurosms', db)
-make_default_tables_eurosms(db)
+# delete_table('eurosms', db)
+# make_default_tables_eurosms(db)
 
 db.commit()
 db.close()
