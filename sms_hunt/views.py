@@ -26,8 +26,8 @@ default_dic = {'valid': True,
                'value': ''
                }
 
-payment = {'amount_pence': 300,
-           'amount': 3.00,
+payment = {'amount_pence': 299,
+           'amount': 2.99,
            'currency': currency,
            'currency_html': currency_html
            }
@@ -137,7 +137,8 @@ def about():
     return render_template('about.html',
                            title=title,
                            company=company,
-                           year=year
+                           year=year,
+                           payment=payment
                            )
 
 

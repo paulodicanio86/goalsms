@@ -4,7 +4,10 @@
 <div class="starter-template">
     <h1>About</h1>
 
-    <p class="lead">No app, no hidden charges, this website will keep you updated during the Euros.<br>Pass on the word!
+    <p class="lead">No app, no hidden charges, this website will keep you updated during the Euros.<br>
+        For just {{ payment.currency_html|safe }}{{ payment.amount }}
+        you will receive instant goal updates. Whenever your team or the opponent scores you will get a sms,
+        as well as at the beginning and end of any match your team plays. All the way until the end of the Euros.
     </p>
 </div>
 {% endblock %}
