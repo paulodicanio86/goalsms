@@ -26,7 +26,7 @@ default_dic = {'valid': True,
                'value': ''
                }
 
-payment = {'amount_pence': 299,
+payment = {'amount_integer': 299,
            'amount': 2.99,
            'currency': currency,
            'currency_html': currency_html
@@ -84,8 +84,11 @@ def verify_post():
 
     # Take card payment
     name = 'Hans Dieter'
-    #charge_successful, name = charge_stripe()
-    #if not charge_successful:
+    #charge_successful, name = charge_stripe(payment=payment,
+    #                                        stripe_email=request.form['stripeEmail'],
+    #                                        stripe_token=request.form['stripeToken'],
+    #                                        phone_number=values_dic['phone_number'])
+    # if not charge_successful:
     #    return redirect(url_for('failure'))
 
     # Establish database connection
@@ -124,7 +127,8 @@ def failure():
     return render_template('failure.html',
                            title=title,
                            company=company,
-                           year=year
+                           year=year,
+
                            )
 
 

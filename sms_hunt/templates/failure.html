@@ -4,6 +4,22 @@
 <div class="starter-template">
     <h1>Failure</h1>
 
-    <p class="lead">Unfortunately something with you card payment went wrong.<br>Please try again.</p>
+    <div class="text row">
+        <div class="col-md-12 col-xs-12">
+            <p class="lead">Unfortunately something with you card payment went wrong.</p>
+        </div>
+    </div>
+
+    <div class="button_back row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-2 col-xs-12">
+            <a href="{{ url_for('start') }}"
+               class="btn btn-success btn-block" role="button">Try again</a>
+        </div>
+        <div class="col-md-5">
+        </div>
+    </div>
+
 </div>
 {% endblock %}

@@ -60,13 +60,13 @@
             <ul class="nav navbar-nav">
                 <li
                         {% if request.path==
-                "/" %} class="active"{% endif %}><a href="/">Home</a></li>
+                "/" %} class="active"{% endif %}><a href="{{ url_for('start') }}">Home</a></li>
                 <li
                         {% if request.path==
-                "/about/" %} class="active"{% endif %}><a href="/about/">About</a></li>
+                "/about/" %} class="active"{% endif %}><a href="{{ url_for('about') }}">About</a></li>
                 <li
                         {% if request.path==
-                "/contact/" %} class="active"{% endif %}><a href="/contact/">Contact</a></li>
+                "/contact/" %} class="active"{% endif %}><a href="{{ url_for('contact') }}">Contact</a></li>
             </ul>
         </div>
         <!--/.nav-collapse -->
