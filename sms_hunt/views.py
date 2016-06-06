@@ -84,8 +84,8 @@ def verify_post():
 
     # Take card payment
     name = 'Hans Dieter'
-    # charge_successful, name = charge_stripe()
-    # if not charge_successful:
+    #charge_successful, name = charge_stripe()
+    #if not charge_successful:
     #    return redirect(url_for('failure'))
 
     # Establish database connection
@@ -101,7 +101,6 @@ def verify_post():
     db.close()
 
     # go to success page
-    print(str(values_dic))
     return redirect(url_for('success'))
 
 
