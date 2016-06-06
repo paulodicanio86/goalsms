@@ -1,29 +1,27 @@
 import MySQLdb
 import os
 from flask import request, send_from_directory, render_template, url_for, redirect
-import stripe
 
 from sms_hunt import app, db_config, key_config, meta_data
 
 from sms import Sms
 from models_tour import follow_tour
+from models_goals import add_data_and_send_sms, charge_stripe
 from functions.validation_functions import convert_entries, validate_entries
 
-stripe.api_key = key_config['stripe_secret_key']
 key = key_config['stripe_publishable_key']
+
 company = meta_data['company']
 year = meta_data['year']
 title = meta_data['title']
+teams = meta_data['teams']
 
+# more configuration settings
 variable_names = ['team', 'phone_number', 'email']
 country_code = '44'
-teams = ['England', 'Northern Ireland', 'Wales']
 currency_html = '&pound;'
 currency = 'gbp'
 
-#######################################
-# / start page
-#######################################
 default_dic = {'valid': True,
                'value': ''
                }
@@ -35,8 +33,13 @@ payment = {'amount_pence': 300,
            }
 
 
+#######################################
+# / start page
+#######################################
 @app.route('/')
-def start(team_dic=default_dic, phone_number_dic=default_dic, email_dic=default_dic):
+def start(team_dic=default_dic,
+          phone_number_dic=default_dic,
+          email_dic=default_dic):
     return render_template('start.html',
                            title=title,
                            company=company,
@@ -76,12 +79,54 @@ def verify_post():
         false_values_dic = {}
         for entry in variable_names:
             false_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
-                                                'value': values_dic[entry]
-                                                }
+                                                'value': values_dic[entry]}
         return start(**false_values_dic)
-    else:
-        return str(values_dic)
-        #    return charge(payment=values, add_fee=get_boolean(request.form['add_fee']))
+
+    # Take card payment
+    name = 'Hans Dieter'
+    # charge_successful, name = charge_stripe()
+    # if not charge_successful:
+    #    return redirect(url_for('failure'))
+
+    # Establish database connection
+    # db = MySQLdb.connect(host=db_config['host'],
+    #                     user=db_config['user'],
+    #                     passwd=db_config['password'],
+    #                     db=db_config['database'])
+
+    # add_data_and_send_sms(db, values_dic, name)
+
+    # Commit and close database connection
+    # db.commit()
+    # db.close()
+
+    # go to success page
+    return str(values_dic)
+    # return redirect(url_for('success'))
+
+
+#######################################
+# /success
+#######################################
+@app.route('/success/')
+def success():
+    return render_template('success.html',
+                           title=title,
+                           company=company,
+                           year=year
+                           )
+
+
+#######################################
+# /failure
+#######################################
+@app.route('/failure/')
+def failure():
+    return render_template('failure.html',
+                           title=title,
+                           company=company,
+                           year=year
+                           )
 
 
 #######################################

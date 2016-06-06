@@ -51,13 +51,4 @@ def make_default_table(db, file_name):
         insert_array_to_table(name, db, columns, rows)
 
 
-def get_table_columns(file_name):
-    # Open json file
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.abspath(os.path.join(os.sep, file_path, file_name))
 
-    with open(file_path, 'r') as fp:
-        table_dic = json.load(fp)
-
-    # Return columns
-    return [x.encode('UTF8') for x in table_dic['columns']]

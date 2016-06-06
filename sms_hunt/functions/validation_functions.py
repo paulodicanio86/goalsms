@@ -1,5 +1,9 @@
 import string
+
+from sms_hunt import meta_data
 from string_functions import validate_number, is_integer_string, matches_reg_ex
+
+teams = meta_data['teams']
 
 
 def convert_white_space_in_link(input_string):
@@ -14,7 +18,7 @@ def valid_email(email):
     reg_ex = '[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}'
     if (isinstance(email, basestring)
         and len(email) == 0):
-        return True
+        return False
     else:
         return matches_reg_ex(email, reg_ex)
 
@@ -28,7 +32,7 @@ def valid_phone_number(account_number):
 
 
 def valid_team(team):
-    if team in ['England', 'Northern Ireland', 'Wales']:
+    if team in teams:
         return True
     else:
         return False

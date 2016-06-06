@@ -7,8 +7,7 @@ from sms_hunt import sms_config, sms_content
 from functions.string_functions import validate_content, validate_number
 from functions.db_functions import (get_tour_from_active_table,
                                     select_number_from_valid_table)
-from backend.db_functions import insert_array_to_table
-from backend.make_default_tables import get_table_columns
+from backend.db_functions import insert_array_to_table, get_table_columns
 
 keywords = sms_content['keywords']
 start_keyword = sms_content['start_keyword']

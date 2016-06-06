@@ -3,21 +3,24 @@
     "VARCHAR(255)",
     "VARCHAR(255)",
     "DATETIME",
+    "VARCHAR(255)",
     "VARCHAR(255)"
   ],
   "name": "eurosms",
   "columns": [
     "phone_number",
     "email",
-    "added",
-    "team"
+    "date",
+    "team",
+    "name"
   ],
   "default_rows": [
     [
       "447776031698",
       "paul.schaack@gmail.com",
       "2016-06-03 08:00:12",
-      "England"
+      "England",
+      "Paul Schaack"
     ]
   ]
 }
