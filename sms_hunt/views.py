@@ -7,14 +7,18 @@ from sms_hunt import app, db_config, key_config, meta_data
 from sms import Sms
 from models_tour import follow_tour
 from models_goals import add_data_and_send_sms, charge_stripe
-from functions.validation_functions import convert_entries, validate_entries
 
 key = key_config['stripe_publishable_key']
 
 company = meta_data['company']
 year = meta_data['year']
 title = meta_data['title']
-teams = meta_data['teams']
+teams = meta_data['national_teams'].values()
+teams.sort()
+teams_dic = meta_data['club_teams']
+
+# this need to be here because teams is imported in validation_functions
+from functions.validation_functions import convert_entries, validate_entries
 
 # more configuration settings
 variable_names = ['team', 'phone_number', 'name']
@@ -48,6 +52,30 @@ def start(team_dic=default_dic,
                            key=key,
                            teams=teams,
                            team=team_dic,
+                           phone_number=phone_number_dic,
+                           name=name_dic
+                           )
+
+
+#######################################
+# / start page
+#######################################
+@app.route('/team/<team_value>/')
+def single_team(team_value,
+                phone_number_dic=default_dic,
+                name_dic=default_dic):
+    team_value = team_value.lower()
+    if team_value not in teams_dic.keys():
+        return redirect(url_for('page_not_found_manual'))
+
+    return render_template('team.html',
+                           title=title,
+                           company=company,
+                           year=year,
+                           payment=payment,
+                           key=key,
+                           team=str(teams_dic[team_value]),
+                           team_value=team_value,
                            phone_number=phone_number_dic,
                            name=name_dic
                            )
@@ -214,6 +242,14 @@ def show_sms_entries():
 #######################################
 # Error 404
 #######################################
+@app.route('/404')
+def page_not_found_manual():
+    return render_template('404.html',
+                           title=title,
+                           company=company,
+                           year=year)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html',

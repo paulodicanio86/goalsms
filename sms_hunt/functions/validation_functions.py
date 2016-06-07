@@ -1,9 +1,7 @@
 import string
 
-from sms_hunt import meta_data
 from string_functions import validate_number, convert_special_characters, is_integer_string, matches_reg_ex
-
-teams = meta_data['teams']
+from sms_hunt.views import teams
 
 
 def convert_white_space_in_link(input_string):
