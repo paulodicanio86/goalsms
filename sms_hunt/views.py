@@ -17,7 +17,7 @@ title = meta_data['title']
 teams = meta_data['teams']
 
 # more configuration settings
-variable_names = ['team', 'phone_number', 'email']
+variable_names = ['team', 'phone_number', 'name']
 country_code = '44'
 currency_html = '&pound;'
 currency = 'gbp'
@@ -39,7 +39,7 @@ payment = {'amount_integer': 299,
 @app.route('/')
 def start(team_dic=default_dic,
           phone_number_dic=default_dic,
-          email_dic=default_dic):
+          name_dic=default_dic):
     return render_template('start.html',
                            title=title,
                            company=company,
@@ -49,7 +49,7 @@ def start(team_dic=default_dic,
                            teams=teams,
                            team=team_dic,
                            phone_number=phone_number_dic,
-                           email=email_dic
+                           name=name_dic
                            )
 
 
@@ -64,7 +64,6 @@ def verify_get():
 @app.route('/verify', methods=['POST'])
 def verify_post():
     # get the values from the post
-
     values_dic = {}
     valid_dic = {}
 
@@ -83,13 +82,16 @@ def verify_post():
         return start(**false_values_dic)
 
     # Take card payment
-    name = 'Hans Dieter'
-    #charge_successful, name = charge_stripe(payment=payment,
-    #                                        stripe_email=request.form['stripeEmail'],
-    #                                        stripe_token=request.form['stripeToken'],
-    #                                        phone_number=values_dic['phone_number'])
-    # if not charge_successful:
-    #    return redirect(url_for('failure'))
+    stripe_token = request.form['stripeToken']
+    email = request.form['stripeEmail']
+    phone_number = values_dic['phone_number']
+
+    charge_successful = charge_stripe(payment=payment,
+                                      email=email,
+                                      stripe_token=stripe_token,
+                                      phone_number=phone_number)
+    if not charge_successful:
+        return redirect(url_for('failure'))
 
     # Establish database connection
     db = MySQLdb.connect(host=db_config['host'],
@@ -97,7 +99,7 @@ def verify_post():
                          passwd=db_config['password'],
                          db=db_config['database'])
 
-    add_data_and_send_sms(db, values_dic, name)
+    add_data_and_send_sms(db, values_dic, email)
 
     # Commit and close database connection
     db.commit()

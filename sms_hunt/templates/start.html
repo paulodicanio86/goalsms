@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-md-2 col-xs-8">
-        <form class="form-horizontal" role="form" action="/verify" method="post">
+        <form class="form-horizontal" id="chargeForm" role="form" action="/verify" method="post">
 
             <div class="team row">
                 <div class="col-md-12 col-xs-12 input-group">
@@ -44,66 +44,61 @@
                 </div>
             </div>
 
-            <div class="email row">
-                {% if email.valid==True %}
+            <div class="name row">
+                {% if name.valid==True %}
                 <div class="form-group">
-                {% elif email.valid==False %}
+                {% elif name.valid==False %}
                 <div class="form-group has-error">
                 {% endif %}
                     <div class="col-md-12 col-xs-12 input-group">
-                        <input type="email" class="form-control" id="email_id"
-                               name="email" placeholder="email"
-                               value="{{ email.value }}">
+                        <input class="form-control" id="name_id"
+                               name="name" placeholder="name"
+                               value="{{ name.value }}">
                     </div>
                 </div>
             </div>
-
-            <div class="button row">
-	            <div class="form-group">
-                    <div class="col-md-12 col-xs-12">
-	                    <button type="submit" class="btn btn-success btn-block">Verify
-                            </button>
-                    </div>
-                </div>
-	        </div>
 
             <div class="button_stripe row">
                 <div class="form-group stripe_button row">
                     <div class="col-md-12 col-xs-12">
 
-                        <script src="https://checkout.stripe.com/checkout.js"></script>
+
+                        <script src="https://checkout.stripe.com/checkout.js"></script>  
 
                         <input type="hidden" name="stripeToken" id="stripeToken"/>
                         <input type="hidden" name="stripeEmail" id="stripeEmail"/>
 
-                        <button id="CustomStripeButton" class="btn btn-success btn-block">
-                            Pay {{ payment.currency_html|safe }}{{ payment.amount }}
-                        </button>
+                        <button id="CustomStripeButton" class="btn btn-success btn-block"> 
+                            Pay {{ payment.currency_html|safe }}{{ payment.amount }} 
+                        </button>  
+
 
                         <script>
-	                var handler = StripeCheckout.configure({
-	                    key: '{{ key }}',
-	                    token: function(token, args) {
-	                        document.getElementById("stripeToken").value = token.id;
-                            document.getElementById("stripeEmail").value = token.email;
-                            document.getElementById("chargeForm").submit();
-	                        // Use the token to create the charge with a server-side script.
-	                        // You can access the token ID with `token.id`
-	                    }
-	                });
+	      var handler = StripeCheckout.configure({
+	        key: '{{ key }}',
+	        token: function(token, args) {
+	          document.getElementById("stripeToken").value = token.id;
+                  document.getElementById("stripeEmail").value = token.email;
+                  document.getElementById("chargeForm").submit();
+	          // Use the token to create the charge with a server-side script.
+	          // You can access the token ID with `token.id`
+	        }
+	      });
 
-                    document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
-	                    // Open Checkout with further options
-	                    handler.open({
-	                        name: '{{ company }}',
-	                        description: 'Please enter your details',
-	                        amount: {{ payment.amount_pence }},
-	                        currency: '{{ payment.currency }}',
-	                        billingAddress: true
-	                    });
-	                    e.preventDefault();
-	                });
-	                </script>
+              document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
+	        // Open Checkout with further options
+	        handler.open({
+	          name: '{{ company }}',
+	          description: 'Please enter your details',
+	          amount: {{ payment.amount_integer }},
+	          currency: '{{ payment.currency }}',
+	          billingAddress: true
+	        });
+	        e.preventDefault();
+	      });
+	                    </script>
+
+
 
                     </div>
                 </div>
