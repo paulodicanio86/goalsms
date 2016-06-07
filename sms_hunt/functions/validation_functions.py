@@ -1,7 +1,7 @@
 import string
 
 from sms_hunt import meta_data
-from string_functions import validate_number, validate_content, is_integer_string, matches_reg_ex
+from string_functions import validate_number, convert_special_characters, is_integer_string, matches_reg_ex
 
 teams = meta_data['teams']
 
@@ -45,7 +45,7 @@ def convert_entries(entry, value, country_code):
     if entry == 'phone_number':
         return validate_number(value, code=country_code)
     if entry == 'name':
-        return validate_content(value)
+        return convert_special_characters(value)
     else:
         return value
 
