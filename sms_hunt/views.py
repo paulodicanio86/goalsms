@@ -13,14 +13,14 @@ key = key_config['stripe_publishable_key']
 company = meta_data['company']
 year = meta_data['year']
 title = meta_data['title']
-teams = meta_data['national_teams'].values()
+teams = meta_data['club_teams'].values()
 teams.sort()
 teams_dic = meta_data['club_teams']
 
-# this need to be here because teams is imported in validation_functions
+# This needs to be here because teams is imported in validation_functions
 from functions.validation_functions import convert_entries, validate_entries
 
-# more configuration settings
+# configuration settings
 variable_names = ['team', 'phone_number', 'name']
 country_code = '44'
 currency_html = '&pound;'
@@ -58,7 +58,7 @@ def start(team_dic=default_dic,
 
 
 #######################################
-# / start page
+# / start page for each team
 #######################################
 @app.route('/team/<team_value>/')
 def single_team(team_value,

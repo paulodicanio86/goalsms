@@ -6,7 +6,7 @@ from sms import Sms
 from sms_hunt import key_config
 from backend.db_functions import insert_array_to_table, get_table_columns
 
-table_name = 'eurosms'
+table_name = 'goalsms'
 sign_up_sms_text = '{name}, you have successfully signed up for goal updates from {team}!'
 
 

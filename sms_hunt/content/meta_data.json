@@ -1,0 +1,17 @@
+{
+  "company": "Goal SMS",
+  "year": "2016",
+  "title": "Goal SMS",
+  "domain": "www.goalsms.com",
+  "national_teams": {
+    "england": "England",
+    "northern_ireland": "Northern Ireland",
+    "wales": "Wales"
+  },
+  "club_teams": {
+    "arsenal": "Arsenal London",
+    "chelsea": "Chelsea FC",
+    "manu": "Manchester United",
+    "mancity": "Manchester City"
+  }
+}
