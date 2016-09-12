@@ -1,6 +1,6 @@
 {
   "types": [
-    "DATETIME",
+    "VARCHAR(255)",
     "VARCHAR(255)",
     "VARCHAR(255)",
     "INT",
@@ -21,8 +21,8 @@
   "default_rows": [
     [
       "03.01.2016",
-      "arsenal",
-      "chelsea",
+      "HSV",
+      "St. Pauli",
       0,
       1,
       "13:30",
