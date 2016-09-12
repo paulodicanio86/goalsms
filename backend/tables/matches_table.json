@@ -1,0 +1,32 @@
+{
+  "types": [
+    "DATETIME",
+    "VARCHAR(255)",
+    "VARCHAR(255)",
+    "INT",
+    "INT",
+    "TIME",
+    "VARCHAR(255)"
+  ],
+  "name": "matches",
+  "columns": [
+    "date",
+    "localteam_name",
+    "visitorteam_name",
+    "localteam_score",
+    "visitorteam_score",
+    "time",
+    "status"
+  ],
+  "default_rows": [
+    [
+      "03.01.2016",
+      "arsenal",
+      "chelsea",
+      0,
+      1,
+      "13:30",
+      "FT"
+    ]
+  ]
+}

@@ -21,15 +21,11 @@ db = MySQLdb.connect(host=data_config['host'],
 # delete_table('finished_tours', db)
 # make_default_tables_tour(db)
 # embed()
-# delete_table('tour_name', db)
-# delete_table('tour', db)
-# delete_table('dummy', db)
-# delete_table('valid', db)
-# delete_table('active', db)
-# embed()
 
 # delete_table('goalsms', db)
+# delete_table('matches', db)
 # make_default_tables_goalsms(db)
+
 
 db.commit()
 db.close()
