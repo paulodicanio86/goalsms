@@ -5,22 +5,22 @@
     "VARCHAR(255)",
     "INT",
     "INT",
-    "TIME",
+    "VARCHAR(255)",
     "VARCHAR(255)"
   ],
   "name": "matches",
   "columns": [
-    "date",
+    "date_str",
     "localteam_name",
     "visitorteam_name",
     "localteam_score",
     "visitorteam_score",
-    "time",
-    "status"
+    "time_str",
+    "status_str"
   ],
   "default_rows": [
     [
-      "03.01.2016",
+      "02.01.2016",
       "HSV",
       "St. Pauli",
       0,

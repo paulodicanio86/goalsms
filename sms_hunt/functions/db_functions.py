@@ -65,7 +65,7 @@ def update_active_table(db, column_name, column_value, phone_number, tour_id):
     update_row(table_name, db, column_name, column_value, condition_1, condition_2)
 
 
-# Update active table
+# Delete active table
 def delete_from_active_table(db, phone_number, tour_id):
     table_name = "active"
     condition_1 = "phone_number='" + str(phone_number) + "'"

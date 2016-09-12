@@ -22,8 +22,8 @@ db = MySQLdb.connect(host=data_config['host'],
 # make_default_tables_tour(db)
 # embed()
 
-delete_table('goalsms', db)
-delete_table('matches', db)
+#delete_table('goalsms', db)
+#delete_table('matches', db)
 make_default_tables_goalsms(db)
 
 
