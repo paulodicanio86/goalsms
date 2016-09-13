@@ -53,11 +53,15 @@ def compare_matches(db_matches, live_matches):
     for db_match in db_matches:
         for live_match in live_matches:
             if db_match == live_match:
-                print('match! ', db_match.date_str, db_match.localteam_name, db_match.visitorteam_name)
 
-                # Has the score changed?
+                # Has the score changed? Only then add to the updated ones.
                 if ((db_match.localteam_score != live_match.localteam_score) |
                         (db_match.visitorteam_score != live_match.visitorteam_score)):
                     changed_matches.append(live_match)
+                    print('match&updated score! DB: ',
+                          db_match.date_str, db_match.localteam_name, db_match.visitorteam_name,
+                          db_match.localteam_score, db_match.visitorteam_score, 'LIVE: ',
+                          live_match.date_str, live_match.localteam_name, live_match.visitorteam_name,
+                          live_match.localteam_score, live_match.visitorteam_score)
 
     return changed_matches
