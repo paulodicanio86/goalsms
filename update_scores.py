@@ -1,4 +1,5 @@
 import datetime as datetime
+import os as os
 import MySQLdb
 
 from sms_hunt import db_config
@@ -21,12 +22,25 @@ time_str = str(i.strftime('%H:%M'))
 hour_int = int(i.strftime('%H'))
 minute_int = int(i.strftime('%M'))
 
+# check if daily file exists. if not create one.
+data_loaded = False
+if os.path.isfile(date_str + '.txt'):
+    f = open(date_str + '.txt', 'r')
+    content = f.readline()
+    f.close()
 
-# Get daily matches
-if not date_in_table(db, date_str):
-    competition = '1204'  # Premier League
-    add_daily_matches_to_db(db, date_str, competition='1204')
+    data_loaded = True
+else:
+    f = open(date_str + '.txt', 'w')
+    # f.write('dummy text!')
+    f.close()
 
+if not data_loaded:
+    if not date_in_table(db, date_str):
+        competition = '1204'  # Premier League
+        add_daily_matches_to_db(db, date_str, competition='1204')
+
+# ARE THERE GAMES ON DAY? CONTENT OF DAY FILE? IF YES, THEN FIND TIMINGS AND WHEN TO START
 
 # Check every 2 minutes of a game after kick off time.
 # Get matches in db
