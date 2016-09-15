@@ -23,41 +23,61 @@ hour_int = int(i.strftime('%H'))
 minute_int = int(i.strftime('%M'))
 
 # check if daily file exists. if not create one.
-data_loaded = False
-if os.path.isfile(date_str + '.txt'):
-    f = open(date_str + '.txt', 'r')
+match_day = False
+file_path = 'match_updates/' + date_str + '.txt'
+
+# File exists
+if os.path.isfile(file_path):
+    f = open(file_path, 'r')
     content = f.readline()
-    f.close()
 
-    data_loaded = True
+    if content == 'False':
+        match_day = False
+    else:
+        match_day = True
+        # Retrieve more information
+        ko_times = content  # .split('.')
+        print('Kick of times are: ', content)
+    f.close()
+# File does not exist
 else:
-    f = open(date_str + '.txt', 'w')
-    # f.write('dummy text!')
-    f.close()
+    f = open(file_path, 'w')
 
-if not data_loaded:
     if not date_in_table(db, date_str):
         competition = '1204'  # Premier League
         add_daily_matches_to_db(db, date_str, competition='1204')
 
-# ARE THERE GAMES ON DAY? CONTENT OF DAY FILE? IF YES, THEN FIND TIMINGS AND WHEN TO START
+    # Now check if there are any matches today:
+    if date_in_table(db, date_str):
+        f.write('True')  # Fill in more information here?
+    else:
+        f.write('False')
 
-# Check every 2 minutes of a game after kick off time.
-# Get matches in db
-db_matches = get_matches_from_db(db, date_str)
-if len(db_matches) > 0:
-    print('no matches today')
-    # STOP HERE NOW?
+    f.close()
 
-# Get live matches
-live_matches = get_live_matches(date_str, competition='1204')
+# We have a match day today
+if match_day:
 
-updated_matches = compare_matches_and_update(db, db_matches, live_matches)
-# FIND PEOPLE SUBSCRIBED TO UPDATED MATCHES (localteamname + visitorteam_name)
-# AND SEND SMS
+    # Is current time during matches? then continue
+
+    # Check every 2 minutes of a game after kick off time.
+
+    # Get matches in db
+    db_matches = get_matches_from_db(db, date_str)
+    if len(db_matches) > 0:
+        print('no matches found')
+    # Get live matches
+    live_matches = get_live_matches(date_str, competition='1204')
+
+    # Compare both for score updates
+    updated_matches = compare_matches_and_update(db, db_matches, live_matches)
 
 
-embed()
+    # FIND PEOPLE SUBSCRIBED TO UPDATED MATCHES (localteamname + visitorteam_name)
+    # AND SEND SMS
+
+
+    embed()
 
 
 # Commit and close database connection
