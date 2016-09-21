@@ -1,7 +1,8 @@
 import urllib2
 import json
+import os as os
 
-from match_updates.functions.db_functions import get_matches
+from match_updates.functions.db_functions import get_matches, date_in_table
 from match import Match, compare_matches
 
 
@@ -62,3 +63,39 @@ def compare_matches_and_update(db, db_matched, live_matches):
         match.update_score_db(db)
 
     return changed_matches
+
+
+def check_for_daily_file(db, file_path, date_str, competition):
+    match_day = False
+    trigger_times = []
+
+    # File exists
+    if os.path.isfile(file_path):
+        f = open(file_path, 'r')
+        content = f.readline()
+
+        if content == 'False':
+            match_day = False
+        else:
+            match_day = True
+            # Retrieve more information
+            trigger_times = [content]  # .split('.')
+            print('Kick of times are: ', content)
+        f.close()
+    # File does not exist
+    else:
+        f = open(file_path, 'w')
+
+        if not date_in_table(db, date_str):
+            add_daily_matches_to_db(db, date_str, competition)
+
+        # Now check if there are any matches today:
+        if date_in_table(db, date_str):
+            f.write('True')  #
+            # Fill in more information here - compute trigger rimes?
+        else:
+            f.write('False')
+
+        f.close()
+
+    return match_day, trigger_times
