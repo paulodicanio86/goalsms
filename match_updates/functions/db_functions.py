@@ -13,6 +13,7 @@ def date_in_table(db, date_str, table_name='matches'):
         return False
 
 
+# Query to return all matches on the day
 def get_matches(db, date_str, table_name='matches'):
     sql_query = '''SELECT date_str, localteam_name, visitorteam_name, localteam_score,
                 visitorteam_score, time_str, status_str FROM {table_name} WHERE date_str='{date_str}';'''
@@ -28,3 +29,11 @@ def update_matches_table(db, column_name, column_value, date_str, localteam_name
     condition_1 = "date_str='" + str(date_str) + "'"
     condition_2 = "localteam_name = " + str(localteam_name)
     update_row(table_name, db, column_name, column_value, condition_1, condition_2)
+
+
+# Query to get all kick off times of the day
+def get_kick_off_times(db, date_str, table_name='matches'):
+    sql_query = '''SELECT time_str FROM {table_name} WHERE date_str='{date_str}';'''
+    sql_query = sql_query.format(table_name=table_name, date_str=date_str)
+
+    return execute_statement(sql_query, db)

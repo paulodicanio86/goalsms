@@ -2,7 +2,7 @@ import urllib2
 import json
 import os as os
 
-from match_updates.functions.db_functions import get_matches, date_in_table
+from match_updates.functions.db_functions import get_matches, date_in_table, get_kick_off_times
 from match import Match, compare_matches
 
 
@@ -65,6 +65,27 @@ def compare_matches_and_update(db, db_matched, live_matches):
     return changed_matches
 
 
+def get_trigger_times(db, date_str):
+    df = get_kick_off_times(db, date_str)
+
+    df_values = df['time_str'].values
+    hours = []
+    if len(df_values) > 0:
+        for entry in df_values:
+            hour = entry.split(':')[0]
+            hours.append(hour)
+
+            # add two hours after kick off to be safe:
+            hour_int = int(hour)
+            hours.append(str(hour_int + 1))
+            hours.append(str(hour_int + 2))
+
+        hours = list(set(hours))
+        return ';'.join(hours)
+    else:
+        return 'False - no trigger times found'
+
+
 def check_for_daily_file(db, file_path, date_str, competition):
     match_day = False
     trigger_times = []
@@ -78,9 +99,8 @@ def check_for_daily_file(db, file_path, date_str, competition):
             match_day = False
         else:
             match_day = True
-            # Retrieve more information
-            trigger_times = [content]  # .split('.')
-            print('Kick of times are: ', content)
+            trigger_times = content.split(';')
+            # print('Kick of times are: ', content)
         f.close()
     # File does not exist
     else:
@@ -91,10 +111,10 @@ def check_for_daily_file(db, file_path, date_str, competition):
 
         # Now check if there are any matches today:
         if date_in_table(db, date_str):
-            f.write('True')  #
-            # Fill in more information here - compute trigger rimes?
+            # Write extra information here, separated by ';'
+            f.write(get_trigger_times(db, date_str))
         else:
-            f.write('False')
+            f.write('False - no matches today')
 
         f.close()
 
