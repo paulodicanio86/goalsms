@@ -32,12 +32,12 @@ class Match:
         update_matches_table(db, 'visitorteam_score', self.visitorteam_score, self.date_str, self.localteam_name)
 
     def get_score_message_text(self):
-        minute = '49'
-        message = 'new score: {localteam_name} {localteam_score_str} - {visitorteam_score_str} {visitorteam_name}'
+        # minute = '49'
+        message = 'New score: {localteam_name} {localteam_score_str} - {visitorteam_score_str} {visitorteam_name}'
         message = message.format(localteam_name=self.localteam_name, localteam_score_str=self.localteam_score_str,
                                  visitorteam_name=self.visitorteam_name,
                                  visitorteam_score_str=self.visitorteam_score_str)
-        message = minute + '. minute, ' + message
+        # message = minute + '. minute, ' + message !!!!!!!!!!!  add a minute feature?
         return message
 
     def __eq__(self, match2):
@@ -58,7 +58,7 @@ def compare_matches(db_matches, live_matches):
                 if ((db_match.localteam_score != live_match.localteam_score) |
                         (db_match.visitorteam_score != live_match.visitorteam_score)):
                     changed_matches.append(live_match)
-                    print('match&updated score! DB: ',
+                    print('match & updated score! DB: ',
                           db_match.date_str, db_match.localteam_name, db_match.visitorteam_name,
                           db_match.localteam_score, db_match.visitorteam_score, 'LIVE: ',
                           live_match.date_str, live_match.localteam_name, live_match.visitorteam_name,

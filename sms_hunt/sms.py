@@ -108,7 +108,12 @@ class Sms:
 
     def send(self):
         # Function to send a sms
-        print ('SMS SENT to ' + self.receiver + ' and content: ' + self.content)
+        if type(self.receiver) == list:
+            receiver = ','.join(self.receiver)
+        else:
+            receiver = self.receiver
+
+        print ('SMS SENT to ' + receiver + ' and content: ' + self.content)
 
         # Check if one number or multiple, and turn multiple into tuple
         number = self.receiver

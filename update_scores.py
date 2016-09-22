@@ -6,7 +6,8 @@ import MySQLdb
 
 from sms_hunt import db_config
 from match_updates.get_daily_matches import (check_for_daily_file, get_matches_from_db,
-                                             get_live_matches, compare_matches_and_update)
+                                             get_live_matches, compare_matches_and_update,
+                                             get_phone_numbers_and_send_sms)
 
 from IPython import embed
 
@@ -37,6 +38,7 @@ file_path = 'match_updates/' + date_str + '.txt'
 file_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(os.sep, file_path, 'match_updates', date_str + '.txt')
 
+# Check what to do based on txt file
 match_day, trigger_times = check_for_daily_file(db, file_path, date_str, competition)
 
 # We have a match day today, and a valid hours and minute. Let's check the score
@@ -44,27 +46,23 @@ if match_day and (hour_str in trigger_times) and (minute_str in minutes):
 
     # Get matches in db
     db_matches = get_matches_from_db(db, date_str)
-    if len(db_matches) > 0:
+    if len(db_matches) == 0:
         print('no db matches found')
     # Get live matches
     live_matches = get_live_matches(date_str, competition='1204')
-    if len(live_matches) > 0:
+    if len(live_matches) == 0:
         print('no live matches found')
 
     # Compare both for score updates
     updated_matches = compare_matches_and_update(db, db_matches, live_matches)
     if len(updated_matches) > 0:
         print('matches with an update found!')
-        # FIND PEOPLE SUBSCRIBED TO UPDATED MATCHES (localteamname + visitorteam_name)
-        # AND SEND SMS
+        for match in updated_matches:
+            get_phone_numbers_and_send_sms(db, match)
         embed()
-
     else:
         print('no update in any match')
-        # do nothing
 
-
-
-# Commit and close database connection
+# do nothing  # Commit and close database connection
 db.commit()
 db.close()
