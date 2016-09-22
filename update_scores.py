@@ -25,7 +25,9 @@ hour_str = i.strftime('%H')
 minute_str = i.strftime('%M')
 
 # Set competition
-competition = '1204'  # Premier League
+# 1204 = Premier League, 1005 = UEFA Champions League, 1007 = UEFA Europa League, 1198 = Fa Cup
+# 1205 = Championship (2nd league),
+competition = '1204,1005,1007,1198'
 minutes = ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18',
            '20', '22', '24', '26', '28', '30', '32', '34', '36', '38',
            '40', '42', '44', '46', '48', '50', '52', '54', '56', '58']
@@ -49,7 +51,7 @@ if match_day and (hour_str in trigger_times) and (minute_str in minutes):
     if len(db_matches) == 0:
         print('no db matches found')
     # Get live matches
-    live_matches = get_live_matches(date_str, competition='1204')
+    live_matches = get_live_matches(date_str, competition)
     if len(live_matches) == 0:
         print('no live matches found')
 

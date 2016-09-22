@@ -3,8 +3,8 @@
     "VARCHAR(255)",
     "VARCHAR(255)",
     "VARCHAR(255)",
-    "INT",
-    "INT",
+    "VARCHAR(255)",
+    "VARCHAR(255)",
     "VARCHAR(255)",
     "VARCHAR(255)"
   ],
@@ -23,8 +23,8 @@
       "22.09.2016",
       "Leicester",
       "Chelsea",
-      0,
-      0,
+      "0",
+      "0",
       "12:30",
       "FT"
     ],
@@ -32,8 +32,8 @@
       "22.09.2016",
       "Bayern",
       "Sunderland",
-      0,
-      0,
+      "0",
+      "0",
       "12:30",
       "FT"
     ]

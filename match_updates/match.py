@@ -4,15 +4,12 @@ from match_updates.functions.db_functions import update_matches_table
 
 class Match:
     def __init__(self, localteam_name, visitorteam_name, time_str, date_str, status,
-                 localteam_score='', visitorteam_score=''):
+                 localteam_score='?', visitorteam_score='?'):
         self.localteam_name = str(localteam_name)
         self.visitorteam_name = str(visitorteam_name)
 
-        self.localteam_score_str = str(localteam_score)  # "0"
-        self.localteam_score = int(self.localteam_score_str)
-
-        self.visitorteam_score_str = str(visitorteam_score)  # "1"
-        self.visitorteam_score = int(self.visitorteam_score_str)
+        self.localteam_score = str(localteam_score)  # "0"
+        self.visitorteam_score = str(visitorteam_score)  # "1"
 
         self.time_str = str(time_str)  # "13:30"
         self.date_str = str(date_str)  # "03.01.2016"
@@ -33,10 +30,10 @@ class Match:
 
     def get_score_message_text(self):
         # minute = '49'
-        message = 'New score: {localteam_name} {localteam_score_str} - {visitorteam_score_str} {visitorteam_name}'
-        message = message.format(localteam_name=self.localteam_name, localteam_score_str=self.localteam_score_str,
+        message = 'New score: {localteam_name} {localteam_score} - {visitorteam_score} {visitorteam_name}'
+        message = message.format(localteam_name=self.localteam_name, localteam_score=self.localteam_score,
                                  visitorteam_name=self.visitorteam_name,
-                                 visitorteam_score_str=self.visitorteam_score_str)
+                                 visitorteam_score=self.visitorteam_score)
         # message = minute + '. minute, ' + message !!!!!!!!!!!  add a minute feature?
         return message
 
