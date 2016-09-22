@@ -5,12 +5,7 @@ import os as os
 from match_updates.functions.db_functions import get_matches, date_in_table, get_kick_off_times, get_phone_numbers
 from match import Match, compare_matches
 from sms_hunt.sms import Sms
-
-meta_json_path = os.path.dirname(os.path.abspath(__file__))
-meta_json_path = os.path.join(os.sep, meta_json_path, '../sms_hunt/content', 'meta_data.json')
-
-with open(meta_json_path) as meta_data_file:
-    meta_data = json.load(meta_data_file)
+from sms_hunt import meta_data
 
 
 def map_to_match_object(entry):

@@ -59,7 +59,6 @@ if match_day and (hour_str in trigger_times) and (minute_str in minutes):
         print('matches with an update found!')
         for match in updated_matches:
             get_phone_numbers_and_send_sms(db, match)
-        embed()
     else:
         print('no update in any match')
 
