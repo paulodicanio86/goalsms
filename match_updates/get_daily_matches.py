@@ -34,7 +34,7 @@ def get_live_matches(date_str, competition):
              '","season":"2015\\/2016",' \
              '"week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"FT",' \
              '"timer":"","time":"12:30","localteam_id":"9127","localteam_name":"Leicester",' \
-             '"localteam_score":"16","visitorteam_id":"9092","visitorteam_name":"Chelseaa","visitorteam_score":"3",' \
+             '"localteam_score":"15","visitorteam_id":"9092","visitorteam_name":"Chelsea","visitorteam_score":"3",' \
              '"ht_score":"[0-1]","ft_score":"[0-3]","et_score":null,"penalty_local":null,' \
              '"penalty_visitor":null,"events":[{"id":"21583631","type":"yellowcard","minute":"13",' \
              '"extra_min":"","team":"localteam","player":"D. Delaney","player_id":"15760","assist":"",' \
@@ -51,8 +51,8 @@ def get_live_matches(date_str, competition):
              '"1204","formatted_date":"' + date_str + \
              '","season":"2015\\/2016","week":"20","venue":"Goodison Park (Liverpool)","venue_id":"1252",' \
              '"venue_city":"Liverpool","status":"FT","timer":"","time":"12:30","localteam_id":"9158",' \
-             '"localteam_name":"Bayern","localteam_score":"5","visitorteam_id":"9406","visitorteam_name":' \
-             '"Sunderland","visitorteam_score":"10","ht_score":"[1-1]","ft_score":"[1-1]","et_score":null,' \
+             '"localteam_name":"Bayern","localteam_score":"1","visitorteam_id":"9406","visitorteam_name":' \
+             '"Sunderland","visitorteam_score":"0","ht_score":"[1-1]","ft_score":"[1-1]","et_score":null,' \
              '"penalty_local":null,"penalty_visitor":null,"events":[{"id":"21583651","type":"goal","minute":"22",' \
              '"extra_min":"","team":"localteam","player":"A. Lennon","player_id":"","assist":"R. Lukaku","assist_id":' \
              '"79495","result":"[1-0]"},{"id":"21583652","type":"yellowcard","minute":"35","extra_min":"","team":' \
@@ -171,7 +171,11 @@ def get_phone_numbers_and_send_sms(db, match):
         phone_numbers = get_phone_numbers(db, teams_formatted)
 
         phone_numbers_list = list(phone_numbers['phone_number'].values)
+        # only send one sms if a user is subcribed to two teams
+        phone_numbers_list = list(set(phone_numbers_list))
+
         content = match.get_score_message_text()
+
         sms = Sms(content, receiver=phone_numbers_list)
         sms.send()
         print('sms have been sent')
