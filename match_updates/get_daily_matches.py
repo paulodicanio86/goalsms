@@ -27,7 +27,6 @@ def get_matches_from_db(db, date_str):
 
 def get_live_matches(date_str, competition):
     # Web query matches
-    date_str = '24.09.2016'
     query = ("http://api.football-api.com/2.0/matches?comp_id=" + competition + "&match_date=" + date_str +
              "&Authorization=565ec012251f932ea4000001393b4115a8bf4bf551672b0543e35683")
     try:
@@ -68,9 +67,9 @@ def get_live_matches(date_str, competition):
                   '"player_id":"81992","assist":"","assist_id":"","result":""},{"id":"21583655","type":"yellowcard",' \
                   '"minute":"72","extra_min":"","team":"visitorteam","player":"T. Carroll","player_id":"173621",' \
                   '"assist":"","assist_id":"","result":""}]}]'
-    matches_json = json.loads(result)
 
     # Make Match objects
+    matches_json = json.loads(result)
     matches = []
     if (len(matches_json) > 0) and ('code' not in matches_json):
         for entry in matches_json:
