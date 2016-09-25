@@ -30,8 +30,8 @@ default_dic = {'valid': True,
                'value': ''
                }
 
-payment = {'amount_integer': 299,
-           'amount': 2.99,
+payment = {'amount_integer': 1499,
+           'amount': 14.99,
            'currency': currency,
            'currency_html': currency_html
            }

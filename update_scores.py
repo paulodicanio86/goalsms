@@ -28,14 +28,15 @@ minute_str = i.strftime('%M')
 # 1204 = Premier League, 1005 = UEFA Champions League, 1007 = UEFA Europa League, 1198 = Fa Cup
 # 1205 = Championship (2nd league),
 competition = '1204,1005,1007,1198'
-minutes = ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18',
-           '20', '22', '24', '26', '28', '30', '32', '34', '36', '38',
-           '40', '42', '44', '46', '48', '50', '52', '54', '56', '58']
+# if a minute requirement is needed, use this:
+# minutes = ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18',
+#           '20', '22', '24', '26', '28', '30', '32', '34', '36', '38',
+#           '40', '42', '44', '46', '48', '50', '52', '54', '56', '58']
 
 
 # Check if daily file exists. if not create one. Retrieve trigger times.
 # manually
-file_path = 'match_updates/' + date_str + '.txt'
+# file_path = 'match_updates/' + date_str + '.txt'
 # automatically in cronjob
 file_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(os.sep, file_path, 'match_updates', date_str + '.txt')
@@ -44,7 +45,7 @@ file_path = os.path.join(os.sep, file_path, 'match_updates', date_str + '.txt')
 match_day, trigger_times = check_for_daily_file(db, file_path, date_str, competition)
 
 # We have a match day today, and a valid hours and minute. Let's check the score
-if match_day and (hour_str in trigger_times) and (minute_str in minutes):
+if match_day and (hour_str in trigger_times):
 
     # Get matches in db
     db_matches = get_matches_from_db(db, date_str)
