@@ -23,8 +23,9 @@ db = MySQLdb.connect(host=data_config['host'],
 # embed()
 
 delete_table('goalsms', db)
-delete_table('matches', db)
-make_default_tables_goalsms(db)
+make_default_table(db, 'tables/goalsms_table.json')
+# delete_table('matches', db)
+# make_default_tables_goalsms(db)
 
 db.commit()
 db.close()

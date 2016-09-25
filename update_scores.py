@@ -64,6 +64,6 @@ if match_day and (hour_str in trigger_times) and (minute_str in minutes):
     else:
         print('no update in any match')
 
-# do nothing  # Commit and close database connection
+# Commit and close database connection
 db.commit()
 db.close()

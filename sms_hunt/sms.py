@@ -108,16 +108,16 @@ class Sms:
 
     def send(self):
         # Function to send a sms
-        if type(self.receiver) == list:
+        if self.multiple_receivers:
             receiver = ','.join(self.receiver)
         else:
             receiver = self.receiver
-
         print ('SMS SENT to ' + receiver + ' and content: ' + self.content)
 
-        # Check if one number or multiple, and turn multiple into tuple
-        number = self.receiver
+        # Check if one number or multiple, and turn multiple into tuple, then send
         if self.multiple_receivers:
             number = tuple(self.receiver)
+        else:
+            number = self.receiver
 
         send_sms(number, self.content, sms_config)

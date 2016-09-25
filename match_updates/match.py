@@ -16,6 +16,10 @@ class Match:
 
         self.status = str(status)  # "FT"
 
+    def change_time(self):
+        adjusted_time = int(self.time_str[:-3]) + 1
+        self.time_str = str(adjusted_time) + self.time_str[-3:]
+
     def save_to_db(self, db, table_name='matches'):
         text_row = [self.date_str, self.localteam_name, self.visitorteam_name,
                     self.localteam_score, self.visitorteam_score, self.time_str,

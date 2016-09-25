@@ -80,6 +80,7 @@ def get_live_matches(date_str, competition):
                           entry['status'],
                           entry['localteam_score'],
                           entry['visitorteam_score'])
+            match.change_time()
             matches.append(match)
 
     return matches
@@ -160,28 +161,34 @@ def check_for_daily_file(db, file_path, date_str, competition):
 
 
 def get_phone_numbers_and_send_sms(db, match):
-    teams = []
-    teams.append(match.localteam_name)
-    teams.append(match.visitorteam_name)
+    teams = [match.localteam_name, match.visitorteam_name]
 
+    # Reverse team name to make it no capitals and no spaces.
     rev_meta_data = dict((v, k) for k, v in meta_data['club_teams'].iteritems())
 
     teams_formatted = []
     for team in teams:
         if team in rev_meta_data.keys():
             teams_formatted.append(str(rev_meta_data[team]))
+
+    # now find users who are subscribed to one of the two teams
     if len(teams_formatted) > 0:
+        # make string readable by SQL
         teams_formatted = str(teams_formatted)[1:-1]
         phone_numbers = get_phone_numbers(db, teams_formatted)
 
         phone_numbers_list = list(phone_numbers['phone_number'].values)
-        # only send one sms if a user is subcribed to two teams
+        # only send one sms if a user is subscribed to two teams
         phone_numbers_list = list(set(phone_numbers_list))
 
-        content = match.get_score_message_text()
+        # check if any users are subscribed, and send sms
+        if len(phone_numbers_list) > 0:
+            content = match.get_score_message_text()
 
-        sms = Sms(content, receiver=phone_numbers_list)
-        sms.send()
-        print('sms have been sent')
+            sms = Sms(content, receiver=phone_numbers_list)
+            sms.send()
+            print('Sms have been sent')
+        else:
+            print('No subscribed users found')
     else:
-        print('No users found for this match')
+        print('No teams found for this match')
