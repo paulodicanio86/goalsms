@@ -120,6 +120,7 @@ def get_trigger_times(db, date_str):
             hours.append(str(hour_int + 2))
 
         hours = list(set(hours))
+        hours.sort()
         return ';'.join(hours)
     else:
         return 'False - no trigger times found'
