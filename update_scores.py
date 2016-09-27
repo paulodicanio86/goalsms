@@ -9,8 +9,6 @@ from match_updates.get_daily_matches import (check_for_daily_file, get_matches_f
                                              get_live_matches, compare_matches_and_update,
                                              get_phone_numbers_and_send_sms)
 
-from IPython import embed
-
 # Establish database connection
 db = MySQLdb.connect(host=db_config['host'],
                      user=db_config['user'],
@@ -39,7 +37,7 @@ competition = '1204,1005,1007,1198'
 # file_path = 'match_updates/' + date_str + '.txt'
 # automatically in cronjob
 file_path = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(os.sep, file_path, 'match_updates', date_str + '.txt')
+file_path = os.path.join(os.sep, file_path, 'match_updates/daily_files', date_str + '.txt')
 
 # Check what to do based on txt file
 match_day, trigger_times = check_for_daily_file(db, file_path, date_str, competition)
