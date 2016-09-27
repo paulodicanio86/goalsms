@@ -171,6 +171,7 @@ def get_phone_numbers_and_send_sms(db, match):
     for team in teams:
         if team in rev_meta_data.keys():
             teams_formatted.append(str(rev_meta_data[team]))
+            teams_formatted.append(str(team))
 
     # now find users who are subscribed to one of the two teams
     if len(teams_formatted) > 0:
