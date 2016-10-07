@@ -21,12 +21,12 @@ def valid_name(name):
         return matches_reg_ex(name, reg_ex)
 
 
-def valid_phone_number(account_number):
+def valid_phone_number(number):
     """
     Checks if account_number is valid and a string.
     Valid: 12345678
     """
-    return is_integer_string(account_number)
+    return is_integer_string(number)
 
 
 def valid_team(team):

@@ -33,11 +33,11 @@ def add_data_and_send_sms(db, values_dic, email):
     return None
 
 
-def charge_stripe(payment, email, stripe_token, phone_number):
+def charge_stripe(payment, email, secret_key, stripe_token, phone_number):
     # Connecting with stripe and charge if successful
     try:
-        stripe.api_key = key_config['stripe_secret_key']
-
+        stripe.api_key = secret_key
+        print(secret_key, stripe_token, email)
         customer = stripe.Customer.create(
             email=email,
             source=stripe_token
@@ -45,7 +45,7 @@ def charge_stripe(payment, email, stripe_token, phone_number):
 
         # create the charge on stripe's servers - this will charge the user's card
         charge = stripe.Charge.create(
-            customer=customer.id,
+            source=stripe_token,
             amount=payment['amount_integer'],
             currency=payment['currency'],
             description=phone_number + ' charge'
@@ -54,4 +54,5 @@ def charge_stripe(payment, email, stripe_token, phone_number):
         return True
 
     except stripe.CardError, e:  # The card has been declined.
+        print('weroonggg')
         return False

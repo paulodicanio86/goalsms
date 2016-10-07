@@ -18,14 +18,15 @@ db = MySQLdb.connect(host=db_config['host'],
 # Calculate current date and time
 i = datetime.datetime.now()
 date_str = str(i.strftime('%d.%m.%Y'))
+# date_str = '30.09.2016'
 time_str = str(i.strftime('%H:%M'))
 hour_str = i.strftime('%H')
 minute_str = i.strftime('%M')
 
 # Set competition
 # 1204 = Premier League, 1005 = UEFA Champions League, 1007 = UEFA Europa League, 1198 = Fa Cup
-# 1205 = Championship (2nd league),
-competition = '1204,1005,1007,1198'
+# 1205 = Championship (2nd league), = Bundesliga
+competition = '1204,1005'#,1007,1198'
 # if a minute requirement is needed, use this:
 # minutes = ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18',
 #           '20', '22', '24', '26', '28', '30', '32', '34', '36', '38',

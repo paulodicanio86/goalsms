@@ -9,6 +9,7 @@ from models_tour import follow_tour
 from models_goals import add_data_and_send_sms, charge_stripe
 
 key = key_config['stripe_publishable_key']
+secret_key = key_config['stripe_secret_key']
 
 company = meta_data['company']
 year = meta_data['year']
@@ -22,7 +23,7 @@ from functions.validation_functions import convert_entries, validate_entries
 
 # configuration settings
 variable_names = ['team', 'phone_number', 'name']
-country_code = '44'
+country_code = '44'  # default code, used to complete numbers
 currency_html = '&pound;'
 currency = 'gbp'
 
@@ -30,8 +31,8 @@ default_dic = {'valid': True,
                'value': ''
                }
 
-payment = {'amount_integer': 1499,
-           'amount': 14.99,
+payment = {'amount_integer': 100,
+           'amount': 1.00,
            'currency': currency,
            'currency_html': currency_html
            }
@@ -116,6 +117,7 @@ def verify_post():
 
     charge_successful = charge_stripe(payment=payment,
                                       email=email,
+                                      secret_key=secret_key,
                                       stripe_token=stripe_token,
                                       phone_number=phone_number)
     if not charge_successful:
