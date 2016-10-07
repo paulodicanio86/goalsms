@@ -14,9 +14,10 @@ secret_key = key_config['stripe_secret_key']
 company = meta_data['company']
 year = meta_data['year']
 title = meta_data['title']
-teams = meta_data['club_teams'].values()
-teams.sort()
 teams_dic = meta_data['club_teams']
+teams = teams_dic.values()
+teams.sort()
+
 
 # This needs to be here because teams is imported in validation_functions
 from functions.validation_functions import convert_entries, validate_entries
@@ -24,19 +25,16 @@ from functions.validation_functions import convert_entries, validate_entries
 # configuration settings
 variable_names = ['team', 'phone_number', 'name']
 country_code = '44'  # default code, used to complete numbers
-currency_html = '&pound;'
-currency = 'gbp'
+
+payment = {'amount_integer': meta_data['amount_integer'],
+           'amount': meta_data['amount'],
+           'currency': meta_data['currency'],
+           'currency_html': meta_data['currency_html']
+           }
 
 default_dic = {'valid': True,
                'value': ''
                }
-
-payment = {'amount_integer': 100,
-           'amount': 1.00,
-           'currency': currency,
-           'currency_html': currency_html
-           }
-
 
 #######################################
 # / start page
@@ -115,13 +113,13 @@ def verify_post():
     email = request.form['stripeEmail']
     phone_number = values_dic['phone_number']
 
-    charge_successful = charge_stripe(payment=payment,
-                                      email=email,
-                                      secret_key=secret_key,
-                                      stripe_token=stripe_token,
-                                      phone_number=phone_number)
-    if not charge_successful:
-        return redirect(url_for('failure'))
+    # charge_successful = charge_stripe(payment=payment,
+    #                                  email=email,
+    #                                  secret_key=secret_key,
+    #                                  stripe_token=stripe_token,
+    #                                  phone_number=phone_number)
+    # if not charge_successful:
+    #    return redirect(url_for('failure'))
 
     # Establish database connection
     db = MySQLdb.connect(host=db_config['host'],
@@ -129,7 +127,7 @@ def verify_post():
                          passwd=db_config['password'],
                          db=db_config['database'])
 
-    add_data_and_send_sms(db, values_dic, email)
+    add_data_and_send_sms(db, values_dic, email, teams_dic)
 
     # Commit and close database connection
     db.commit()

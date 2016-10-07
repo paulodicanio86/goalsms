@@ -3,6 +3,10 @@
   "year": "2016",
   "title": "Goal SMS",
   "domain": "www.goalsms.com",
+  "amount_integer": 99,
+  "amount": 0.99,
+  "currency": "gbp",
+  "currency_html": "&pound;",
   "national_teams": {
     "england": "England",
     "northern_ireland": "Northern Ireland",

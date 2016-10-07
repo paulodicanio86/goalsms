@@ -3,21 +3,22 @@ from datetime import datetime
 import stripe
 
 from sms import Sms
-from sms_hunt import key_config
 from backend.db_functions import insert_array_to_table, get_table_columns
 
 table_name = 'goalsms'
 sign_up_sms_text = '{name}, you have successfully signed up for goal updates from {team}!'
 
 
-def add_data_and_send_sms(db, values_dic, email):
-    # Add to data base and send sms
+def add_data_and_send_sms(db, values_dic, email, teams_dic):
+    # Add to data base and send sms.
+
+    rev_teams_dic = dict((v, k) for k, v in teams_dic.iteritems())
 
     dt = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
     text_row = [str(values_dic['phone_number']),
                 str(email),
                 dt,
-                str(values_dic['team']),
+                str(rev_teams_dic[str(values_dic['team'])]),
                 str(values_dic['name'])]
 
     # Add message to table
@@ -54,5 +55,4 @@ def charge_stripe(payment, email, secret_key, stripe_token, phone_number):
         return True
 
     except stripe.CardError, e:  # The card has been declined.
-        print('weroonggg')
         return False
