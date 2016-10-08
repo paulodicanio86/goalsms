@@ -17,6 +17,7 @@ class Match:
         self.status = str(status)  # "FT"
 
     def change_time(self):
+        # Function to convert kick off times back by one hour for BST from ECT
         adjusted_time = int(self.time_str[:-3]) + 1
         self.time_str = str(adjusted_time) + self.time_str[-3:]
 
