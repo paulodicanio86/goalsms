@@ -38,7 +38,7 @@ def charge_stripe(payment, email, secret_key, stripe_token, phone_number):
     # Connecting with stripe and charge if successful
     try:
         stripe.api_key = secret_key
-        print(secret_key, stripe_token, email)
+        # print(secret_key, stripe_token, email)
         customer = stripe.Customer.create(
             email=email,
             source=stripe_token

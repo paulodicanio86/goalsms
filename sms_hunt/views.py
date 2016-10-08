@@ -36,6 +36,7 @@ default_dic = {'valid': True,
                'value': ''
                }
 
+
 #######################################
 # / start page
 #######################################
@@ -113,13 +114,13 @@ def verify_post():
     email = request.form['stripeEmail']
     phone_number = values_dic['phone_number']
 
-    # charge_successful = charge_stripe(payment=payment,
-    #                                  email=email,
-    #                                  secret_key=secret_key,
-    #                                  stripe_token=stripe_token,
-    #                                  phone_number=phone_number)
-    # if not charge_successful:
-    #    return redirect(url_for('failure'))
+    charge_successful = charge_stripe(payment=payment,
+                                      email=email,
+                                      secret_key=secret_key,
+                                      stripe_token=stripe_token,
+                                      phone_number=phone_number)
+    if not charge_successful:
+        return redirect(url_for('failure'))
 
     # Establish database connection
     db = MySQLdb.connect(host=db_config['host'],
