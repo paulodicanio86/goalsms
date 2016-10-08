@@ -1,11 +1,15 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+# added by me:
 *.json
 *.csv
 *.txt
 *.sh
+*.pem
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *$py.class
+*.py[cod]
 
 # C extensions
 *.so
