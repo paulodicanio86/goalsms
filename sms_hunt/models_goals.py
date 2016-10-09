@@ -36,23 +36,105 @@ def add_data_and_send_sms(db, values_dic, email, teams_dic):
 
 def charge_stripe(payment, email, secret_key, stripe_token, phone_number):
     # Connecting with stripe and charge if successful
-    try:
-        stripe.api_key = secret_key
-        # print(secret_key, stripe_token, email)
-        customer = stripe.Customer.create(
-            email=email,
-            source=stripe_token
-        )
+    stripe.api_key = secret_key
+    print(payment, secret_key, stripe_token, email, phone_number)
 
+    print('make user  ----------------------')
+    try:
+        customer = stripe.Customer.create(
+            email=str(email),
+            source=str(stripe_token)
+        )
+        print('made user ----------')
+        print(customer, '=---------')
+    except stripe.error.CardError as e:
+        # Since it's a decline, stripe.error.CardError will be caught
+        body = e.json_body
+        err = body['error']
+
+        print "Status is: %s" % e.http_status
+        print "Type is: %s" % err['type']
+        print "Code is: %s" % err['code']
+        # param is '' in this case
+        print "Param is: %s" % err['param']
+        print "Message is: %s" % err['message']
+        return False
+    except stripe.error.RateLimitError as e:
+        # Too many requests made to the API too quickly
+        print('RateLimitError -----------')
+        return False
+    except stripe.error.InvalidRequestError as e:
+        # Invalid parameters were supplied to Stripe's API
+        print('InvalidRequestError -----------')
+        return False
+    except stripe.error.AuthenticationError as e:
+        # Authentication with Stripe's API failed
+        # (maybe you changed API keys recently)
+        print('AuthenticationError -----------')
+        return False
+    except stripe.error.APIConnectionError as e:
+        # Network communication with Stripe failed
+        print('APIConnectionError -----------')
+        return False
+    except stripe.error.StripeError as e:
+        # Display a very generic error to the user, and maybe send
+        # yourself an email
+        print('StripeError -----------')
+        return False
+    except Exception as e:
+        # Something else happened, completely unrelated to Stripe
+        print('Exception - something else! -----------')
+        return False
+
+    print('make charge  ----------------------')
+    print(str(stripe_token), int(payment['amount_integer']), str(payment['currency']), (str(phone_number) + ' charge'),
+          'goalsms.com fee')
+    try:
         # create the charge on stripe's servers - this will charge the user's card
         charge = stripe.Charge.create(
-            source=stripe_token,
-            amount=payment['amount_integer'],
-            currency=payment['currency'],
-            description=phone_number + ' charge'
+            amount=int(payment['amount_integer']),
+            currency=str(payment['currency']),
+            # source=str(stripe_token),
+            customer=customer.id,
+            description=str(phone_number) + ' charge',
+            statement_descriptor='goalsms.com fee'
         )
-
         return True
+    except stripe.error.CardError as e:
+        # Since it's a decline, stripe.error.CardError will be caught
+        body = e.json_body
+        err = body['error']
 
-    except stripe.CardError, e:  # The card has been declined.
+        print "Status is: %s" % e.http_status
+        print "Type is: %s" % err['type']
+        print "Code is: %s" % err['code']
+        # param is '' in this case
+        print "Param is: %s" % err['param']
+        print "Message is: %s" % err['message']
+        return False
+    except stripe.error.RateLimitError as e:
+        # Too many requests made to the API too quickly
+        print('RateLimitError -----------')
+        return False
+    except stripe.error.InvalidRequestError as e:
+        # Invalid parameters were supplied to Stripe's API
+        print('InvalidRequestError -----------')
+        return False
+    except stripe.error.AuthenticationError as e:
+        # Authentication with Stripe's API failed
+        # (maybe you changed API keys recently)
+        print('AuthenticationError -----------')
+        return False
+    except stripe.error.APIConnectionError as e:
+        # Network communication with Stripe failed
+        print('APIConnectionError -----------')
+        return False
+    except stripe.error.StripeError as e:
+        # Display a very generic error to the user, and maybe send
+        # yourself an email
+        print('StripeError -----------')
+        return False
+    except Exception as e:
+        # Something else happened, completely unrelated to Stripe
+        print('Exception - something else! -----------')
         return False
