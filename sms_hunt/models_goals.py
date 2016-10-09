@@ -37,16 +37,15 @@ def add_data_and_send_sms(db, values_dic, email, teams_dic):
 def charge_stripe(payment, email, secret_key, stripe_token, phone_number):
     # Connecting with stripe and charge if successful
     stripe.api_key = secret_key
-    print(payment, secret_key, stripe_token, email, phone_number)
 
-    print('make user  ----------------------')
+    # print(payment, secret_key, stripe_token, email, phone_number)
+    # print('make user  ----------------------')
+
     try:
         customer = stripe.Customer.create(
             email=str(email),
             source=str(stripe_token)
         )
-        print('made user ----------')
-        print(customer, '=---------')
     except stripe.error.CardError as e:
         # Since it's a decline, stripe.error.CardError will be caught
         body = e.json_body
@@ -86,9 +85,11 @@ def charge_stripe(payment, email, secret_key, stripe_token, phone_number):
         print('Exception - something else! -----------')
         return False
 
-    print('make charge  ----------------------')
-    print(str(stripe_token), int(payment['amount_integer']), str(payment['currency']), (str(phone_number) + ' charge'),
-          'goalsms.com fee')
+    # print('made user ----------')
+    # print(customer, '=---------')
+    # print('make charge  ----------------------')
+    # print(str(stripe_token), int(payment['amount_integer']), str(payment['currency']), (str(phone_number) + ' charge'),
+    #      'goalsms.com fee')
     try:
         # create the charge on stripe's servers - this will charge the user's card
         charge = stripe.Charge.create(
