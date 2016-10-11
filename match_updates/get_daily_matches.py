@@ -80,7 +80,7 @@ def get_live_matches(date_str, competition):
                           entry['status'],
                           entry['localteam_score'],
                           entry['visitorteam_score'])
-            match.change_time()
+            # match.change_time() # Not required as time on AWS is same as football API times...
             matches.append(match)
 
     return matches
