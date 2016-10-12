@@ -1,0 +1,34 @@
+{
+  "national_teams": {
+    "england": "England",
+    "northern_ireland": "Northern Ireland",
+    "scotland": "Scotland",
+    "wales": "Wales"
+  },
+  "club_teams": {
+    "bournemouth": "Bournemouth",
+    "arsenal": "Arsenal",
+    "burnley": "Burnley",
+    "chelsea": "Chelsea",
+    "crystal_palace": "Crystal Palace",
+    "everton": "Everton",
+    "hull_city": "Hull City",
+    "leicester": "Leicester",
+    "liverpool": "Liverpool",
+    "manchester_city": "Manchester City",
+    "manchester_united": "Manchester United",
+    "middlesbrough": "Middlesbrough",
+    "southampton": "Southampton",
+    "stoke_city": "Stoke City",
+    "sunderland": "Sunderland",
+    "swansea": "Swansea",
+    "tottenham": "Tottenham",
+    "watford": "Watford",
+    "west_brom": "West Brom",
+    "west_ham": "West Ham",
+    "bvb": "Borussia Dortmund",
+    "hsv": "HSV",
+    "bayern": "Bayern Muenchen"
+  }
+}
+
