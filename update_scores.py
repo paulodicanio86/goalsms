@@ -12,7 +12,7 @@ from match_updates.get_daily_matches import (check_for_daily_file, get_matches_f
 
 # Get login for goal API
 api_json_path = os.path.dirname(os.path.abspath(__file__))
-api_json_path = os.path.abspath(os.path.join(os.sep, api_json_path, 'goal_api_config.json'))
+api_json_path = os.path.abspath(os.path.join(os.sep, api_json_path, 'config_files', 'goal_api_config.json'))
 with open(api_json_path) as api_connection_file:
     api_config = json.load(api_connection_file)
 login_goal_api = api_config['login_goal_api']

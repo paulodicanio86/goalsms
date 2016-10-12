@@ -2,19 +2,19 @@ import MySQLdb
 import os
 from flask import request, send_from_directory, render_template, url_for, redirect
 
-from sms_hunt import app, db_config, key_config, meta_data
+from sms_hunt import app, db_config, stripe_config, team_data, app_config
 
 from sms import Sms
 from models_tour import follow_tour
 from models_goals import add_data_and_send_sms, charge_stripe
 
-key = key_config['stripe_publishable_key']
-secret_key = key_config['stripe_secret_key']
+key = stripe_config['stripe_publishable_key']
+secret_key = stripe_config['stripe_secret_key']
 
-company = meta_data['company']
-year = meta_data['year']
-title = meta_data['title']
-teams_dic = meta_data['club_teams']
+company = app_config['company']
+year = app_config['year']
+title = app_config['title']
+teams_dic = team_data['club_teams']
 teams = teams_dic.values()
 teams.sort()
 
@@ -24,12 +24,12 @@ from functions.validation_functions import convert_entries, validate_entries
 
 # configuration settings
 variable_names = ['team', 'phone_number', 'name']
-country_code = '44'  # default code, used to complete numbers
+country_code = app_config['country_code']  # default code, used to complete numbers
 
-payment = {'amount_integer': meta_data['amount_integer'],
-           'amount': meta_data['amount'],
-           'currency': meta_data['currency'],
-           'currency_html': meta_data['currency_html']
+payment = {'amount_integer': app_config['amount_integer'],
+           'amount': app_config['amount'],
+           'currency': app_config['currency'],
+           'currency_html': app_config['currency_html']
            }
 
 default_dic = {'valid': True,

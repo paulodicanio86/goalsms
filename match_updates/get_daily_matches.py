@@ -5,7 +5,7 @@ import os as os
 from match_updates.functions.db_functions import get_matches, date_in_table, get_kick_off_times, get_phone_numbers
 from match import Match, compare_matches
 from sms_hunt.sms import Sms
-from sms_hunt import meta_data
+from sms_hunt import team_data
 
 
 def map_to_match_object(entry):
@@ -165,12 +165,12 @@ def get_phone_numbers_and_send_sms(db, match):
     teams = [match.localteam_name, match.visitorteam_name]
 
     # Reverse team name to make it no capitals and no spaces.
-    rev_meta_data = dict((v, k) for k, v in meta_data['club_teams'].iteritems())
+    rev_team_data = dict((v, k) for k, v in team_data['club_teams'].iteritems())
 
     teams_formatted = []
     for team in teams:
-        if team in rev_meta_data.keys():
-            teams_formatted.append(str(rev_meta_data[team]))
+        if team in rev_team_data.keys():
+            teams_formatted.append(str(rev_team_data[team]))
             # teams_formatted.append(str(team)) # Let us only add our key team names and remove this full name
 
     # now find users who are subscribed to one of the two teams
@@ -184,6 +184,8 @@ def get_phone_numbers_and_send_sms(db, match):
         phone_numbers_list = list(set(phone_numbers_list))
 
         # check if any users are subscribed, and send sms
+        # In future, if there are many many users, the list can be split here and several requests to send sms
+        # can me made here.
         if len(phone_numbers_list) > 0:
             content = match.get_score_message_text()
 

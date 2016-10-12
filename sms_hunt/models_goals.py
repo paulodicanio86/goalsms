@@ -3,14 +3,15 @@ from datetime import datetime
 import stripe
 
 from sms import Sms
+from sms_hunt import sms_content
 from backend.db_functions import insert_array_to_table, get_table_columns
 
-table_name = 'goalsms'
-sign_up_sms_text = '{name}, you have successfully signed up for goal updates from {team}!'
+sign_up_sms_text = sms_content['sign_up_sms_text']
 
 
 def add_data_and_send_sms(db, values_dic, email, teams_dic):
     # Add to data base and send sms.
+    table_name = 'goalsms'
 
     rev_teams_dic = dict((v, k) for k, v in teams_dic.iteritems())
 

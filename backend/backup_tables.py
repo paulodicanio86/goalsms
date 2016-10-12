@@ -5,7 +5,7 @@ import os
 
 from db_functions import select_all
 
-with open('db_connection.json') as data_file:
+with open('config_files/db_config.json') as data_file:
     data_config = json.load(data_file)
 
 db = MySQLdb.connect(host=data_config['host'],

@@ -7,6 +7,7 @@
 other/
 venv/
 .idea/
+goalsms.com/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
