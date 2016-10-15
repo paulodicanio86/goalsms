@@ -3,7 +3,7 @@ from match_updates.functions.db_functions import update_matches_table
 
 
 class Match:
-    def __init__(self, localteam_name, visitorteam_name, time_str, date_str, status,
+    def __init__(self, localteam_name, visitorteam_name, time_str, date_str, status, timer,
                  localteam_score='?', visitorteam_score='?'):
         self.localteam_name = str(localteam_name)
         self.visitorteam_name = str(visitorteam_name)
@@ -15,6 +15,7 @@ class Match:
         self.date_str = str(date_str)  # "03.01.2016"
 
         self.status = str(status)  # "FT"
+        self.timer = str(timer)
 
     def change_time(self):
         # Function to convert kick off times back by one hour for BST from ECT
@@ -24,7 +25,7 @@ class Match:
     def save_to_db(self, db, table_name='matches'):
         text_row = [self.date_str, self.localteam_name, self.visitorteam_name,
                     self.localteam_score, self.visitorteam_score, self.time_str,
-                    self.status]
+                    self.status, self.timer]
 
         # Add match to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
@@ -32,11 +33,15 @@ class Match:
     def update_score_db(self, db):
         update_matches_table(db, 'localteam_score', self.localteam_score, self.date_str, self.localteam_name)
         update_matches_table(db, 'visitorteam_score', self.visitorteam_score, self.date_str, self.localteam_name)
+        update_matches_table(db, 'status_str', self.status, self.date_str, self.localteam_name)
+        update_matches_table(db, 'timer_str', self.timer, self.date_str, self.localteam_name)
 
     def get_score_message_text(self):
         # minute = '49'
-        message = 'New score: {localteam_name} {localteam_score} - {visitorteam_score} {visitorteam_name}'
-        message = message.format(localteam_name=self.localteam_name, localteam_score=self.localteam_score,
+        message = '{timer}. New score: {localteam_name} {localteam_score} - {visitorteam_score} {visitorteam_name}'
+        message = message.format(timer=self.timer,
+                                 localteam_name=self.localteam_name,
+                                 localteam_score=self.localteam_score,
                                  visitorteam_name=self.visitorteam_name,
                                  visitorteam_score=self.visitorteam_score)
         # message = minute + '. minute, ' + message !!!!!!!!!!!  add a minute feature?

@@ -78,9 +78,10 @@ def get_live_matches(date_str, competition, login_goal_api):
                           entry['time'],
                           entry['formatted_date'],
                           entry['status'],
+                          entry['timer'],
                           entry['localteam_score'],
                           entry['visitorteam_score'])
-            # match.change_time() # Not required as time on AWS is same as football API times...
+            # match.change_time()  # Not required as time on AWS is same as football API times...
             matches.append(match)
 
     return matches
@@ -187,7 +188,11 @@ def get_phone_numbers_and_send_sms(db, match):
         # In future, if there are many many users, the list can be split here and several requests to send sms
         # can me made here.
         if len(phone_numbers_list) > 0:
-            content = match.get_score_message_text()
+
+            if match.status == 'FT':
+                content = 'Full time'
+            else:
+                content = match.get_score_message_text()
 
             sms = Sms(content, receiver=phone_numbers_list)
             sms.send()
