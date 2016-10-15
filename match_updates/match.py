@@ -7,6 +7,8 @@ class Match:
                  localteam_score='?', visitorteam_score='?'):
         self.localteam_name = str(localteam_name)
         self.visitorteam_name = str(visitorteam_name)
+        self.localteam_name_print = str(localteam_name)
+        self.visitorteam_name_print = str(visitorteam_name)
 
         self.localteam_score = str(localteam_score)  # "0"
         self.visitorteam_score = str(visitorteam_score)  # "1"
@@ -20,6 +22,8 @@ class Match:
     def change_names(self, team_data):
         self.localteam_name = look_up_teams(self.localteam_name, team_data)
         self.visitorteam_name = look_up_teams(self.visitorteam_name, team_data)
+        self.localteam_name_print = look_up_teams_print(self.localteam_name, team_data)
+        self.visitorteam_name_print = look_up_teams_print(self.visitorteam_name, team_data)
 
     def change_time(self):
         # Function to convert kick off times back by one hour for BST from ECT
@@ -41,14 +45,22 @@ class Match:
         update_matches_table(db, 'timer_str', self.timer, self.date_str, self.localteam_name)
 
     def get_score_message_text(self):
-        # minute = '49'
-        message = '{timer}. New score: {localteam_name} {localteam_score} - {visitorteam_score} {visitorteam_name}'
+        message = '{timer}. New score: {localteam_name_print} {localteam_score} -'
+        message += ' {visitorteam_score} {visitorteam_name_pring}'
         message = message.format(timer=self.timer,
-                                 localteam_name=self.localteam_name,
+                                 localteam_name_print=self.localteam_name_print,
                                  localteam_score=self.localteam_score,
-                                 visitorteam_name=self.visitorteam_name,
+                                 visitorteam_name_print=self.visitorteam_name_print,
                                  visitorteam_score=self.visitorteam_score)
-        # message = minute + '. minute, ' + message !!!!!!!!!!!  add a minute feature?
+        return message
+
+    def get_full_time_message_text(self):
+        message = 'FT. Final score: {localteam_name_print} {localteam_score} -'
+        message += ' {visitorteam_score} {visitorteam_name_pring}'
+        message = message.format(localteam_name_print=self.localteam_name_print,
+                                 localteam_score=self.localteam_score,
+                                 visitorteam_name_print=self.visitorteam_name_print,
+                                 visitorteam_score=self.visitorteam_score)
         return message
 
     def __eq__(self, match2):
@@ -70,13 +82,21 @@ def look_up_teams(team_name, team_data):
         return team_name
 
 
+def look_up_teams_print(team_name, team_data):
+    # First check if team name is in look up table
+    if team_name in team_data['club_teams'].keys():
+        return str(team_data['club_teams'][team_name])
+    else:
+        return team_name
+
+
 def compare_matches(db_matches, live_matches):
     changed_matches = []
 
     for db_match in db_matches:
         for live_match in live_matches:
             if db_match == live_match:
-
+                # FT BREAK HERE!!!
                 # Has the score changed, or the status? Only then add to the updated ones.
                 if ((db_match.localteam_score != live_match.localteam_score) |
                         (db_match.visitorteam_score != live_match.visitorteam_score)):

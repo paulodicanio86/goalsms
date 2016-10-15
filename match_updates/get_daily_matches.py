@@ -188,7 +188,7 @@ def get_phone_numbers_and_send_sms(db, match):
         if len(phone_numbers_list) > 0:
 
             if match.status == 'FT':
-                content = 'Full time'
+                content = match.get_full_time_message_text()
             else:
                 content = match.get_score_message_text()
 
