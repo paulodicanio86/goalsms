@@ -82,6 +82,7 @@ def get_live_matches(date_str, competition, login_goal_api):
                           entry['localteam_score'],
                           entry['visitorteam_score'])
             # match.change_time()  # Not required as time on AWS is same as football API times...
+            match.change_names(team_data)  # change team names according to dict keys
             matches.append(match)
 
     return matches
@@ -164,15 +165,12 @@ def check_for_daily_file(db, file_path, date_str, competition, login_goal_api):
 
 def get_phone_numbers_and_send_sms(db, match):
     teams = [match.localteam_name, match.visitorteam_name]
-
-    # Reverse team name to make it no capitals and no spaces.
-    rev_team_data = dict((v, k) for k, v in team_data['club_teams'].iteritems())
-
     teams_formatted = []
+
     for team in teams:
-        if team in rev_team_data.keys():
-            teams_formatted.append(str(rev_team_data[team]))
-            # teams_formatted.append(str(team)) # Let us only add our key team names and remove this full name
+        if team in team_data['club_teams'].keys():
+            # teams_formatted.append(str(rev_team_data[team]))
+            teams_formatted.append(str(team))
 
     # now find users who are subscribed to one of the two teams
     if len(teams_formatted) > 0:

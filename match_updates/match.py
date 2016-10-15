@@ -17,6 +17,10 @@ class Match:
         self.status = str(status)  # "FT"
         self.timer = str(timer)
 
+    def change_names(self, team_data):
+        self.localteam_name = look_up_teams(self.localteam_name, team_data)
+        self.visitorteam_name = look_up_teams(self.visitorteam_name, team_data)
+
     def change_time(self):
         # Function to convert kick off times back by one hour for BST from ECT
         adjusted_time = int(self.time_str[:-3]) + 1
@@ -54,6 +58,18 @@ class Match:
                 (self.date_str == match2.date_str))
 
 
+def look_up_teams(team_name, team_data):
+    # First check if team name is in look up table
+    if team_name in team_data['team_name_lookup'].keys():
+        return str(team_data['team_name_lookup'][team_name])
+    # else look up in master table. If team is not known at all then it stays just unchanged
+    elif team_name in team_data['club_teams'].values():
+        rev_team_data = dict((v, k) for k, v in team_data['club_teams'].iteritems())
+        return str(rev_team_data[team_name])
+    else:
+        return team_name
+
+
 def compare_matches(db_matches, live_matches):
     changed_matches = []
 
@@ -63,8 +79,7 @@ def compare_matches(db_matches, live_matches):
 
                 # Has the score changed, or the status? Only then add to the updated ones.
                 if ((db_match.localteam_score != live_match.localteam_score) |
-                        (db_match.visitorteam_score != live_match.visitorteam_score) |
-                        ((db_match.status != 'FT') & (live_match.status == 'FT'))):
+                        (db_match.visitorteam_score != live_match.visitorteam_score)):
                     changed_matches.append(live_match)
                     print('match & updated score! DB: ',
                           db_match.date_str, db_match.localteam_name, db_match.visitorteam_name,
