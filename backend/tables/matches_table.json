@@ -6,6 +6,7 @@
     "VARCHAR(255)",
     "VARCHAR(255)",
     "VARCHAR(255)",
+    "VARCHAR(255)",
     "VARCHAR(255)"
   ],
   "name": "matches",
@@ -16,7 +17,8 @@
     "localteam_score",
     "visitorteam_score",
     "time_str",
-    "status_str"
+    "status_str",
+    "timer_str"
   ],
   "default_rows": [
     [
@@ -26,7 +28,8 @@
       "0",
       "0",
       "12:30",
-      "FT"
+      "FT",
+      "31"
     ],
     [
       "22.09.2016",
@@ -35,7 +38,8 @@
       "0",
       "0",
       "12:30",
-      "FT"
+      "FT",
+      "50"
     ]
   ]
 }
