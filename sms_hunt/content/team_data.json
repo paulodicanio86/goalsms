@@ -26,9 +26,20 @@
     "watford": "Watford",
     "west_brom": "West Brom",
     "west_ham": "West Ham",
-    "bvb": "Borussia Dortmund",
-    "hsv": "HSV",
-    "bayern": "Bayern Muenchen"
+    "dortmund": "Dortmund",
+    "hertha_berlin": "Hertha Berlin",
+    "hamburger_sv": "Hamburger SV",
+    "bayern_munich": "Bayern Munich",
+    "b_monchengladbach": "B. Monchengladbach",
+    "fc_koln": "1. FC Koln",
+    "ingolstadt": "Ingolstadt",
+    "augsburg": "Augsburg",
+    "schalke": "Schalke",
+    "hoffenheim": "Hoffenheim",
+    "freiburg": "Freiburg",
+    "eintracht_frankfurt": "Eintracht Frankfurt",
+    "sv_werder_bremen": "SV Werder Bremen",
+    "bayer_leverkusen": "Bayer Leverkusen"
   }
 }
 
