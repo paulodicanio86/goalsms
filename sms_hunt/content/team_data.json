@@ -39,7 +39,11 @@
     "freiburg": "SC Freiburg",
     "eintracht_frankfurt": "Eintracht Frankfurt",
     "sv_werder_bremen": "SV Werder Bremen",
-    "bayer_leverkusen": "Bayer 04 Leverkusen"
+    "bayer_leverkusen": "Bayer 04 Leverkusen",
+    "mainz": "Mainz",
+    "darmstadt": "Darmstadt",
+    "wolfsburg": "Wolfsburg",
+    "leipzig": "RB Leipzig"
   },
   "team_name_lookup": {
     "Arsenal": "arsenal",
