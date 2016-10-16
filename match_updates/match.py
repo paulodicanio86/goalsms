@@ -46,7 +46,7 @@ class Match:
 
     def get_score_message_text(self):
         message = '{timer}. New score: {localteam_name_print} {localteam_score} -'
-        message += ' {visitorteam_score} {visitorteam_name_pring}'
+        message += ' {visitorteam_score} {visitorteam_name_print}'
         message = message.format(timer=self.timer,
                                  localteam_name_print=self.localteam_name_print,
                                  localteam_score=self.localteam_score,
@@ -56,7 +56,7 @@ class Match:
 
     def get_full_time_message_text(self):
         message = 'FT. Final score: {localteam_name_print} {localteam_score} -'
-        message += ' {visitorteam_score} {visitorteam_name_pring}'
+        message += ' {visitorteam_score} {visitorteam_name_print}'
         message = message.format(localteam_name_print=self.localteam_name_print,
                                  localteam_score=self.localteam_score,
                                  visitorteam_name_print=self.visitorteam_name_print,
