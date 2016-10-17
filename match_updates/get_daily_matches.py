@@ -14,6 +14,7 @@ def map_to_match_object(entry):
                   entry['time_str'],
                   entry['date_str'],
                   entry['status_str'],
+                  entry['timer_str'],
                   entry['localteam_score'],
                   entry['visitorteam_score'])
     return match

@@ -16,7 +16,7 @@ def date_in_table(db, date_str, table_name='matches'):
 # Query to return all matches on the day
 def get_matches(db, date_str, table_name='matches'):
     sql_query = '''SELECT date_str, localteam_name, visitorteam_name, localteam_score,
-                visitorteam_score, time_str, status_str FROM {table_name} WHERE date_str='{date_str}';'''
+                visitorteam_score, time_str, status_str, timer_str FROM {table_name} WHERE date_str='{date_str}';'''
     sql_query = sql_query.format(table_name=table_name, date_str=date_str)
 
     return execute_statement(sql_query, db)
