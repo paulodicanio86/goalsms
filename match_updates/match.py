@@ -99,7 +99,8 @@ def compare_matches(db_matches, live_matches):
                 # FT BREAK HERE!!!
                 # Has the score changed, or the status? Only then add to the updated ones.
                 if ((db_match.localteam_score != live_match.localteam_score) |
-                        (db_match.visitorteam_score != live_match.visitorteam_score)):
+                        (db_match.visitorteam_score != live_match.visitorteam_score) |
+                        ((db_match.status != 'FT') & (live_match.status == 'FT'))):
                     changed_matches.append(live_match)
                     print('match & updated score! DB: ',
                           db_match.date_str, db_match.localteam_name, db_match.visitorteam_name,

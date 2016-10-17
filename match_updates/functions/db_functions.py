@@ -25,7 +25,7 @@ def get_matches(db, date_str, table_name='matches'):
 # Update matches table
 def update_matches_table(db, column_name, column_value, date_str, localteam_name):
     table_name = "matches"
-    column_value = str(column_value)
+    column_value = "'" + str(column_value) + "'"
     condition_1 = "date_str = '" + str(date_str) + "'"
     condition_2 = "localteam_name = '" + str(localteam_name) + "'"
     update_row(table_name, db, column_name, column_value, condition_1, condition_2)
