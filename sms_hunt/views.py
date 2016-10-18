@@ -24,7 +24,8 @@ from functions.validation_functions import convert_entries, validate_entries
 
 # configuration settings
 variable_names = ['team', 'phone_number', 'name']
-country_code = app_config['country_code']  # default code, used to complete numbers
+country_codes = app_config['country_codes'].split(',') # all accepted codes
+default_country_code = country_codes[0]  # default code, used to complete numbers
 
 payment = {'amount_integer': app_config['amount_integer'],
            'amount': app_config['amount'],
@@ -98,8 +99,8 @@ def verify_post():
     # fill, convert and validate entries
     for entry in variable_names:
         values_dic[entry] = request.form[entry]
-        values_dic[entry] = convert_entries(entry, values_dic[entry], country_code)
-        valid_dic[entry] = validate_entries(entry, values_dic[entry])
+        values_dic[entry] = convert_entries(entry, values_dic[entry], default_country_code)
+        valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
 
     # reload if non-validated entries exist
     if False in valid_dic.values():

@@ -21,12 +21,12 @@ def valid_name(name):
         return matches_reg_ex(name, reg_ex)
 
 
-def valid_phone_number(number):
+def valid_phone_number(number, country_codes):
     """
     Checks if account_number is valid and a string.
     Valid: 12345678
     """
-    return is_integer_string(number)
+    return is_integer_string(number) and (number[:2] in country_codes)
 
 
 def valid_team(team):
@@ -48,9 +48,9 @@ def convert_entries(entry, value, country_code):
         return value
 
 
-def validate_entries(entry, value):
+def validate_entries(entry, value, country_codes):
     if entry == 'phone_number':
-        return valid_phone_number(value)
+        return valid_phone_number(value, country_codes)
     elif entry == 'name':
         return valid_name(value)
     elif entry == 'team':
