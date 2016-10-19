@@ -85,7 +85,9 @@ def look_up_teams(team_name, team_data):
 def look_up_teams_print(team_name, team_data):
     # First check if team name is in look up table
     if team_name in team_data['club_teams'].keys():
-        return str(team_data['club_teams'][team_name])
+        team_str = team_data['club_teams'][team_name]
+        team_str = unicode(team_str).encode("utf-8")
+        return str(team_str)
     else:
         return team_name
 
