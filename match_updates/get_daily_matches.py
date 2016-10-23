@@ -188,8 +188,13 @@ def get_phone_numbers_and_send_sms(db, match):
         # can me made here.
         if len(phone_numbers_list) > 0:
 
-            if match.status == 'FT':
+            # kick off message
+            if match.localteam_score == '0' and match.visitorteam_score == '0':
+                content = match.get_kick_off_message_text()
+            # FT message
+            elif match.status == 'FT':
                 content = match.get_full_time_message_text()
+            # score change message
             else:
                 content = match.get_score_message_text()
 

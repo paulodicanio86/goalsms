@@ -4,7 +4,7 @@ from match_updates.functions.db_functions import update_matches_table
 
 class Match:
     def __init__(self, localteam_name, visitorteam_name, time_str, date_str, status, timer,
-                 localteam_score='?', visitorteam_score='?'):
+                 localteam_score, visitorteam_score):
         self.localteam_name = str(localteam_name)
         self.visitorteam_name = str(visitorteam_name)
         self.localteam_name_print = str(localteam_name)
@@ -63,6 +63,13 @@ class Match:
                                  visitorteam_score=self.visitorteam_score)
         return message
 
+    def get_kick_off_message_text(self):
+        message = 'Kick off: {localteam_name_print} -'
+        message += ' {visitorteam_name_print}'
+        message = message.format(localteam_name_print=self.localteam_name_print,
+                                 visitorteam_name_print=self.visitorteam_name_print)
+        return message
+
     def __eq__(self, match2):
         return ((self.localteam_name == match2.localteam_name) &
                 (self.visitorteam_name == match2.visitorteam_name) &
@@ -92,18 +99,55 @@ def look_up_teams_print(team_name, team_data):
         return team_name
 
 
+def has_qm(match):
+    if match.localteam_score == '?' or match.visitorteam_score == '?':
+        return True
+    else:
+        return False
+
+
+def is_score(match, score_local, score_visitor):
+    if match.localteam_score == score_local and match.visitorteam_score == score_visitor:
+        return True
+    else:
+        return False
+
+
+def are_digits(match):
+    if match.localteam_score.isdigit() and match.visitorteam_score.isdigit():
+        return True
+    else:
+        return False
+
+
 def compare_matches(db_matches, live_matches):
     changed_matches = []
 
     for db_match in db_matches:
         for live_match in live_matches:
             if db_match == live_match:
-                # FT BREAK HERE!!!
-                # Has the score changed, or the status? Only then add to the updated ones.
-                if ((db_match.localteam_score != live_match.localteam_score) |
-                        (db_match.visitorteam_score != live_match.visitorteam_score) |
-                        ((db_match.status != 'FT') & (live_match.status == 'FT'))):
+                print_flag = False
+
+                # kick off:
+                if has_qm(db_match) and is_score(live_match, '0', '0'):
                     changed_matches.append(live_match)
+                    print_flag = True
+                # full time
+                elif (db_match.status != 'FT') and (live_match.status == 'FT'):
+                    changed_matches.append(live_match)
+                    print_flag = True
+                # score change
+                elif are_digits(db_match) and are_digits(live_match):
+                    # visitor team has scored
+                    if int(live_match.visitorteam_score) > int(db_match.visitorteam_score):
+                        changed_matches.append(live_match)
+                        print_flag = True
+                    # local team has scored
+                    elif int(live_match.localteam_score) > int(db_match.localteam_score):
+                        changed_matches.append(live_match)
+                        print_flag = True
+
+                if print_flag:
                     print('match & updated score found! DB: ',
                           db_match.date_str, db_match.localteam_name, db_match.visitorteam_name,
                           db_match.localteam_score, db_match.visitorteam_score, db_match.status, db_match.timer,
