@@ -38,7 +38,7 @@ class Match:
         # Add match to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
 
-    def update_score_db(self, db):
+    def update_on_db(self, db):
         update_matches_table(db, 'localteam_score', self.localteam_score, self.date_str, self.localteam_name)
         update_matches_table(db, 'visitorteam_score', self.visitorteam_score, self.date_str, self.localteam_name)
         update_matches_table(db, 'status_str', self.status, self.date_str, self.localteam_name)
@@ -129,7 +129,7 @@ def compare_matches(db_matches, live_matches):
                 print_flag = False
 
                 # kick off:
-                if has_qm(db_match) and is_score(live_match, '0', '0'):
+                if has_qm(db_match) and are_digits(live_match):
                     changed_matches.append(live_match)
                     print_flag = True
                 # full time

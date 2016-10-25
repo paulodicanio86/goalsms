@@ -72,7 +72,7 @@ def get_live_matches(date_str, competition, login_goal_api):
     # Make Match objects
     matches_json = json.loads(result)
     matches = []
-    if (len(matches_json) > 0) and ('code' not in matches_json):
+    if (len(matches_json) > 0) and ('code' not in matches_json): # 'code' was sometimes returned so taking this out.
         for entry in matches_json:
             match = Match(entry['localteam_name'],
                           entry['visitorteam_name'],
@@ -95,6 +95,8 @@ def add_daily_matches_to_db(db, date_str, competition, login_goal_api):
     # Save matches to db
     for match in matches:
         match.save_to_db(db)
+        # Do a commit here to update table in this moment
+        db.commit()
 
 
 def compare_matches_and_update(db, db_matches, live_matches):
@@ -102,7 +104,9 @@ def compare_matches_and_update(db, db_matches, live_matches):
 
     # Update matches on db
     for match in changed_matches:
-        match.update_score_db(db)
+        match.update_on_db(db)
+        # Do a commit here to update table in this moment
+        db.commit()
 
     return changed_matches
 

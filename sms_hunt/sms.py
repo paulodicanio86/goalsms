@@ -59,14 +59,16 @@ class Sms:
     def set_receiver(self, receiver):
         # check if
         if receiver:
-            self.receiver = receiver
             if type(receiver) == list:
                 if len(receiver) > 1:
                     self.multiple_receivers = True
+                    self.receiver = receiver
                 elif len(receiver) == 1:
                     self.receiver = str(receiver[0])
                 else:
                     self.receiver = None
+            else:
+                self.receiver = receiver
 
     def validate_sender(self):
         self.sender = validate_number(self.sender)
