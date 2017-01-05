@@ -60,22 +60,7 @@ def get_live_matches(date_str, competition, login_goal_api):
                   '{"id":"21583635","type":"goal","minute":"66","extra_min":"","team":"visitorteam","player":' \
                   '"D. Costa","player_id":"60977","assist":"Willian","assist_id":"9051","result":"[0-3]"},' \
                   '{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam","player":' \
-                  '"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}]},{"id":"1921987","comp_id":' \
-                  '"1204","formatted_date":"' + date_str + \
-                  '","season":"2015\\/2016","week":"20","venue":"Goodison Park (Liverpool)","venue_id":"1252",' \
-                  '"venue_city":"Liverpool","status":"FT","timer":"","time":"12:30","localteam_id":"9158",' \
-                  '"localteam_name":"Bayern","localteam_score":"1","visitorteam_id":"9406","visitorteam_name":' \
-                  '"Sunderland","visitorteam_score":"0","ht_score":"[1-1]","ft_score":"[1-1]","et_score":null,' \
-                  '"penalty_local":null,"penalty_visitor":null,"events":[{"id":"21583651","type":"goal","minute":"22",' \
-                  '"extra_min":"","team":"localteam","player":"A. Lennon","player_id":"","assist":"R. Lukaku","assist_id":' \
-                  '"79495","result":"[1-0]"},{"id":"21583652","type":"yellowcard","minute":"35","extra_min":"","team":' \
-                  '"localteam","player":"S. Coleman","player_id":"7158","assist":"","assist_id":"","result":""},' \
-                  '{"id":"21583653","type":"goal","minute":"45","extra_min":"1","team":"visitorteam","player":"D. Alli",' \
-                  '"player_id":"217739","assist":"T. Alderweireld","assist_id":"70508","result":"[1-1]"},{"id":"21583654",' \
-                  '"type":"yellowcard","minute":"68","extra_min":"","team":"visitorteam","player":"E. Lamela",' \
-                  '"player_id":"81992","assist":"","assist_id":"","result":""},{"id":"21583655","type":"yellowcard",' \
-                  '"minute":"72","extra_min":"","team":"visitorteam","player":"T. Carroll","player_id":"173621",' \
-                  '"assist":"","assist_id":"","result":""}]}]'
+                  '"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}]}]'
 
     # Make Match objects
     matches_json = json.loads(result)
