@@ -16,7 +16,8 @@ def map_to_match_object(entry):
                   entry['status_str'],
                   entry['timer_str'],
                   entry['localteam_score'],
-                  entry['visitorteam_score'])
+                  entry['visitorteam_score'],
+                  entry['comp_id_str'])
     return match
 
 
@@ -35,11 +36,18 @@ def get_live_matches(date_str, competition, login_goal_api):
     except urllib2.HTTPError:
         result = '{}'
 
-    result_test = '[{"id":"1921980","comp_id":"1204","formatted_date":"' + date_str + \
+    test_localteam = 'Leicester'
+    test_localteam_score = '4'
+    test_visitorteam = 'Arsenal'
+    test_visitorteam_score = '66'
+    test_timer = '4' # Minute or FT
+    test_comp_id = '1204'
+
+    test_result = '[{"id":"1921980","comp_id":"'+test_comp_id+'","formatted_date":"' + date_str + \
                   '","season":"2015\\/2016",' \
-                  '"week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"FT",' \
-                  '"timer":"","time":"12:30","localteam_id":"9127","localteam_name":"Leicester",' \
-                  '"localteam_score":"15","visitorteam_id":"9092","visitorteam_name":"Chelsea","visitorteam_score":"3",' \
+                  '"week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"'+test_timer+'",' \
+                  '"timer":"'+test_timer+'","time":"12:30","localteam_id":"9127","localteam_name":"'+test_localteam+'",' \
+                  '"localteam_score":"'+test_localteam_score+'","visitorteam_id":"9092","visitorteam_name":"'+test_visitorteam+'","visitorteam_score":"'+test_visitorteam_score+'",' \
                   '"ht_score":"[0-1]","ft_score":"[0-3]","et_score":null,"penalty_local":null,' \
                   '"penalty_visitor":null,"events":[{"id":"21583631","type":"yellowcard","minute":"13",' \
                   '"extra_min":"","team":"localteam","player":"D. Delaney","player_id":"15760","assist":"",' \
@@ -81,7 +89,8 @@ def get_live_matches(date_str, competition, login_goal_api):
                           entry['status'],
                           entry['timer'],
                           entry['localteam_score'],
-                          entry['visitorteam_score'])
+                          entry['visitorteam_score'],
+                          entry['comp_id'])
             # match.change_time()  # Not required as time on AWS is same as football API times...
             match.change_names(team_data)  # change team names according to dict keys
             matches.append(match)
@@ -192,12 +201,12 @@ def get_phone_numbers_and_send_sms(db, match):
         # can me made here.
         if len(phone_numbers_list) > 0:
 
-            # kick off message
-            if match.localteam_score == '0' and match.visitorteam_score == '0':
-                content = match.get_kick_off_message_text()
             # FT message
-            elif match.status == 'FT':
+            if match.status == 'FT':
                 content = match.get_full_time_message_text()
+            # kick off message
+            elif match.localteam_score == '0' and match.visitorteam_score == '0':
+                content = match.get_kick_off_message_text()
             # score change message
             else:
                 content = match.get_score_message_text()

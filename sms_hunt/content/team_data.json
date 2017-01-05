@@ -5,6 +5,15 @@
     "scotland": "Scotland",
     "wales": "Wales"
   },
+  "1005": [
+    "arsenal",
+    "chelsea",
+    "bayern_munich"
+  ],
+  "1007": [
+    "hsv",
+    "schalke"
+  ],
   "club_teams": {
     "bournemouth": "Bournemouth",
     "arsenal": "Arsenal F.C.",
@@ -58,7 +67,13 @@
     "Schalke": "schalke",
     "Hoffenheim": "hoffenheim",
     "Freiburg": "freiburg",
-    "Bayer Leverkusen": "bayer_leverkusen"
+    "Bayer Leverkusen": "bayer_leverkusen",
+    "Swansea City": "swansea",
+    "AFC Bournemouth": "bournemouth",
+    "West Bromwich Albion": "west_brom",
+    "Leicester City": "leicester",
+    "West Ham United": "west_ham",
+    "Tottenham Hotspur": "tottenham"
   }
 }
 

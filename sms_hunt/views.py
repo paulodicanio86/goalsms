@@ -8,8 +8,12 @@ from sms import Sms
 from models_tour import follow_tour
 from models_goals import add_data_and_send_sms, charge_stripe
 
-key = stripe_config['stripe_publishable_key']
-secret_key = stripe_config['stripe_secret_key']
+if stripe_config['stripe_test_flag'] == 0:
+    key = stripe_config['stripe_live_publishable_key']
+    secret_key = stripe_config['stripe_live_secret_key']
+else:
+    key = stripe_config['stripe_test_publishable_key']
+    secret_key = stripe_config['stripe_test_secret_key']
 
 company = app_config['company']
 year = app_config['year']
@@ -24,7 +28,7 @@ from functions.validation_functions import convert_entries, validate_entries
 
 # configuration settings
 variable_names = ['team', 'phone_number', 'name']
-country_codes = app_config['country_codes'].split(',') # all accepted codes
+country_codes = app_config['country_codes'].split(',')  # all accepted codes
 default_country_code = country_codes[0]  # default code, used to complete numbers
 
 payment = {'amount_integer': app_config['amount_integer'],

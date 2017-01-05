@@ -4,7 +4,7 @@ from match_updates.functions.db_functions import update_matches_table
 
 class Match:
     def __init__(self, localteam_name, visitorteam_name, time_str, date_str, status, timer,
-                 localteam_score, visitorteam_score):
+                 localteam_score, visitorteam_score, comp_id):
         self.localteam_name = str(localteam_name)
         self.visitorteam_name = str(visitorteam_name)
         self.localteam_name_print = str(localteam_name)
@@ -18,6 +18,8 @@ class Match:
 
         self.status = str(status)  # "FT"
         self.timer = str(timer)
+
+        self.comp_id = str(comp_id)
 
     def change_names(self, team_data):
         self.localteam_name = look_up_teams(self.localteam_name, team_data)
@@ -33,7 +35,7 @@ class Match:
     def save_to_db(self, db, table_name='matches'):
         text_row = [self.date_str, self.localteam_name, self.visitorteam_name,
                     self.localteam_score, self.visitorteam_score, self.time_str,
-                    self.status, self.timer]
+                    self.status, self.timer, self.comp_id]
 
         # Add match to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
@@ -73,7 +75,7 @@ class Match:
     def __eq__(self, match2):
         return ((self.localteam_name == match2.localteam_name) &
                 (self.visitorteam_name == match2.visitorteam_name) &
-                (self.time_str == match2.time_str) &
+                # (self.time_str == match2.time_str) &
                 (self.date_str == match2.date_str))
 
 
@@ -139,11 +141,13 @@ def compare_matches(db_matches, live_matches):
                 # score change
                 elif are_digits(db_match) and are_digits(live_match):
                     # visitor team has scored
-                    if int(live_match.visitorteam_score) > int(db_match.visitorteam_score):
+                    if int(live_match.visitorteam_score) > int(db_match.visitorteam_score) and int(
+                            live_match.localteam_score) >= int(db_match.localteam_score):
                         changed_matches.append(live_match)
                         print_flag = True
                     # local team has scored
-                    elif int(live_match.localteam_score) > int(db_match.localteam_score):
+                    elif int(live_match.localteam_score) > int(db_match.localteam_score) and int(
+                            live_match.visitorteam_score) >= int(db_match.visitorteam_score):
                         changed_matches.append(live_match)
                         print_flag = True
 

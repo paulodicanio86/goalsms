@@ -7,6 +7,7 @@
     "VARCHAR(255)",
     "VARCHAR(255)",
     "VARCHAR(255)",
+    "VARCHAR(255)",
     "VARCHAR(255)"
   ],
   "name": "matches",
@@ -18,28 +19,31 @@
     "visitorteam_score",
     "time_str",
     "status_str",
-    "timer_str"
+    "timer_str",
+    "comp_id_str"
   ],
   "default_rows": [
     [
       "22.09.2016",
-      "Leicester",
-      "Chelsea",
+      "hsv",
+      "arsenal",
       "0",
       "0",
       "12:30",
       "FT",
-      "31"
+      "31",
+      "1204"
     ],
     [
       "22.09.2016",
-      "Bayern",
-      "Sunderland",
+      "bvb",
+      "Moskau",
       "0",
       "0",
       "12:30",
       "FT",
-      "50"
+      "50",
+      "1204"
     ]
   ]
 }
