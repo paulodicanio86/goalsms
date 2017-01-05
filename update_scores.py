@@ -10,6 +10,14 @@ from match_updates.get_daily_matches import (check_for_daily_file, get_matches_f
                                              get_live_matches, compare_matches_and_update,
                                              get_phone_numbers_and_send_sms)
 
+# Open app data file
+app_json_path = os.path.dirname(os.path.abspath(__file__))
+app_json_path = os.path.abspath(os.path.join(os.sep, app_json_path, 'config_files', 'app_config.json'))
+
+with open(app_json_path) as app_config_file:
+    app_config = json.load(app_config_file)
+stop_updates = app_config['stop_updates']
+
 # Get login for goal API
 api_json_path = os.path.dirname(os.path.abspath(__file__))
 api_json_path = os.path.abspath(os.path.join(os.sep, api_json_path, 'config_files', 'goal_api_config.json'))
@@ -41,10 +49,14 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(os.sep, file_path, 'match_updates/daily_files', date_str + '.txt')
 
 # Check what to do based on txt file
-match_day, trigger_times = check_for_daily_file(db, file_path, date_str, competition, login_goal_api)
+if stop_updates == 1:
+    match_day = False
+    trigger_times = []
+else:
+    match_day, trigger_times = check_for_daily_file(db, file_path, date_str, competition, login_goal_api)
 
 # We have a match day today, and a valid hours and minute. Let's check the score
-if (match_day and (hour_str in trigger_times)):  # or True:
+if match_day and (hour_str in trigger_times):  # or True:
 
     # Get matches in db
     db_matches = get_matches_from_db(db, date_str)
