@@ -9,7 +9,7 @@ from backend.db_functions import insert_array_to_table, get_table_columns
 sign_up_sms_text = sms_content['sign_up_sms_text']
 
 
-def add_data_and_send_sms(db, values_dic, email, teams_dic):
+def add_data_and_send_sms(db, values_dic, email, teams_dic, mode=0):
     # Add to data base and send sms.
     table_name = 'goalsms'
 
@@ -20,7 +20,8 @@ def add_data_and_send_sms(db, values_dic, email, teams_dic):
                 str(email),
                 dt,
                 str(rev_teams_dic[str(values_dic['team'])]),
-                str(values_dic['name'])]
+                str(values_dic['name']),
+                mode]
 
     # Add message to table
     insert_array_to_table(table_name, db,
