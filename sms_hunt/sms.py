@@ -114,7 +114,6 @@ class Sms:
             receiver = ','.join(self.receiver)
         else:
             receiver = self.receiver
-        print ('SMS SENT to ' + receiver + ' and content: ' + self.content)
 
         # Check if one number or multiple, and turn multiple into tuple, then send
         if self.multiple_receivers:
@@ -123,3 +122,4 @@ class Sms:
             number = self.receiver
 
         send_sms(number, self.content, sms_config)
+        print ('SMS SENT to ' + str(number) + ' and content: ' + self.content)
