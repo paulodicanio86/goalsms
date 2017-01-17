@@ -4,7 +4,7 @@ from match_updates.get_daily_matches import (check_for_daily_file, get_matches_f
 
 
 class MatchDay:
-    def __init__(self, date_str, db, login_goal_api):
+    def __init__(self, date_str, competitions, db, login_goal_api):
         self.date_str = date_str
         self.db = db
         self.login_goal_api = login_goal_api
@@ -16,22 +16,23 @@ class MatchDay:
         self.live_matches = []
         self.updated_matches = []
 
-        self.competitions = []
+        self.competitions_str = competitions
+        self.competitions = self.competitions_str.split(',')
         self.final_day_whistle_time = ''
 
-    def check_match_day_trigger_times(self, file_path, competition):
+    def check_match_day_trigger_times(self, file_path):
 
         self.is_match_day, self.trigger_times = check_for_daily_file(self.db,
                                                                      file_path,
                                                                      self.date_str,
-                                                                     competition,
+                                                                     self.competitions_str,
                                                                      self.login_goal_api)
 
     def get_db_matches(self):
         self.db_matches = get_matches_from_db(self.db, self.date_str)
 
-    def get_live_matches(self, competition):
-        self.live_matches = get_live_matches(self.date_str, competition, self.login_goal_api)
+    def get_live_matches(self):
+        self.live_matches = get_live_matches(self.date_str, self.competitions_str, self.login_goal_api)
 
     def get_updated_matches(self):
         self.updated_matches = compare_matches_and_update(self.db, self.db_matches, self.live_matches)
