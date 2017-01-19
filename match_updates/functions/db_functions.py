@@ -14,13 +14,36 @@ def date_in_table(db, date_str, table_name='matches'):
 
 
 # Query to return all matches on the day
-def get_matches(db, date_str, table_name='matches'):
+def get_matches(db, date_str, competition_str='', table_name='matches'):
+    condition = ''
+    if competition_str != '':
+        condition = " AND comp_id_str='" + competition_str + "'"
+
     sql_query = '''SELECT date_str, localteam_name, visitorteam_name, localteam_score,
                 visitorteam_score, time_str, status_str, timer_str, comp_id_str
-                FROM {table_name} WHERE date_str='{date_str}';'''
-    sql_query = sql_query.format(table_name=table_name, date_str=date_str)
+                FROM {table_name} WHERE date_str='{date_str}'{condition};'''
+    sql_query = sql_query.format(table_name=table_name, date_str=date_str, condition=condition)
 
     return execute_statement(sql_query, db)
+
+
+def number_of_live_matches(db, date_str, competition_str, table_name='matches'):
+    total_matches = '''SELECT count(*) AS total_matches FROM {table_name}
+                    WHERE date_str = '{date_str}' AND comp_id_str='{competition_str}';'''
+
+    total_matches = total_matches.format(table_name=table_name, date_str=date_str, competition_str=competition_str)
+    no_total_matches = execute_statement(total_matches, db)
+    no_total_matches = int(no_total_matches['total_matches'].values[0])
+
+    ft_matches = '''SELECT count(*) AS ft_matches FROM {table_name}
+                    WHERE date_str = '{date_str}' AND comp_id_str='{competition_str}' AND status_str = 'FT';'''
+
+    ft_matches = ft_matches.format(table_name=table_name, date_str=date_str, competition_str=competition_str)
+    no_ft_matches = execute_statement(ft_matches, db)
+    no_ft_matches = int(no_ft_matches['ft_matches'].values[0])
+
+    no_live_matches = no_total_matches - no_ft_matches
+    return no_live_matches
 
 
 # Update matches table

@@ -21,8 +21,8 @@ def map_to_match_object(entry):
     return match
 
 
-def get_matches_from_db(db, date_str):
-    matches = get_matches(db, date_str)
+def get_matches_from_db(db, date_str, competition_str=''):
+    matches = get_matches(db, date_str, competition_str)
     result = matches.apply(map_to_match_object, axis=1)
     return result.values
 
@@ -40,32 +40,32 @@ def get_live_matches(date_str, competition, login_goal_api):
     test_localteam_score = '4'
     test_visitorteam = 'Arsenal'
     test_visitorteam_score = '66'
-    test_timer = '4' # Minute or FT
+    test_timer = '4'  # Minute or FT
     test_comp_id = '1204'
 
-    test_result = '[{"id":"1921980","comp_id":"'+test_comp_id+'","formatted_date":"' + date_str + \
+    test_result = '[{"id":"1921980","comp_id":"' + test_comp_id + '","formatted_date":"' + date_str + \
                   '","season":"2015\\/2016",' \
-                  '"week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"'+test_timer+'",' \
-                  '"timer":"'+test_timer+'","time":"12:30","localteam_id":"9127","localteam_name":"'+test_localteam+'",' \
-                  '"localteam_score":"'+test_localteam_score+'","visitorteam_id":"9092","visitorteam_name":"'+test_visitorteam+'","visitorteam_score":"'+test_visitorteam_score+'",' \
-                  '"ht_score":"[0-1]","ft_score":"[0-3]","et_score":null,"penalty_local":null,' \
-                  '"penalty_visitor":null,"events":[{"id":"21583631","type":"yellowcard","minute":"13",' \
-                  '"extra_min":"","team":"localteam","player":"D. Delaney","player_id":"15760","assist":"",' \
-                  '"assist_id":"","result":""},{"id":"21583632","type":"goal","minute":"29","extra_min":"",' \
-                  '"team":"visitorteam","player":"Oscar","player_id":"57860","assist":"D. Costa","assist_id":"60977",' \
-                  '"result":"[0-1]"},{"id":"21583633","type":"yellowcard","minute":"57","extra_min":' \
-                  '"","team":"localteam","player":"M. Jedinak","player_id":"17515","assist":"","assist_id":""' \
-                  ',"result":""},{"id":"21583634","type":"goal","minute":"60","extra_min":"","team":"visitorteam",' \
-                  '"player":"Willian","player_id":"9051","assist":"Oscar","assist_id":"57860","result":"[0-2]"},' \
-                  '{"id":"21583635","type":"goal","minute":"66","extra_min":"","team":"visitorteam","player":' \
-                  '"D. Costa","player_id":"60977","assist":"Willian","assist_id":"9051","result":"[0-3]"},' \
-                  '{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam","player":' \
-                  '"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}]}]'
+                  '"week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"' + test_timer + '",' \
+                                                                                                                                   '"timer":"' + test_timer + '","time":"12:30","localteam_id":"9127","localteam_name":"' + test_localteam + '",' \
+                                                                                                                                                                                                                                             '"localteam_score":"' + test_localteam_score + '","visitorteam_id":"9092","visitorteam_name":"' + test_visitorteam + '","visitorteam_score":"' + test_visitorteam_score + '",' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"ht_score":"[0-1]","ft_score":"[0-3]","et_score":null,"penalty_local":null,' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"penalty_visitor":null,"events":[{"id":"21583631","type":"yellowcard","minute":"13",' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"extra_min":"","team":"localteam","player":"D. Delaney","player_id":"15760","assist":"",' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"assist_id":"","result":""},{"id":"21583632","type":"goal","minute":"29","extra_min":"",' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"team":"visitorteam","player":"Oscar","player_id":"57860","assist":"D. Costa","assist_id":"60977",' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"result":"[0-1]"},{"id":"21583633","type":"yellowcard","minute":"57","extra_min":' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"","team":"localteam","player":"M. Jedinak","player_id":"17515","assist":"","assist_id":""' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       ',"result":""},{"id":"21583634","type":"goal","minute":"60","extra_min":"","team":"visitorteam",' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"player":"Willian","player_id":"9051","assist":"Oscar","assist_id":"57860","result":"[0-2]"},' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '{"id":"21583635","type":"goal","minute":"66","extra_min":"","team":"visitorteam","player":' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"D. Costa","player_id":"60977","assist":"Willian","assist_id":"9051","result":"[0-3]"},' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam","player":' \
+                                                                                                                                                                                                                                                                                                                                                                                                                       '"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}]}]'
 
     # Make Match objects
     matches_json = json.loads(result)
     matches = []
-    if (len(matches_json) > 0) and ('code' not in matches_json): # 'code' was sometimes returned so taking this out.
+    if (len(matches_json) > 0) and ('code' not in matches_json):  # 'code' was sometimes returned so taking this out.
         for entry in matches_json:
             match = Match(entry['localteam_name'],
                           entry['visitorteam_name'],
@@ -81,6 +81,23 @@ def get_live_matches(date_str, competition, login_goal_api):
             matches.append(match)
 
     return matches
+
+
+def get_comp_standing(competition, login_goal_api):
+    # Web query matches
+    query = ("http://api.football-api.com/2.0/standings/" + competition + "?Authorization=" + login_goal_api)
+
+    try:
+        result = urllib2.urlopen(query).read()
+    except urllib2.HTTPError:
+        result = '{}'
+
+    standing = json.loads(result)
+
+    for entry in standing:
+        print entry['team_name']
+
+    return standing
 
 
 def add_daily_matches_to_db(db, date_str, competition, login_goal_api):
