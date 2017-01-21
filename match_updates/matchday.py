@@ -27,7 +27,6 @@ class MatchDay:
         self.all_games_finished = all_games_finished(self.db, self.date_str, self.comp_id)
 
     def send_sms_updates(self):
-
         if len(self.updated_matches) > 0:
             print('matches with an update found!')
             for match in self.updated_matches:

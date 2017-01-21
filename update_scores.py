@@ -7,9 +7,8 @@ import MySQLdb
 # from IPython import embed
 
 from sms_hunt import db_config
-from match_updates.get_daily_matches import (check_for_daily_file, get_matches_from_db,
-                                             get_live_matches, compare_matches_and_update,
-                                             get_phone_numbers_and_send_sms)
+from match_updates.matchday import MatchDay
+from match_updates.get_daily_matches import (check_for_daily_file, get_live_matches)
 
 # Open app data file
 app_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -36,46 +35,45 @@ db = MySQLdb.connect(host=db_config['host'],
 i = datetime.datetime.now()
 date_str = str(i.strftime('%d.%m.%Y'))
 # date_str = '30.09.2016'
-time_str = str(i.strftime('%H:%M'))
+# time_str = str(i.strftime('%H:%M'))
 hour_str = i.strftime('%H')
-minute_str = i.strftime('%M')
+# hour_str = '17'
+# minute_str = i.strftime('%M')
 
 # Set competition
 # 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
 # 1198 = Fa Cup, 1205 = Championship (2nd league)
-competition = '1204,1229,1005,1007'
+comp_id = '1204,1229,1005,1007'
+PL = MatchDay(db, date_str, '1204')
+BL = MatchDay(db, date_str, '1229')
+CL = MatchDay(db, date_str, '1005')
+EL = MatchDay(db, date_str, '1007')
+match_days = [PL, BL, CL, EL]
 
 # Check if daily file exists. If not create one. Retrieve trigger times.
 file_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(os.sep, file_path, 'match_updates/daily_files', date_str + '.txt')
 
-# Check what to do based on txt file
 if stop_updates == 1:
     match_day = False
     trigger_times = []
 else:
-    match_day, trigger_times = check_for_daily_file(db, file_path, date_str, competition, login_goal_api)
+    match_day, trigger_times = check_for_daily_file(db, file_path, date_str, comp_id, login_goal_api)
 
 # We have a match day today, and a valid hours and minute. Let's check the score
 if match_day and (hour_str in trigger_times):  # or True:
 
-    # Get matches in db
-    db_matches = get_matches_from_db(db, date_str)
-    if len(db_matches) == 0:
-        print('no db matches found')
     # Get live matches
-    live_matches = get_live_matches(date_str, competition, login_goal_api)
+    live_matches = get_live_matches(date_str, comp_id, login_goal_api)
     if len(live_matches) == 0:
         print('no live matches found')
 
-    # Compare both for score updates
-    updated_matches = compare_matches_and_update(db, db_matches, live_matches)
-    if len(updated_matches) > 0:
-        print('matches with an update found!')
-        for match in updated_matches:
-            get_phone_numbers_and_send_sms(db, match)
-    else:
-        print('no update in any match')
+    # Update leagues and send sms
+    for league in match_days:
+        league.get_db_matches()
+        league.set_live_matches(live_matches)
+        league.find_updated_matches()
+        league.send_sms_updates()
 
 # Commit and close database connection
 db.commit()
