@@ -14,10 +14,11 @@ def date_in_table(db, date_str, table_name='matches'):
 
 
 # Query to return all matches on the day
-def get_matches(db, date_str, competition_str='', table_name='matches'):
+def get_matches(db, date_str, comp_id='', table_name='matches'):
+    comp_id = str(comp_id)
     condition = ''
-    if competition_str != '':
-        condition = " AND comp_id_str='" + competition_str + "'"
+    if comp_id != '':
+        condition = " AND comp_id_str='" + comp_id + "'"
 
     sql_query = '''SELECT date_str, localteam_name, visitorteam_name, localteam_score,
                 visitorteam_score, time_str, status_str, timer_str, comp_id_str
@@ -27,23 +28,28 @@ def get_matches(db, date_str, competition_str='', table_name='matches'):
     return execute_statement(sql_query, db)
 
 
-def number_of_live_matches(db, date_str, competition_str, table_name='matches'):
-    total_matches = '''SELECT count(*) AS total_matches FROM {table_name}
-                    WHERE date_str = '{date_str}' AND comp_id_str='{competition_str}';'''
+def all_games_finished(db, date_str, comp_id, table_name='matches'):
+    comp_id = str(comp_id)
 
-    total_matches = total_matches.format(table_name=table_name, date_str=date_str, competition_str=competition_str)
+    total_matches = '''SELECT count(*) AS total_matches FROM {table_name}
+                    WHERE date_str = '{date_str}' AND comp_id_str='{comp_id}';'''
+
+    total_matches = total_matches.format(table_name=table_name, date_str=date_str, comp_id=comp_id)
     no_total_matches = execute_statement(total_matches, db)
     no_total_matches = int(no_total_matches['total_matches'].values[0])
 
     ft_matches = '''SELECT count(*) AS ft_matches FROM {table_name}
-                    WHERE date_str = '{date_str}' AND comp_id_str='{competition_str}' AND status_str = 'FT';'''
+                    WHERE date_str = '{date_str}' AND comp_id_str='{comp_id}' AND status_str = 'FT';'''
 
-    ft_matches = ft_matches.format(table_name=table_name, date_str=date_str, competition_str=competition_str)
+    ft_matches = ft_matches.format(table_name=table_name, date_str=date_str, comp_id=comp_id)
     no_ft_matches = execute_statement(ft_matches, db)
     no_ft_matches = int(no_ft_matches['ft_matches'].values[0])
 
     no_live_matches = no_total_matches - no_ft_matches
-    return no_live_matches
+    if no_live_matches == 0 and total_matches > 0:
+        return True
+    else:
+        return False
 
 
 # Update matches table

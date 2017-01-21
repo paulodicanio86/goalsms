@@ -21,15 +21,15 @@ def map_to_match_object(entry):
     return match
 
 
-def get_matches_from_db(db, date_str, competition_str=''):
-    matches = get_matches(db, date_str, competition_str)
+def get_matches_from_db(db, date_str, comp_id=''):
+    matches = get_matches(db, date_str, comp_id)
     result = matches.apply(map_to_match_object, axis=1)
     return result.values
 
 
-def get_live_matches(date_str, competition, login_goal_api):
+def get_live_matches(date_str, comp_id, login_goal_api):
     # Web query matches
-    query = ("http://api.football-api.com/2.0/matches?comp_id=" + competition + "&match_date=" + date_str +
+    query = ("http://api.football-api.com/2.0/matches?comp_id=" + comp_id + "&match_date=" + date_str +
              "&Authorization=" + login_goal_api)
     try:
         result = urllib2.urlopen(query).read()
@@ -83,9 +83,9 @@ def get_live_matches(date_str, competition, login_goal_api):
     return matches
 
 
-def get_comp_standing(competition, login_goal_api):
+def get_comp_standing(comp_id, login_goal_api):
     # Web query matches
-    query = ("http://api.football-api.com/2.0/standings/" + competition + "?Authorization=" + login_goal_api)
+    query = ("http://api.football-api.com/2.0/standings/" + comp_id + "?Authorization=" + login_goal_api)
 
     try:
         result = urllib2.urlopen(query).read()
@@ -100,8 +100,8 @@ def get_comp_standing(competition, login_goal_api):
     return standing
 
 
-def add_daily_matches_to_db(db, date_str, competition, login_goal_api):
-    matches = get_live_matches(date_str, competition, login_goal_api)
+def add_daily_matches_to_db(db, date_str, comp_id, login_goal_api):
+    matches = get_live_matches(date_str, comp_id, login_goal_api)
 
     # Save matches to db
     for match in matches:
@@ -144,7 +144,7 @@ def get_trigger_times(db, date_str):
         return 'False - no trigger times found'
 
 
-def check_for_daily_file(db, file_path, date_str, competition, login_goal_api):
+def check_for_daily_file(db, file_path, date_str, comp_id, login_goal_api):
     match_day = False
     trigger_times = []
 
@@ -165,7 +165,7 @@ def check_for_daily_file(db, file_path, date_str, competition, login_goal_api):
         f = open(file_path, 'w')
 
         if not date_in_table(db, date_str):
-            add_daily_matches_to_db(db, date_str, competition, login_goal_api)
+            add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
 
         # Now check if there are any matches today:
         if date_in_table(db, date_str):

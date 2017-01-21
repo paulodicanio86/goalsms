@@ -1,11 +1,11 @@
 from match_updates.get_daily_matches import (get_matches_from_db,
                                              compare_matches_and_update,
                                              get_phone_numbers_and_send_sms)
-from match_updates.functions.db_functions import number_of_live_matches
+from match_updates.functions.db_functions import all_games_finished
 
 
 class MatchDay:
-    def __init__(self, db, date_str, competition_str):
+    def __init__(self, db, date_str, comp_id):
         self.date_str = date_str
         self.db = db
 
@@ -13,19 +13,18 @@ class MatchDay:
         self.live_matches = []
         self.updated_matches = []
 
-        self.competition_str = competition_str
+        self.comp_id = comp_id
         self.all_games_finished = False
 
     def get_db_matches(self):
-        self.db_matches = get_matches_from_db(self.db, self.date_str, self.competition_str)
+        self.db_matches = get_matches_from_db(self.db, self.date_str, self.comp_id)
 
     def set_live_matches(self, live_matches):
         self.live_matches = live_matches
 
     def find_updated_matches(self):
         self.updated_matches = compare_matches_and_update(self.db, self.db_matches, self.live_matches)
-        if number_of_live_matches(self.db, self.date_str, self.competition_str) == 0:
-            self.all_games_finished = True
+        self.all_games_finished = all_games_finished(self.db, self.date_str, self.comp_id)
 
     def send_sms_updates(self):
 
