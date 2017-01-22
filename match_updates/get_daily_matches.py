@@ -2,7 +2,8 @@ import urllib2
 import json
 import os as os
 
-from match_updates.functions.db_functions import get_matches, date_in_table, get_kick_off_times, get_phone_numbers
+from match_updates.functions.db_functions import (get_matches, date_in_table,
+                                                  get_kick_off_times, get_phone_numbers)
 from match import Match, compare_matches
 from sms_hunt.sms import Sms
 from sms_hunt import team_data
@@ -36,11 +37,11 @@ def get_live_matches(date_str, comp_id, login_goal_api):
     except urllib2.HTTPError:
         result = '{}'
 
-    test_localteam = 'Leicester'
-    test_localteam_score = '4'
-    test_visitorteam = 'Arsenal'
+    test_localteam = 'Arsenal'
+    test_localteam_score = '7'
+    test_visitorteam = 'Burnley'
     test_visitorteam_score = '66'
-    test_timer = '4'  # Minute or FT
+    test_timer = '5'  # Minute or FT
     test_comp_id = '1204'
 
     test_result = '[{"id":"1921980","comp_id":"' + test_comp_id + '","formatted_date":"' + date_str + \
