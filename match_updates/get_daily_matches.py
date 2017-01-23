@@ -40,7 +40,7 @@ def get_live_matches(date_str, comp_id, login_goal_api):
     test_localteam = 'Arsenal'
     test_localteam_score = '7'
     test_visitorteam = 'Burnley'
-    test_visitorteam_score = '66'
+    test_visitorteam_score = '69'
     test_timer = '5'  # Minute or FT
     test_comp_id = '1204'
 
@@ -180,7 +180,8 @@ def check_for_daily_file(db, file_path, date_str, comp_id, login_goal_api):
     return match_day, trigger_times
 
 
-def get_phone_numbers_and_send_sms(db, match):
+def format_teams(match):
+    # format team names
     teams = [match.localteam_name, match.visitorteam_name]
     teams_formatted = []
 
@@ -189,35 +190,75 @@ def get_phone_numbers_and_send_sms(db, match):
             # teams_formatted.append(str(rev_team_data[team]))
             teams_formatted.append(str(team))
 
+    return teams_formatted
+
+
+def format_content(match):
+    # determine type and content of message
+    # 1 = Kickoff, 2 = goal scored, 3 = Full Time
+    # FT message
+    if match.status == 'FT':
+        content = match.get_full_time_message_text()
+        msg_type = 3
+    # kick off message
+    elif match.localteam_score == '0' and match.visitorteam_score == '0':
+        content = match.get_kick_off_message_text()
+        msg_type = 1
+    # score change message
+    else:
+        content = match.get_score_message_text()
+        msg_type = 2
+
+    return content, msg_type
+
+
+def format_message_and_send_sms(db, match):
+    teams = format_teams(match)
+    content, msg_type = format_content(match)
+    sms = Sms(content)
+
     # now find users who are subscribed to one of the two teams
-    if len(teams_formatted) > 0:
+    if len(teams) > 0:
         # make string readable by SQL
-        teams_formatted = str(teams_formatted)[1:-1]
-        phone_numbers = get_phone_numbers(db, teams_formatted)
+        teams_formatted = str(teams)[1:-1]
 
-        phone_numbers_list = list(phone_numbers['phone_number'].values)
-        # only send one sms if a user is subscribed to two teams
-        phone_numbers_list = list(set(phone_numbers_list))
-
-        # check if any users are subscribed, and send sms
-        # In future, if there are many many users, the list can be split here and several requests to send sms
-        # can me made here.
-        if len(phone_numbers_list) > 0:
-
-            # FT message
-            if match.status == 'FT':
-                content = match.get_full_time_message_text()
-            # kick off message
-            elif match.localteam_score == '0' and match.visitorteam_score == '0':
-                content = match.get_kick_off_message_text()
-            # score change message
-            else:
-                content = match.get_score_message_text()
-
-            sms = Sms(content, receiver=phone_numbers_list)
-            sms.send()
-            print('Sms have been sent')
-        else:
-            print('No subscribed users found')
+        check_cases_and_send(db, match, teams_formatted, sms, msg_type)
     else:
         print('No teams found for this match')
+
+
+def get_numbers(db, teams_formatted, mode):
+    phone_numbers = get_phone_numbers(db, teams_formatted, mode)
+    phone_numbers_list = list(phone_numbers['phone_number'].values)
+    # only send one sms if a user is subscribed to two teams
+    phone_numbers_list = list(set(phone_numbers_list))
+    return phone_numbers_list
+
+
+def get_numbers_and_send_sms(db, teams_formatted, sms, mode):
+    phone_numbers_list = get_numbers(db, teams_formatted, mode)
+
+    # In future, if there are many many users, the list can be split here and several requests to send sms
+    # can me made here.
+    if len(phone_numbers_list) > 0:
+        sms.set_receiver(phone_numbers_list)
+        sms.send()
+        print('Sms have been sent')
+    else:
+        print('No subscribed users found')
+
+
+# send sms to all relevant modes
+def check_cases_and_send(db, match, teams_formatted, sms, msg_type):
+    mode = 0
+
+    # Here special cases can be defined, of whome to send which message depending on message type and league
+    # The mode needs to be set in the flask module when signing up
+    # mode = 0, all messages
+    if msg_type in [1, 2, 3] and match.comp_id == '1204':
+        mode = 0
+        get_numbers_and_send_sms(db, teams_formatted, sms, mode)
+
+    if msg_type in [3] and match.comp_id == '1204':
+        mode = 1
+        get_numbers_and_send_sms(db, teams_formatted, sms, mode)

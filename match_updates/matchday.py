@@ -1,6 +1,6 @@
 from match_updates.get_daily_matches import (get_matches_from_db,
                                              compare_matches_and_update,
-                                             get_phone_numbers_and_send_sms)
+                                             format_message_and_send_sms)
 from match_updates.functions.db_functions import all_games_finished, get_ft_standings
 from sms_hunt import team_data
 from match_updates.match import look_up_teams_print
@@ -42,6 +42,6 @@ class MatchDay:
         if len(self.updated_matches) > 0:
             print('matches with an update found!')
             for match in self.updated_matches:
-                get_phone_numbers_and_send_sms(self.db, match)
+                format_message_and_send_sms(self.db, match)
         else:
             print('no update in any match')

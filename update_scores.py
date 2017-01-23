@@ -34,7 +34,7 @@ db = MySQLdb.connect(host=db_config['host'],
 # Calculate current date and time
 i = datetime.datetime.now()
 date_str = str(i.strftime('%d.%m.%Y'))
-# date_str = '30.09.2016'
+# date_str = '22.01.2017'
 # time_str = str(i.strftime('%H:%M'))
 hour_str = i.strftime('%H')
 # hour_str = '17'
