@@ -12,100 +12,147 @@
         </div>
 
         <div class="col-md-2 col-xs-8">
-        <form class="form-horizontal" id="chargeForm" role="form" action="/verify" method="post">
+            <form class="form-horizontal" id="chargeForm" role="form" action="/verify" method="post">
 
-            <div class="team row">
-                <div class="col-md-12 col-xs-12 input-group">
-                    <select class="form-control" name="team" id="team_id">
-                        {% for name in teams %}
-                        <option {% if name==team.value %}selected{% endif %}>{{ name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="space row">
-                <div class="col-md-12 col-xs-12 input-group">
-                    &nbsp;
-                </div>
-            </div>
-
-            <div class="phone_number row">
-                {% if phone_number.valid==True %}
-                <div class="form-group">
-                {% elif phone_number.valid==False %}
-                <div class="form-group has-error">
-                {% endif %}
+                <div class="league row">
                     <div class="col-md-12 col-xs-12 input-group">
-                        <input type="tel" class="form-control" id="phone_number_id"
-                               name="phone_number" placeholder="mobile no. (incl. prefix)"
-                               value="{{ phone_number.value }}">
+                        <select class="form-control" name="league" id="league_id">
+                            <option value='America'>America</option>
+                            <option value='Europe'>Europe</option>
+                            <option value='Asia'>Asia</option>
+                        </select>
                     </div>
                 </div>
-            </div>
 
-            <div class="name row">
-                {% if name.valid==True %}
-                <div class="form-group">
-                {% elif name.valid==False %}
-                <div class="form-group has-error">
-                {% endif %}
+                <div class="space row">
                     <div class="col-md-12 col-xs-12 input-group">
-                        <input class="form-control" id="name_id"
-                               name="name" placeholder="your name"
-                               value="{{ name.value }}">
+                        &nbsp;
                     </div>
                 </div>
-            </div>
 
-            <div class="button_stripe row">
-                <div class="form-group stripe_button row">
-                    <div class="col-md-12 col-xs-12">
-
-
-                        <script src="https://checkout.stripe.com/checkout.js"></script>  
-
-                        <input type="hidden" name="stripeToken" id="stripeToken"/>
-                        <input type="hidden" name="stripeEmail" id="stripeEmail"/>
-
-                        <button id="CustomStripeButton" class="btn btn-success btn-block"> 
-                            Pay {{ payment.currency_html|safe }}{{ payment.amount }} 
-                        </button>  
-
-
-                        <script>
-	      var handler = StripeCheckout.configure({
-	        key: '{{ key }}',
-	        token: function(token, args) {
-	          document.getElementById("stripeToken").value = token.id;
-                  document.getElementById("stripeEmail").value = token.email;
-                  document.getElementById("chargeForm").submit();
-	          // Use the token to create the charge with a server-side script.
-	          // You can access the token ID with `token.id`
-	        }
-	      });
-
-              document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
-	        // Open Checkout with further options
-	        handler.open({
-	          name: '{{ company }}',
-	          description: 'Please enter your details',
-	          amount: {{ payment.amount_integer }},
-	          currency: '{{ payment.currency }}',
-	          billingAddress: true
-	        });
-	        e.preventDefault();
-	      });
-	                    </script>
-
-
-
+                <div class="team_2 row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        <select class="form-control" name="team_2" id="team_id_2">
+                            <option data-group='SHOW' value='0'>Choose team</option>
+                            <option data-group='America' value='Argentina'>Argentina</option>
+                            <option data-group='America' value='Brazil'>Brazil</option>
+                            <option data-group='America' value='Chile'>Chile</option>
+                            <option data-group='Europe' value='Italy'>Italy</option>
+                            <option data-group='Europe' value='France'>France</option>
+                            <option data-group='Europe' value='Spain'>Spain</option>
+                            <option data-group='Asia' value='China'>China</option>
+                            <option data-group='Asia' value='Japan'>Japan</option>
+                        </select>
                     </div>
                 </div>
-            </div>
+
+                <div class="space row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="team row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        <select class="form-control" name="team" id="team_id">
+                            {% for name in teams %}
+                            <option {% if name==team.value %}selected{% endif %}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="cl row">
+                    <div class="col-md-12 col-xs-12 checkbox">
+                        <input type="checkbox" name="vehicle" value="Car" checked> Include Champions and Europa League
+                    </div>
+                </div>
 
 
-        </form>
+                <div class="space row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="phone_number row">
+                    {% if phone_number.valid==True %}
+                    <div class="form-group">
+                        {% elif phone_number.valid==False %}
+                        <div class="form-group has-error">
+                            {% endif %}
+                            <div class="col-md-12 col-xs-12 input-group">
+                                <input type="tel" class="form-control" id="phone_number_id"
+                                       name="phone_number" placeholder="mobile no. (incl. prefix)"
+                                       value="{{ phone_number.value }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="name row">
+                        {% if name.valid==True %}
+                        <div class="form-group">
+                            {% elif name.valid==False %}
+                            <div class="form-group has-error">
+                                {% endif %}
+                                <div class="col-md-12 col-xs-12 input-group">
+                                    <input class="form-control" id="name_id"
+                                           name="name" placeholder="your name"
+                                           value="{{ name.value }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button_stripe row">
+                            <div class="form-group stripe_button row">
+                                <div class="col-md-12 col-xs-12">
+
+
+                                    <script src="https://checkout.stripe.com/checkout.js"></script>
+                                      
+
+                                    <input type="hidden" name="stripeToken" id="stripeToken"/>
+                                    <input type="hidden" name="stripeEmail" id="stripeEmail"/>
+
+                                    <button id="CustomStripeButton" class="btn btn-success btn-block"> 
+                                        Pay {{ payment.currency_html|safe }}{{ payment.amount }} 
+                                    </button>
+                                      
+
+
+                                    <script>
+                                              var handler = StripeCheckout.configure({
+                                                key: '{{ key }}',
+                                                token: function(token, args) {
+                                                  document.getElementById("stripeToken").value = token.id;
+                                                      document.getElementById("stripeEmail").value = token.email;
+                                                      document.getElementById("chargeForm").submit();
+                                                  // Use the token to create the charge with a server-side script.
+                                                  // You can access the token ID with `token.id`
+                                                }
+                                              });
+
+                                                  document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
+                                                // Open Checkout with further options
+                                                handler.open({
+                                                  name: '{{ company }}',
+                                                  description: 'Please enter your details',
+                                                  amount: {{ payment.amount_integer }},
+                                                  currency: '{{ payment.currency }}',
+                                                  billingAddress: true
+                                                });
+                                                e.preventDefault();
+                                              });
+
+                                    </script>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+            </form>
         </div>
 
         <div class="col-md-5 col-xs-2">
@@ -113,4 +160,6 @@
     </div>
 
 </div>
+
+
 {% endblock %}

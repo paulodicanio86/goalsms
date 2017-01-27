@@ -75,6 +75,60 @@
     "West Ham United": "west_ham",
     "Tottenham Hotspur": "tottenham",
     "1. FSV Mainz 05": "mainz"
-  }
+  },
+  "bundesliga": [
+    "dortmund",
+    "hertha_berlin",
+    "hsv",
+    "bayern_munich",
+    "b_monchengladbach",
+    "fc_koeln",
+    "ingolstadt",
+    "augsburg",
+    "schalke",
+    "hoffenheim",
+    "freiburg",
+    "eintracht_frankfurt",
+    "sv_werder_bremen",
+    "bayer_leverkusen",
+    "mainz",
+    "darmstadt",
+    "wolfsburg",
+    "leipzig"
+  ],
+  "premier_league": [
+    "bournemouth",
+    "arsenal",
+    "burnley",
+    "chelsea",
+    "crystal_palace",
+    "everton",
+    "hull_city",
+    "leicester",
+    "liverpool",
+    "manchester_city",
+    "manchester_united",
+    "middlesbrough",
+    "southampton",
+    "stoke_city",
+    "sunderland",
+    "swansea",
+    "tottenham",
+    "watford",
+    "west_brom",
+    "west_ham"
+  ],
+  "champions_league": [
+    "arsenal",
+    "chelsea",
+    "dortmund",
+    "bayern_munich"
+  ],
+  "europa_league": [
+    "wolfsburg",
+    "mainz",
+    "tottenham",
+    "southampton"
+  ]
 }
 
