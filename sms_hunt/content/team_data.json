@@ -14,6 +14,12 @@
     "hsv",
     "schalke"
   ],
+  "leagues": {
+    "premier_league": "Premier League",
+    "bundesliga": "Bundesliga",
+    "champions_league": "Champions League",
+    "europa_league": "Europa League"
+  },
   "club_teams": {
     "bournemouth": "Bournemouth",
     "arsenal": "Arsenal F.C.",
@@ -62,6 +68,7 @@
     "Bayern Munich": "bayern_munich",
     "B. Monchengladbach": "b_monchengladbach",
     "1. FC Koln": "fc_koeln",
+    "FC Koln": "fc_koeln",
     "Ingolstadt": "ingolstadt",
     "Augsburg": "augsburg",
     "Schalke": "schalke",
