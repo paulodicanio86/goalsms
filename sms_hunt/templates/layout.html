@@ -145,7 +145,7 @@
 $(function(){
     $('#league_id').on('change', function(){
         var val = $(this).val();
-        var sub = $('#team_id_2');
+        var sub = $('#team_id');
         $('option', sub).filter(function(){
             if (
                  $(this).attr('data-group') === val

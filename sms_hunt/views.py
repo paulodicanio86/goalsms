@@ -18,9 +18,22 @@ else:
 company = app_config['company']
 year = app_config['year']
 title = app_config['title']
+
 teams_dic = team_data['club_teams']
 teams = teams_dic.values()
 teams.sort()
+
+leagues_dic = team_data['leagues']
+teams_list = []
+for key in leagues_dic:
+    team_keys = team_data[key]
+    team_keys.sort()
+    for team in team_keys:
+        entry = {}
+        entry['league_id'] = key
+        entry['team_id'] = team
+        entry['team_name'] = teams_dic[team]
+        teams_list.append(entry)
 
 
 # This needs to be here because teams is imported in validation_functions
@@ -55,10 +68,10 @@ def start(team_dic=default_dic,
                            year=year,
                            payment=payment,
                            key=key,
-                           teams=teams,
-                           team=team_dic,
                            phone_number=phone_number_dic,
-                           name=name_dic
+                           name=name_dic,
+                           leagues=leagues_dic,
+                           teams=teams_list
                            )
 
 
@@ -82,7 +95,7 @@ def single_team(team_value,
                            team=str(teams_dic[team_value]),
                            team_value=team_value,
                            phone_number=phone_number_dic,
-                           name=name_dic
+                           name=name_dic,
                            )
 
 

@@ -17,50 +17,40 @@
                 <div class="league row">
                     <div class="col-md-12 col-xs-12 input-group">
                         <select class="form-control" name="league" id="league_id">
-                            <option value='America'>America</option>
-                            <option value='Europe'>Europe</option>
-                            <option value='Asia'>Asia</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="space row">
-                    <div class="col-md-12 col-xs-12 input-group">
-                        &nbsp;
-                    </div>
-                </div>
-
-                <div class="team_2 row">
-                    <div class="col-md-12 col-xs-12 input-group">
-                        <select class="form-control" name="team_2" id="team_id_2">
-                            <option data-group='SHOW' value='0'>Choose team</option>
-                            <option data-group='America' value='Argentina'>Argentina</option>
-                            <option data-group='America' value='Brazil'>Brazil</option>
-                            <option data-group='America' value='Chile'>Chile</option>
-                            <option data-group='Europe' value='Italy'>Italy</option>
-                            <option data-group='Europe' value='France'>France</option>
-                            <option data-group='Europe' value='Spain'>Spain</option>
-                            <option data-group='Asia' value='China'>China</option>
-                            <option data-group='Asia' value='Japan'>Japan</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="space row">
-                    <div class="col-md-12 col-xs-12 input-group">
-                        &nbsp;
-                    </div>
-                </div>
-
-                <div class="team row">
-                    <div class="col-md-12 col-xs-12 input-group">
-                        <select class="form-control" name="team" id="team_id">
-                            {% for name in teams %}
-                            <option {% if name==team.value %}selected{% endif %}>{{ name }}</option>
+                            {% for key, value in leagues.iteritems() %}
+                            <option value={{ key }}>{{ value }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
+
+
+                <div class="space row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        &nbsp;
+                    </div>
+                </div>
+
+
+                <div class="team row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        <select class="form-control" name="team" id="team_id">
+                            <option data-group='SHOW' value='0'>Choose team</option>
+                            {% for entry in teams %}
+                            <option data-group={{ entry.league_id }} value={{ entry.team_id }}>{{ entry.team_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="space row">
+                    <div class="col-md-12 col-xs-12 input-group">
+                        &nbsp;
+                    </div>
+                </div>
+
 
                 <div class="cl row">
                     <div class="col-md-12 col-xs-12 checkbox">
@@ -132,7 +122,7 @@
                                                 }
                                               });
 
-                                                  document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
+                                              document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
                                                 // Open Checkout with further options
                                                 handler.open({
                                                   name: '{{ company }}',
@@ -143,6 +133,9 @@
                                                 });
                                                 e.preventDefault();
                                               });
+
+
+
 
                                     </script>
 
