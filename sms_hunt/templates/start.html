@@ -17,8 +17,8 @@
                 <div class="league row">
                     <div class="col-md-12 col-xs-12 input-group">
                         <select class="form-control" name="league" id="league_id">
-                            {% for key, value in leagues.iteritems() %}
-                            <option value={{ key }}>{{ value }}</option>
+                            {% for entry in leagues %}
+                            <option value="{{ entry.league_id }}">{{ entry.league_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -35,9 +35,9 @@
                 <div class="team row">
                     <div class="col-md-12 col-xs-12 input-group">
                         <select class="form-control" name="team" id="team_id">
-                            <option data-group='SHOW' value='0'>Choose team</option>
+                            <option data-group='SHOW' value=no_team>Choose team</option>
                             {% for entry in teams %}
-                            <option data-group={{ entry.league_id }} value={{ entry.team_id }}>{{ entry.team_name }}
+                            <option data-group={{ entry.league_id }} value="{{ entry.team_id }}">{{ entry.team_name }}
                             </option>
                             {% endfor %}
                         </select>
@@ -52,9 +52,15 @@
                 </div>
 
 
-                <div class="cl row">
+                <div class="service row">
                     <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="checkbox" name="vehicle" value="Car" checked> Include Champions and Europa League
+                        <input type="checkbox" name="service" value="bronze" checked> Basic
+                    </div>
+                    <div class="col-md-12 col-xs-12 checkbox">
+                        <input type="checkbox" name="service" value="silver" checked> + Kick off, Full time score and competition results alerts
+                    </div>
+                    <div class="col-md-12 col-xs-12 checkbox">
+                        <input type="checkbox" name="service" value="gold" checked> + Live score alerts of every goal
                     </div>
                 </div>
 
@@ -100,7 +106,7 @@
 
                                     <script src="https://checkout.stripe.com/checkout.js"></script>
                                       
-
+                                    <input type="hidden" name="single_team" id="single_team_id" value="False"/>
                                     <input type="hidden" name="stripeToken" id="stripeToken"/>
                                     <input type="hidden" name="stripeEmail" id="stripeEmail"/>
 
@@ -135,10 +141,7 @@
                                               });
 
 
-
-
                                     </script>
-
 
                                 </div>
                             </div>

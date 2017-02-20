@@ -20,19 +20,29 @@ year = app_config['year']
 title = app_config['title']
 
 teams_dic = team_data['club_teams']
+leagues_dic = team_data['leagues']
 teams = teams_dic.values()
 teams.sort()
 
-leagues_dic = team_data['leagues']
+# Create an ordered league list to be passed to the templates
+leagues_order = ['premier_league', 'bundesliga', 'champions_league', 'europa_league']
+main_leagues = ['bundesliga', 'premier_league']
+leagues_list = []
+for league_key in leagues_order:
+    entry = {'league_id': league_key,
+             'league_name': leagues_dic[league_key]}
+    leagues_list.append(entry)
+
+# Create a team list dictionary to be passed to the templates
 teams_list = []
-for key in leagues_dic:
-    team_keys = team_data[key]
+for league_key in leagues_dic:
+    team_keys = team_data[league_key]
     team_keys.sort()
     for team in team_keys:
-        entry = {}
-        entry['league_id'] = key
-        entry['team_id'] = team
-        entry['team_name'] = teams_dic[team]
+        entry = {'league_id': league_key,
+                 'team_id': team,
+                 'team_name': teams_dic[team]}
+
         teams_list.append(entry)
 
 
@@ -40,15 +50,25 @@ for key in leagues_dic:
 from functions.validation_functions import convert_entries, validate_entries
 
 # configuration settings
-variable_names = ['team', 'phone_number', 'name']
+variable_names = ['phone_number', 'name']
 country_codes = app_config['country_codes'].split(',')  # all accepted codes
 default_country_code = country_codes[0]  # default code, used to complete numbers
 
-payment = {'amount_integer': app_config['amount_integer'],
-           'amount': app_config['amount'],
-           'currency': app_config['currency'],
-           'currency_html': app_config['currency_html']
-           }
+payment_1 = {'amount_integer': app_config['amount_integer_1'],
+             'amount': app_config['amount_1'],
+             'currency': app_config['currency_1'],
+             'currency_html': app_config['currency_html_1']
+             }
+payment_2 = {'amount_integer': app_config['amount_integer_2'],
+             'amount': app_config['amount_2'],
+             'currency': app_config['currency_2'],
+             'currency_html': app_config['currency_html_2']
+             }
+payment_3 = {'amount_integer': app_config['amount_integer_3'],
+             'amount': app_config['amount_3'],
+             'currency': app_config['currency_3'],
+             'currency_html': app_config['currency_html_3']
+             }
 
 default_dic = {'valid': True,
                'value': ''
@@ -59,18 +79,17 @@ default_dic = {'valid': True,
 # / start page
 #######################################
 @app.route('/')
-def start(team_dic=default_dic,
-          phone_number_dic=default_dic,
+def start(phone_number_dic=default_dic,
           name_dic=default_dic):
     return render_template('start.html',
                            title=title,
                            company=company,
                            year=year,
-                           payment=payment,
+                           payment=payment_1,
                            key=key,
                            phone_number=phone_number_dic,
                            name=name_dic,
-                           leagues=leagues_dic,
+                           leagues=leagues_list,
                            teams=teams_list
                            )
 
@@ -86,16 +105,22 @@ def single_team(team_value,
     if team_value not in teams_dic.keys():
         return redirect(url_for('page_not_found_manual'))
 
+    league_value = ''
+    for league_name in main_leagues:
+        if team_value in team_data[league_name]:
+            league_value = league_name
+
     return render_template('team.html',
                            title=title,
                            company=company,
                            year=year,
-                           payment=payment,
+                           payment=payment_1,
                            key=key,
-                           team=str(teams_dic[team_value]),
-                           team_value=team_value,
                            phone_number=phone_number_dic,
                            name=name_dic,
+                           team=teams_dic[team_value],
+                           team_value=team_value,
+                           league_value=league_value
                            )
 
 
@@ -125,18 +150,25 @@ def verify_post():
         for entry in variable_names:
             false_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
                                                 'value': values_dic[entry]}
-        return start(**false_values_dic)
+        if request.form['single_team'] == 'False':
+            return start(**false_values_dic)
+        else:
+            return single_team(request.form['team'], **false_values_dic)
 
-    # Take card payment
-    stripe_token = request.form['stripeToken']
-    email = request.form['stripeEmail']
-    phone_number = values_dic['phone_number']
+    # if no team is chosen reload the base page with validated entries
+    if request.form['team'] == 'no_team':
+        chosen_values_dic = {}
+        for entry in variable_names:
+            chosen_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
+                                                 'value': values_dic[entry]}
+        return start(**chosen_values_dic)
 
-    charge_successful = charge_stripe(payment=payment,
-                                      email=email,
+    # take card payment
+    charge_successful = charge_stripe(payment=payment_1,
+                                      email=request.form['stripeEmail'],
                                       secret_key=secret_key,
-                                      stripe_token=stripe_token,
-                                      phone_number=phone_number)
+                                      stripe_token=request.form['stripeToken'],
+                                      phone_number=values_dic['phone_number'])
     if not charge_successful:
         return redirect(url_for('failure'))
 
@@ -146,7 +178,13 @@ def verify_post():
                          passwd=db_config['password'],
                          db=db_config['database'])
 
-    add_data_and_send_sms(db, values_dic, email, teams_dic)
+    add_data_and_send_sms(db,
+                          values_dic['phone_number'],
+                          request.form['stripeEmail'],
+                          request.form['team'],
+                          request.form['league'],
+                          values_dic['name'],
+                          teams_dic[request.form['team']])
 
     # Commit and close database connection
     db.commit()
@@ -190,7 +228,7 @@ def about():
                            title=title,
                            company=company,
                            year=year,
-                           payment=payment
+                           payment=payment_1
                            )
 
 

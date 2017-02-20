@@ -16,8 +16,26 @@
 
             <div class="team row">
                 <div class="col-md-12 col-xs-12 input-group">
-                    <input type="hidden" name="team" id="team_id" value="{{ team }}"/>
+                    <input type="hidden" name="team" id="team_id" value="{{ team_value }}"/>
                 </div>
+            </div>
+
+            <div class="league row">
+                <div class="col-md-12 col-xs-12 input-group">
+                    <input type="hidden" name="league" id="league_id" value="{{ league_value }}"/>
+                </div>
+            </div>
+
+            <div class="service row">
+                    <div class="col-md-12 col-xs-12 checkbox">
+                        <input type="checkbox" name="service" value="bronze" checked> Basic
+                    </div>
+                    <div class="col-md-12 col-xs-12 checkbox">
+                        <input type="checkbox" name="service" value="silver" checked> + Kick off, Full time score and competition results alerts
+                    </div>
+                    <div class="col-md-12 col-xs-12 checkbox">
+                        <input type="checkbox" name="service" value="gold" checked> + Live score alerts of every goal
+                    </div>
             </div>
 
             <div class="space row">
@@ -61,6 +79,7 @@
 
                         <script src="https://checkout.stripe.com/checkout.js"></script>  
 
+                        <input type="hidden" name="single_team" id="single_team_id" value="True"/>
                         <input type="hidden" name="stripeToken" id="stripeToken"/>
                         <input type="hidden" name="stripeEmail" id="stripeEmail"/>
 

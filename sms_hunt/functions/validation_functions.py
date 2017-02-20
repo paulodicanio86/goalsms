@@ -29,13 +29,6 @@ def valid_phone_number(number, country_codes):
     return is_integer_string(number) and (number[:2] in country_codes)
 
 
-def valid_team(team):
-    if team in teams:
-        return True
-    else:
-        return False
-
-
 #######################################
 # combining the above functions in two
 #######################################
@@ -53,7 +46,5 @@ def validate_entries(entry, value, country_codes):
         return valid_phone_number(value, country_codes)
     elif entry == 'name':
         return valid_name(value)
-    elif entry == 'team':
-        return valid_team(value)
     else:
         return False

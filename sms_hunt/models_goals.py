@@ -9,18 +9,19 @@ from backend.db_functions import insert_array_to_table, get_table_columns
 sign_up_sms_text = sms_content['sign_up_sms_text']
 
 
-def add_data_and_send_sms(db, values_dic, email, teams_dic, mode=0):
+def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name, mode=0):
     # Add to data base and send sms.
     table_name = 'goalsms'
 
     rev_teams_dic = dict((v, k) for k, v in teams_dic.iteritems())
 
     dt = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-    text_row = [str(values_dic['phone_number']),
+    text_row = [str(phone_number),
                 str(email),
                 dt,
-                str(rev_teams_dic[str(values_dic['team'])]),
-                str(values_dic['name']),
+                str(team),
+                str(league),
+                str(name),
                 mode]
 
     # Add message to table
@@ -29,9 +30,9 @@ def add_data_and_send_sms(db, values_dic, email, teams_dic, mode=0):
                           text_row)
 
     # Send message that it is over now
-    sign_up_sms = Sms(content=sign_up_sms_text.format(name=str(values_dic['name']),
-                                                      team=str(values_dic['team'])),
-                      receiver=str(values_dic['phone_number']))
+    sign_up_sms = Sms(content=sign_up_sms_text.format(name=str(name),
+                                                      team=str(team_name)),
+                      receiver=str(phone_number))
     sign_up_sms.send()
     return None
 
