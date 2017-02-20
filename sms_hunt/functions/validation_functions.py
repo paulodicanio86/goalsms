@@ -1,7 +1,6 @@
 import string
 
 from string_functions import validate_number, convert_special_characters, is_integer_string, matches_reg_ex
-from sms_hunt.views import teams
 
 
 def convert_white_space_in_link(input_string):

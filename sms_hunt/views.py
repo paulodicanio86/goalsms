@@ -6,7 +6,10 @@ from sms_hunt import app, db_config, stripe_config, team_data, app_config
 
 from sms import Sms
 from models_tour import follow_tour
-from models_goals import add_data_and_send_sms, charge_stripe
+from models_goals import (default_dic, payment_1, payment_2, payment_3, leagues_list, teams_list, teams_dic,
+                          main_leagues, variable_names, default_country_code, country_codes,
+                          add_data_and_send_sms, charge_stripe)
+from functions.validation_functions import convert_entries, validate_entries
 
 if stripe_config['stripe_test_flag'] == 0:
     key = stripe_config['stripe_live_publishable_key']
@@ -18,61 +21,6 @@ else:
 company = app_config['company']
 year = app_config['year']
 title = app_config['title']
-
-teams_dic = team_data['club_teams']
-leagues_dic = team_data['leagues']
-teams = teams_dic.values()
-teams.sort()
-
-# Create an ordered league list to be passed to the templates
-leagues_order = ['premier_league', 'bundesliga', 'champions_league', 'europa_league']
-main_leagues = ['bundesliga', 'premier_league']
-leagues_list = []
-for league_key in leagues_order:
-    entry = {'league_id': league_key,
-             'league_name': leagues_dic[league_key]}
-    leagues_list.append(entry)
-
-# Create a team list dictionary to be passed to the templates
-teams_list = []
-for league_key in leagues_dic:
-    team_keys = team_data[league_key]
-    team_keys.sort()
-    for team in team_keys:
-        entry = {'league_id': league_key,
-                 'team_id': team,
-                 'team_name': teams_dic[team]}
-
-        teams_list.append(entry)
-
-
-# This needs to be here because teams is imported in validation_functions
-from functions.validation_functions import convert_entries, validate_entries
-
-# configuration settings
-variable_names = ['phone_number', 'name']
-country_codes = app_config['country_codes'].split(',')  # all accepted codes
-default_country_code = country_codes[0]  # default code, used to complete numbers
-
-payment_1 = {'amount_integer': app_config['amount_integer_1'],
-             'amount': app_config['amount_1'],
-             'currency': app_config['currency_1'],
-             'currency_html': app_config['currency_html_1']
-             }
-payment_2 = {'amount_integer': app_config['amount_integer_2'],
-             'amount': app_config['amount_2'],
-             'currency': app_config['currency_2'],
-             'currency_html': app_config['currency_html_2']
-             }
-payment_3 = {'amount_integer': app_config['amount_integer_3'],
-             'amount': app_config['amount_3'],
-             'currency': app_config['currency_3'],
-             'currency_html': app_config['currency_html_3']
-             }
-
-default_dic = {'valid': True,
-               'value': ''
-               }
 
 
 #######################################

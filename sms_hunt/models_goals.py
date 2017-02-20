@@ -5,15 +5,63 @@ import stripe
 from sms import Sms
 from sms_hunt import sms_content
 from backend.db_functions import insert_array_to_table, get_table_columns
+from sms_hunt import team_data, app_config
 
 sign_up_sms_text = sms_content['sign_up_sms_text']
+teams_dic = team_data['club_teams']
+leagues_dic = team_data['leagues']
+teams = teams_dic.values()
+teams.sort()
+
+# Create an ordered league list to be passed to the templates
+leagues_order = ['premier_league', 'bundesliga', 'champions_league', 'europa_league']
+main_leagues = ['bundesliga', 'premier_league']
+leagues_list = []
+for league_key in leagues_order:
+    entry = {'league_id': league_key,
+             'league_name': leagues_dic[league_key]}
+    leagues_list.append(entry)
+
+# Create a team list dictionary to be passed to the templates
+teams_list = []
+for league_key in leagues_dic:
+    team_keys = team_data[league_key]
+    team_keys.sort()
+    for team in team_keys:
+        entry = {'league_id': league_key,
+                 'team_id': team,
+                 'team_name': teams_dic[team]}
+        teams_list.append(entry)
+
+# goal sms configuration settings
+variable_names = ['phone_number', 'name']
+country_codes = app_config['country_codes'].split(',')  # all accepted codes
+default_country_code = country_codes[0]  # default code, used to complete numbers
+
+payment_1 = {'amount_integer': app_config['amount_integer_1'],
+             'amount': app_config['amount_1'],
+             'currency': app_config['currency_1'],
+             'currency_html': app_config['currency_html_1']
+             }
+payment_2 = {'amount_integer': app_config['amount_integer_2'],
+             'amount': app_config['amount_2'],
+             'currency': app_config['currency_2'],
+             'currency_html': app_config['currency_html_2']
+             }
+payment_3 = {'amount_integer': app_config['amount_integer_3'],
+             'amount': app_config['amount_3'],
+             'currency': app_config['currency_3'],
+             'currency_html': app_config['currency_html_3']
+             }
+
+default_dic = {'valid': True,
+               'value': ''
+               }
 
 
 def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name, mode=0):
     # Add to data base and send sms.
     table_name = 'goalsms'
-
-    rev_teams_dic = dict((v, k) for k, v in teams_dic.iteritems())
 
     dt = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
     text_row = [str(phone_number),
