@@ -28,7 +28,7 @@ title = app_config['title']
 #######################################
 @app.route('/')
 def start(phone_number_dic=default_dic,
-          name_dic=default_dic):
+          name_dic=default_dic, team_valid=True):
     return render_template('start.html',
                            title=title,
                            company=company,
@@ -38,7 +38,8 @@ def start(phone_number_dic=default_dic,
                            phone_number=phone_number_dic,
                            name=name_dic,
                            leagues=leagues_list,
-                           teams=teams_list
+                           teams=teams_list,
+                           team_valid=team_valid
                            )
 
 
@@ -109,6 +110,7 @@ def verify_post():
         for entry in variable_names:
             chosen_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
                                                  'value': values_dic[entry]}
+            chosen_values_dic['team_valid'] = False
         return start(**chosen_values_dic)
 
     # take card payment
@@ -118,6 +120,7 @@ def verify_post():
                                       stripe_token=request.form['stripeToken'],
                                       phone_number=values_dic['phone_number'])
     if not charge_successful:
+        print(request.form['service'])
         return redirect(url_for('failure'))
 
     # Establish database connection

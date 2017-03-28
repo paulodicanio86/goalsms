@@ -33,6 +33,12 @@
 
 
                 <div class="team row">
+                    {% if team_valid==True %}
+                    <div class="form-group">
+                        {% elif team_valid==False %}
+                        <div class="form-group has-error">
+                            {% endif %}
+
                     <div class="col-md-12 col-xs-12 input-group">
                         <select class="form-control" name="team" id="team_id">
                             <option data-group='SHOW' value=no_team>Choose team</option>
@@ -41,6 +47,7 @@
                             </option>
                             {% endfor %}
                         </select>
+                    </div>
                     </div>
                 </div>
 
@@ -54,13 +61,13 @@
 
                 <div class="service row">
                     <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="checkbox" name="service" value="bronze" checked> Basic
+                        <input type="radio" name="service" value="bronze"> Bronze Service
                     </div>
                     <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="checkbox" name="service" value="silver" checked> + Kick off, Full time score and competition results alerts
+                        <input type="radio" name="service" value="silver" checked> Silver Service
                     </div>
                     <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="checkbox" name="service" value="gold" checked> + Live score alerts of every goal
+                        <input type="radio" name="service" value="gold"> Gold Service
                     </div>
                 </div>
 
