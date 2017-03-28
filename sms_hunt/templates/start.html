@@ -92,20 +92,6 @@
                         </div>
                     </div>
 
-                    <div class="name row">
-                        {% if name.valid==True %}
-                        <div class="form-group">
-                            {% elif name.valid==False %}
-                            <div class="form-group has-error">
-                                {% endif %}
-                                <div class="col-md-12 col-xs-12 input-group">
-                                    <input class="form-control" id="name_id"
-                                           name="name" placeholder="your name"
-                                           value="{{ name.value }}">
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="button_stripe row">
                             <div class="form-group stripe_button row">
                                 <div class="col-md-12 col-xs-12">
@@ -116,6 +102,7 @@
                                     <input type="hidden" name="single_team" id="single_team_id" value="False"/>
                                     <input type="hidden" name="stripeToken" id="stripeToken"/>
                                     <input type="hidden" name="stripeEmail" id="stripeEmail"/>
+                                    <input type="hidden" name="stripeName" id="stripeName"/>
 
                                     <button id="CustomStripeButton" class="btn btn-success btn-block"> 
                                         Pay {{ payment.currency_html|safe }}{{ payment.amount }} 
@@ -128,8 +115,9 @@
                                                 key: '{{ key }}',
                                                 token: function(token, args) {
                                                   document.getElementById("stripeToken").value = token.id;
-                                                      document.getElementById("stripeEmail").value = token.email;
-                                                      document.getElementById("chargeForm").submit();
+                                                  document.getElementById("stripeEmail").value = token.email;
+                                                  document.getElementById("stripeName").value = args.billing_name;
+                                                  document.getElementById("chargeForm").submit();
                                                   // Use the token to create the charge with a server-side script.
                                                   // You can access the token ID with `token.id`
                                                 }

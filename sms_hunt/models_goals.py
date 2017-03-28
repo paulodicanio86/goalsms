@@ -34,7 +34,7 @@ for league_key in leagues_dic:
         teams_list.append(entry)
 
 # goal sms configuration settings
-variable_names = ['phone_number', 'name']
+variable_names = ['phone_number']  # used to contain 'names', but that's now obtained from stripe checkout.
 country_codes = app_config['country_codes'].split(',')  # all accepted codes
 default_country_code = country_codes[0]  # default code, used to complete numbers
 
@@ -59,9 +59,17 @@ default_dic = {'valid': True,
                }
 
 
-def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name, mode=0):
+def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name, service):
     # Add to data base and send sms.
     table_name = 'goalsms'
+
+    mode = 0
+    if service == 'bronze':
+        mode = 1
+    elif service == 'silver':
+        mode = 2
+    elif service == 'gold':
+        mode = 3
 
     dt = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
     text_row = [str(phone_number),

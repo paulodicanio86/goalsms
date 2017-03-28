@@ -110,7 +110,7 @@ def verify_post():
         for entry in variable_names:
             chosen_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
                                                  'value': values_dic[entry]}
-            chosen_values_dic['team_valid'] = False
+        chosen_values_dic['team_valid'] = False
         return start(**chosen_values_dic)
 
     # take card payment
@@ -121,6 +121,7 @@ def verify_post():
                                       phone_number=values_dic['phone_number'])
     if not charge_successful:
         print(request.form['service'])
+        print(request.form['stripeName'])
         return redirect(url_for('failure'))
 
     # Establish database connection
@@ -134,8 +135,9 @@ def verify_post():
                           request.form['stripeEmail'],
                           request.form['team'],
                           request.form['league'],
-                          values_dic['name'],
-                          teams_dic[request.form['team']])
+                          request.form['stripeName'],
+                          teams_dic[request.form['team']],
+                          request.form['service'])
 
     # Commit and close database connection
     db.commit()
