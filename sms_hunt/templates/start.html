@@ -39,50 +39,51 @@
                         <div class="form-group has-error">
                             {% endif %}
 
-                    <div class="col-md-12 col-xs-12 input-group">
-                        <select class="form-control" name="team" id="team_id">
-                            <option data-group='SHOW' value=no_team>Choose team</option>
-                            {% for entry in teams %}
-                            <option data-group={{ entry.league_id }} value="{{ entry.team_id }}">{{ entry.team_name }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="service row">
-                    <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="radio" name="service" value="bronze"> Bronze Service
-                    </div>
-                    <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="radio" name="service" value="silver" checked> Silver Service
-                    </div>
-                    <div class="col-md-12 col-xs-12 checkbox">
-                        <input type="radio" name="service" value="gold"> Gold Service
-                    </div>
-                </div>
-
-
-                <div class="space row">
-                    <div class="col-md-12 col-xs-12 input-group">
-                        &nbsp;
-                    </div>
-                </div>
-
-                <div class="phone_number row">
-                    {% if phone_number.valid==True %}
-                    <div class="form-group">
-                        {% elif phone_number.valid==False %}
-                        <div class="form-group has-error">
-                            {% endif %}
                             <div class="col-md-12 col-xs-12 input-group">
-                                <input type="tel" class="form-control" id="phone_number_id"
-                                       name="phone_number" placeholder="mobile no. (incl. prefix)"
-                                       value="{{ phone_number.value }}">
+                                <select class="form-control" name="team" id="team_id">
+                                    <option data-group='SHOW' value=no_team>Choose team</option>
+                                    {% for entry in teams %}
+                                    <option data-group={{ entry.league_id }} value="{{ entry.team_id }}">{{
+                                        entry.team_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
+
+                    <div class="service row">
+                        <div class="col-md-12 col-xs-12 checkbox">
+                            <input id="bronze" type="radio" name="service" value="100"/> Bronze Service
+                        </div>
+                        <div class="col-md-12 col-xs-12 checkbox">
+                            <input id="silver" type="radio" name="service" value="200" checked/> Silver Service
+                        </div>
+                        <div class="col-md-12 col-xs-12 checkbox">
+                            <input id="gold" type="radio" name="service" value="300"/> Gold Service
+                        </div>
+                    </div>
+
+
+                    <div class="space row">
+                        <div class="col-md-12 col-xs-12 input-group">
+                            &nbsp;
+                        </div>
+                    </div>
+
+                    <div class="phone_number row">
+                        {% if phone_number.valid==True %}
+                        <div class="form-group">
+                            {% elif phone_number.valid==False %}
+                            <div class="form-group has-error">
+                                {% endif %}
+                                <div class="col-md-12 col-xs-12 input-group">
+                                    <input type="tel" class="form-control" id="phone_number_id"
+                                           name="phone_number" placeholder="mobile no. (incl. prefix)"
+                                           value="{{ phone_number.value }}">
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="button_stripe row">
                             <div class="form-group stripe_button row">
@@ -95,6 +96,9 @@
                                     <input type="hidden" name="stripeToken" id="stripeToken"/>
                                     <input type="hidden" name="stripeEmail" id="stripeEmail"/>
                                     <input type="hidden" name="stripeName" id="stripeName"/>
+
+                                    <input type="hidden" id="service-amount" value=5 />
+                                    <input id="service-amount2" value="" />
 
                                     <button id="CustomStripeButton" class="btn btn-success btn-block"> 
                                         Pay {{ payment.currency_html|safe }}{{ payment.amount }} 
@@ -117,18 +121,40 @@
 
                                               document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
                                                 // Open Checkout with further options
+                                                var amount = $("#service-amount").val();
                                                 handler.open({
                                                   name: '{{ company }}',
                                                   description: 'Please enter your details',
-                                                  amount: {{ payment.amount_integer }},
+                                                  amount: amount,
                                                   currency: '{{ payment.currency }}',
                                                   billingAddress: true
                                                 });
                                                 e.preventDefault();
                                               });
 
+                                               document.getElementById('bronze').addEventListener('click', function(a) {
+                                                    document.getElementById("service-amount2").value = document.getElementById('bronze').value;
+                                                    document.getElementById("service-amount").value = document.getElementById('bronze').value;
+                                                    var value_amount = document.getElementById('bronze').value / 100.00
+                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
+                                                });
+                                               document.getElementById('silver').addEventListener('click', function(a) {
+                                                    document.getElementById("service-amount2").value = document.getElementById('silver').value;
+                                                    document.getElementById("service-amount").value = document.getElementById('silver').value;
+                                                    var value_amount = document.getElementById('silver').value / 100.00
+                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
+                                                });
+                                               document.getElementById('gold').addEventListener('click', function(a) {
+                                                    document.getElementById("service-amount2").value = document.getElementById('gold').value;
+                                                    document.getElementById("service-amount").value = document.getElementById('gold').value;
+                                                    var value_amount = document.getElementById('gold').value / 100.00
+                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
+                                                });
 
-                                    </script>
+
+
+
+                                </script>
 
                                 </div>
                             </div>
