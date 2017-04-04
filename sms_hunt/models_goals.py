@@ -14,8 +14,8 @@ teams = teams_dic.values()
 teams.sort()
 
 # Create an ordered league list to be passed to the templates
-leagues_order = ['premier_league', 'bundesliga', 'champions_league', 'europa_league']
-main_leagues = ['bundesliga', 'premier_league']
+leagues_order = team_data['leagues_order']
+country_leagues = team_data['country_leagues']
 leagues_list = []
 for league_key in leagues_order:
     entry = {'league_id': league_key,
@@ -37,22 +37,7 @@ for league_key in leagues_dic:
 variable_names = ['phone_number']  # used to contain 'names', but that's now obtained from stripe checkout.
 country_codes = app_config['country_codes'].split(',')  # all accepted codes
 default_country_code = country_codes[0]  # default code, used to complete numbers
-
-payment_1 = {'amount_integer': app_config['amount_integer_1'],
-             'amount': app_config['amount_1'],
-             'currency': app_config['currency_1'],
-             'currency_html': app_config['currency_html_1']
-             }
-payment_2 = {'amount_integer': app_config['amount_integer_2'],
-             'amount': app_config['amount_2'],
-             'currency': app_config['currency_2'],
-             'currency_html': app_config['currency_html_2']
-             }
-payment_3 = {'amount_integer': app_config['amount_integer_3'],
-             'amount': app_config['amount_3'],
-             'currency': app_config['currency_3'],
-             'currency_html': app_config['currency_html_3']
-             }
+payments = app_config['payments']
 
 default_dic = {'valid': True,
                'value': ''

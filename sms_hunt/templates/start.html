@@ -53,15 +53,11 @@
                     </div>
 
                     <div class="service row">
+                        {% for payment in payments %}
                         <div class="col-md-12 col-xs-12 checkbox">
-                            <input id="bronze" type="radio" name="service" value="100"/> Bronze Service
+                            <input id={{ payment.name }} type="radio" name="service" value="{{ payment.value_int }}" /> {{ payment.title }}
                         </div>
-                        <div class="col-md-12 col-xs-12 checkbox">
-                            <input id="silver" type="radio" name="service" value="200" checked/> Silver Service
-                        </div>
-                        <div class="col-md-12 col-xs-12 checkbox">
-                            <input id="gold" type="radio" name="service" value="300"/> Gold Service
-                        </div>
+                        {% endfor %}
                     </div>
 
 
@@ -92,16 +88,17 @@
 
                                     <script src="https://checkout.stripe.com/checkout.js"></script>
                                       
-                                    <input type="hidden" name="single_team" id="single_team_id" value="False"/>
-                                    <input type="hidden" name="stripeToken" id="stripeToken"/>
-                                    <input type="hidden" name="stripeEmail" id="stripeEmail"/>
-                                    <input type="hidden" name="stripeName" id="stripeName"/>
+                                    <input type="hidden" name="single_team" id="single_team_id" value="False" />
+                                    <input type="hidden" name="stripeToken" id="stripeToken" />
+                                    <input type="hidden" name="stripeEmail" id="stripeEmail" />
+                                    <input type="hidden" name="stripeName" id="stripeName" />
 
-                                    <input type="hidden" id="service-amount" value=5 />
-                                    <input id="service-amount2" value="" />
+                                    <input type="hidden" name="service_chosen" id="service_chosen" value="" />
+                                    <input type="hidden" name="service-amount" id="service-amount" value="" />
+                                    <input type="hidden" name="currency" id="currency" value="" />
 
-                                    <button id="CustomStripeButton" class="btn btn-success btn-block"> 
-                                        Pay {{ payment.currency_html|safe }}{{ payment.amount }} 
+                                    <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
+                                        Pay
                                     </button>
                                       
 
@@ -121,38 +118,28 @@
 
                                               document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
                                                 // Open Checkout with further options
-                                                var amount = $("#service-amount").val();
+                                                var amount = parseInt($("#service-amount").val());
+                                                var currency= $("#currency").val();
                                                 handler.open({
                                                   name: '{{ company }}',
                                                   description: 'Please enter your details',
                                                   amount: amount,
-                                                  currency: '{{ payment.currency }}',
+                                                  currency: currency,
                                                   billingAddress: true
                                                 });
                                                 e.preventDefault();
                                               });
 
-                                               document.getElementById('bronze').addEventListener('click', function(a) {
-                                                    document.getElementById("service-amount2").value = document.getElementById('bronze').value;
-                                                    document.getElementById("service-amount").value = document.getElementById('bronze').value;
-                                                    var value_amount = document.getElementById('bronze').value / 100.00
+                                              {% for payment in payments %}
+                                              document.getElementById('{{ payment.name }}').addEventListener('click', function(a) {
+                                                    document.getElementById("service_chosen").value = '{{ payment.name }}';
+                                                    document.getElementById("currency").value = '{{ payment.currency }}';
+                                                    document.getElementById("service-amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
+                                                    var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00
                                                     document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
-                                                });
-                                               document.getElementById('silver').addEventListener('click', function(a) {
-                                                    document.getElementById("service-amount2").value = document.getElementById('silver').value;
-                                                    document.getElementById("service-amount").value = document.getElementById('silver').value;
-                                                    var value_amount = document.getElementById('silver').value / 100.00
-                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
-                                                });
-                                               document.getElementById('gold').addEventListener('click', function(a) {
-                                                    document.getElementById("service-amount2").value = document.getElementById('gold').value;
-                                                    document.getElementById("service-amount").value = document.getElementById('gold').value;
-                                                    var value_amount = document.getElementById('gold').value / 100.00
-                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
-                                                });
-
-
-
+                                                    document.getElementById("CustomStripeButton").disabled = false;
+                                               });
+                                               {% endfor %}
 
                                 </script>
 

@@ -20,6 +20,16 @@
     "champions_league": "Champions League",
     "europa_league": "Europa League"
   },
+  "leagues_order": [
+    "premier_league",
+    "bundesliga",
+    "champions_league",
+    "europa_league"
+  ],
+  "country_leagues": [
+    "bundesliga",
+    "premier_league"
+  ],
   "club_teams": {
     "bournemouth": "Bournemouth",
     "arsenal": "Arsenal F.C.",

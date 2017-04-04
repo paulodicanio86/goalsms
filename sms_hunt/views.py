@@ -6,8 +6,8 @@ from sms_hunt import app, db_config, stripe_config, team_data, app_config
 
 from sms import Sms
 from models_tour import follow_tour
-from models_goals import (default_dic, payment_1, payment_2, payment_3, leagues_list, teams_list, teams_dic,
-                          main_leagues, variable_names, default_country_code, country_codes,
+from models_goals import (default_dic, payments, leagues_list, teams_list, teams_dic,
+                          country_leagues, variable_names, default_country_code, country_codes,
                           add_data_and_send_sms, charge_stripe)
 from functions.validation_functions import convert_entries, validate_entries
 
@@ -28,15 +28,14 @@ title = app_config['title']
 #######################################
 @app.route('/')
 def start(phone_number_dic=default_dic,
-          name_dic=default_dic, team_valid=True):
+          team_valid=True):
     return render_template('start.html',
                            title=title,
                            company=company,
                            year=year,
-                           payment=payment_1,
+                           payments=payments,
                            key=key,
                            phone_number=phone_number_dic,
-                           name=name_dic,
                            leagues=leagues_list,
                            teams=teams_list,
                            team_valid=team_valid
@@ -48,14 +47,13 @@ def start(phone_number_dic=default_dic,
 #######################################
 @app.route('/team/<team_value>/')
 def single_team(team_value,
-                phone_number_dic=default_dic,
-                name_dic=default_dic):
+                phone_number_dic=default_dic):
     team_value = team_value.lower()
     if team_value not in teams_dic.keys():
         return redirect(url_for('page_not_found_manual'))
 
     league_value = ''
-    for league_name in main_leagues:
+    for league_name in country_leagues:
         if team_value in team_data[league_name]:
             league_value = league_name
 
@@ -63,10 +61,9 @@ def single_team(team_value,
                            title=title,
                            company=company,
                            year=year,
-                           payment=payment_1,
+                           payments=payments,
                            key=key,
                            phone_number=phone_number_dic,
-                           name=name_dic,
                            team=teams_dic[team_value],
                            team_value=team_value,
                            league_value=league_value
@@ -92,35 +89,35 @@ def verify_post():
         values_dic[entry] = request.form[entry]
         values_dic[entry] = convert_entries(entry, values_dic[entry], default_country_code)
         valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
+    if request.form['team'] == 'no_team':
+        team_selected = False
+    else:
+        team_selected = True
 
     # reload if non-validated entries exist
-    if False in valid_dic.values():
-        false_values_dic = {}
+    if False in valid_dic.values() or not team_selected:
+        reload_values_dic = {}
         for entry in variable_names:
-            false_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
-                                                'value': values_dic[entry]}
-        if request.form['single_team'] == 'False':
-            return start(**false_values_dic)
-        else:
-            return single_team(request.form['team'], **false_values_dic)
-
-    # if no team is chosen reload the base page with validated entries
-    if request.form['team'] == 'no_team':
-        chosen_values_dic = {}
-        for entry in variable_names:
-            chosen_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
+            reload_values_dic['team_valid'] = team_selected
+            reload_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
                                                  'value': values_dic[entry]}
-        chosen_values_dic['team_valid'] = False
-        return start(**chosen_values_dic)
+
+        if request.form['single_team'] == 'False':
+            return start(**reload_values_dic)
+        else:
+            return single_team(request.form['team'], **reload_values_dic)
 
     # take card payment
-    charge_successful = charge_stripe(payment=payment_1,
+    payment = {'amount_integer': request.form['service-amount'],
+               'currency': request.form['currency']}
+
+    charge_successful = charge_stripe(payment=payment,
                                       email=request.form['stripeEmail'],
                                       secret_key=secret_key,
                                       stripe_token=request.form['stripeToken'],
                                       phone_number=values_dic['phone_number'])
     if not charge_successful:
-        print(request.form['service'])
+        print(request.form['service_chosen'])
         print(request.form['stripeName'])
         return redirect(url_for('failure'))
 
@@ -137,7 +134,7 @@ def verify_post():
                           request.form['league'],
                           request.form['stripeName'],
                           teams_dic[request.form['team']],
-                          request.form['service'])
+                          request.form['service_chosen'])
 
     # Commit and close database connection
     db.commit()
@@ -180,8 +177,7 @@ def about():
     return render_template('about.html',
                            title=title,
                            company=company,
-                           year=year,
-                           payment=payment_1
+                           year=year
                            )
 
 
