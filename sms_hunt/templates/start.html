@@ -15,19 +15,12 @@
             <form class="form-horizontal" id="chargeForm" role="form" action="/verify" method="post">
 
                 <div class="league row">
-                    <div class="col-md-12 col-xs-12 input-group">
+                    <div class="form-group">
                         <select class="form-control" name="league" id="league_id">
                             {% for entry in leagues %}
                             <option value="{{ entry.league_id }}">{{ entry.league_name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                </div>
-
-
-                <div class="space row">
-                    <div class="col-md-12 col-xs-12 input-group">
-                        &nbsp;
                     </div>
                 </div>
 
@@ -39,7 +32,7 @@
                         <div class="form-group has-error">
                             {% endif %}
 
-                            <div class="col-md-12 col-xs-12 input-group">
+
                                 <select class="form-control" name="team" id="team_id">
                                     <option data-group='SHOW' value=no_team>Choose team</option>
                                     {% for entry in teams %}
@@ -48,21 +41,21 @@
                                     </option>
                                     {% endfor %}
                                 </select>
-                            </div>
+
                         </div>
                     </div>
 
 
                     <div class="service row">
                         {% for entry in leagues %}
-                        <div id="{{ entry.league_id }}_price_id" style="display: none;">
+                        <div id="{{ entry.league_id }}_price_id" style="display: none;" >
 
                         {% for payment in payments %}
                             {% if entry.league_id==payment.league %}
-                        <div class="col-md-12 col-xs-12 checkbox">
-                            <input id={{ payment.name }} type="radio"
+                        <div class="input-group checkbox text-left" >
+                            <label><input id={{ payment.name }} type="radio"
                                    name="service"
-                                   value="{{ payment.value_int }}"/> {{ payment.title }}
+                                   value="{{ payment.value_int }}"/> {{ payment.title }} </label>
                         </div>
                             {% endif %}
                         {% endfor %}
@@ -83,17 +76,17 @@
                             {% elif phone_number.valid==False %}
                             <div class="form-group has-error">
                                 {% endif %}
-                                <div class="col-md-12 col-xs-12 input-group">
+
                                     <input type="tel" class="form-control" id="phone_number_id"
                                            name="phone_number" placeholder="mobile no. (incl. prefix)"
                                            value="{{ phone_number.value }}">
-                                </div>
+
                             </div>
                         </div>
 
                         <div class="button_stripe row">
                             <div class="form-group stripe_button row">
-                                <div class="col-md-12 col-xs-12">
+
 
 
                                     <script src="https://checkout.stripe.com/checkout.js"></script>
@@ -107,13 +100,12 @@
                                     <input type="hidden" name="service-amount" id="service-amount" value="" />
                                     <input type="hidden" name="currency" id="currency" value="" />
 
-                                    <input name="blabla" id="box" value="" />
+
 
                                     <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
                                         Pay
                                     </button>
                                       
-
 
                                     <script>
                                               var handler = StripeCheckout.configure({
@@ -155,7 +147,6 @@
 
                                                document.getElementById('team_id').addEventListener('change', function() {
                                                     val = document.getElementById("league_id").value;
-                                                    document.getElementById('box').value = val;
 
                                                     {% for entry in leagues %}
                                                     document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
@@ -169,13 +160,14 @@
                                                     {% for entry in leagues %}
                                                     document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
                                                     {% endfor %}
-
+                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay";
+                                                    document.getElementById("CustomStripeButton").disabled = true;
 
                                                });
 
                                 </script>
 
-                                </div>
+
                             </div>
                         </div>
 
