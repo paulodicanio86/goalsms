@@ -43,7 +43,7 @@
                                 <select class="form-control" name="team" id="team_id">
                                     <option data-group='SHOW' value=no_team>Choose team</option>
                                     {% for entry in teams %}
-                                    <option data-group={{ entry.league_id }} value="{{ entry.team_id }}">{{
+                                    <option data-group={{ entry.league_id }} value="{{ entry.team_id }}" >{{
                                         entry.team_name }}
                                     </option>
                                     {% endfor %}
@@ -52,10 +52,20 @@
                         </div>
                     </div>
 
+
                     <div class="service row">
+                        {% for entry in leagues %}
+                        <div id="{{ entry.league_id }}_price_id" style="display: none;">
+
                         {% for payment in payments %}
+                            {% if entry.league_id==payment.league %}
                         <div class="col-md-12 col-xs-12 checkbox">
-                            <input id={{ payment.name }} type="radio" name="service" value="{{ payment.value_int }}" /> {{ payment.title }}
+                            <input id={{ payment.name }} type="radio"
+                                   name="service"
+                                   value="{{ payment.value_int }}"/> {{ payment.title }}
+                        </div>
+                            {% endif %}
+                        {% endfor %}
                         </div>
                         {% endfor %}
                     </div>
@@ -96,6 +106,8 @@
                                     <input type="hidden" name="service_chosen" id="service_chosen" value="" />
                                     <input type="hidden" name="service-amount" id="service-amount" value="" />
                                     <input type="hidden" name="currency" id="currency" value="" />
+
+                                    <input name="blabla" id="box" value="" />
 
                                     <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
                                         Pay
@@ -140,6 +152,26 @@
                                                     document.getElementById("CustomStripeButton").disabled = false;
                                                });
                                                {% endfor %}
+
+                                               document.getElementById('team_id').addEventListener('change', function() {
+                                                    val = document.getElementById("league_id").value;
+                                                    document.getElementById('box').value = val;
+
+                                                    {% for entry in leagues %}
+                                                    document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
+                                                    {% endfor %}
+                                                    document.getElementById(val.concat('_price_id')).style.display = 'block';
+
+                                               });
+
+                                              document.getElementById('league_id').addEventListener('change', function() {
+
+                                                    {% for entry in leagues %}
+                                                    document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
+                                                    {% endfor %}
+
+
+                                               });
 
                                 </script>
 

@@ -26,13 +26,25 @@
                     </div>
                 </div>
 
-                    <div class="service row">
+
+                <div class="service row">
+
+                        <div id="{{ league_value }}_price_id" style="display: block;">
+
                         {% for payment in payments %}
+                            {% if payment.league == league_value %}
                         <div class="col-md-12 col-xs-12 checkbox">
-                            <input id={{ payment.name }} type="radio" name="service" value="{{ payment.value_int }}" /> {{ payment.title }}
+                            <input id={{ payment.name }} type="radio"
+                                   name="service"
+                                   value="{{ payment.value_int }}"/> {{ payment.title }}
                         </div>
+                            {% endif %}
                         {% endfor %}
+                        </div>
+
                     </div>
+
+
 
                 <div class="space row">
                     <div class="col-md-12 col-xs-12 input-group">
