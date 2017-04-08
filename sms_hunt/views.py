@@ -89,7 +89,7 @@ def verify_post():
         values_dic[entry] = request.form[entry]
         values_dic[entry] = convert_entries(entry, values_dic[entry], default_country_code)
         valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
-    if request.form['team'] == 'no_team':
+    if request.form['team'] == '':
         team_selected = False
     else:
         team_selected = True

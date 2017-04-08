@@ -141,34 +141,6 @@
 <link href="" rel="stylesheet">
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-<script>
-$(function(){
-    $('#league_id').on('change', function(){
-        var val = $(this).val();
-        var sub = $('#team_id');
-        $('option', sub).filter(function(){
-            if (
-                 $(this).attr('data-group') === val
-              || $(this).attr('data-group') === 'SHOW'
-            ) {
-              if ($(this).parent('span').length) {
-                $(this).unwrap();
-              }
-            } else {
-              if (!$(this).parent('span').length) {
-                $(this).wrap( "<span>" ).parent().hide();
-              }
-            }
-        });
-    });
-    $('#league_id').trigger('change');
 
-});
-
-
-
-
-
-</script>
 </body>
 </html>
