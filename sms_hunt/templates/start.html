@@ -29,179 +29,173 @@
                 <div class="team row">
                     {% if team_valid==True %}
                     <div class="form-group">
-                        {% elif team_valid==False %}
-                        <div class="form-group has-error">
+                    {% elif team_valid==False %}
+                    <div class="form-group has-error">
+                    {% endif %}
+
+                        {% for league in leagues %}
+                        <select class="form-control" name="team" id="{{ league.league_id }}_team_id"
+                                style="display: none;" >
+                            <option value="">Choose Team</option>
+                            {% for team in teams %}
+                            {% if league.league_id==team.league_id %}
+                            <option  value="{{ team.team_id }}" >{{ team.team_name }} </option>
                             {% endif %}
-
-                            {% for entry in leagues %}
-
-                                <select class="form-control" name="team" id="{{ entry.league_id }}_team_id"
-                                        style="display: none;" >
-                                    <option value="">Choose Team</option>
-                                    {% for team in teams %}
-                                        {% if entry.league_id==team.league_id %}
-                                        <option  value="{{ team.team_id }}" >{{ team.team_name }} </option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
                             {% endfor %}
-                        </div>
+                        </select>
+                        {% endfor %}
                     </div>
+                </div>
 
-
-                    <div class="service row">
-                        {% for entry in leagues %}
-                        <div id="{{ entry.league_id }}_price_id" style="display: none;" >
+                <div class="service row">
+                    {% for league in leagues %}
+                    <div id="{{ league.league_id }}_price_id" style="display: none;" >
 
                         {% for payment in payments %}
-                            {% if entry.league_id==payment.league %}
+
+                        {% if league.league_id==payment.league %}
                         <div class="input-group checkbox text-left" >
-                            <label><input id={{ payment.name }} type="radio"
-                                   name="service"
-                                   value="{{ payment.value_int }}"/> {{ payment.title }} </label>
+                            <label>
+                                <input id={{ payment.name }} type="radio"
+                                       name="service"
+                                       value="{{ payment.value_int }}"/>
+                                {{ payment.title }}
+                            </label>
                         </div>
-                            {% endif %}
-                        {% endfor %}
-                        </div>
+                        {% endif %}
+
                         {% endfor %}
                     </div>
+                    {% endfor %}
+                </div>
 
 
-                    <div class="space row">
-                        <div class="col-md-12 col-xs-12">
-                            &nbsp;
-                        </div>
+                <div class="space row">
+                    <div class="col-md-12 col-xs-12">
+                        &nbsp;
                     </div>
+                </div>
 
-                    <div class="phone_number row">
-                        {% if phone_number.valid==True %}
-                        <div class="form-group">
-                            {% elif phone_number.valid==False %}
-                            <div class="form-group has-error">
-                                {% endif %}
+                <div class="phone_number row">
+                    {% if phone_number.valid==True %}
+                    <div class="form-group">
+                    {% elif phone_number.valid==False %}
+                    <div class="form-group has-error">
+                    {% endif %}
 
-                                    <input type="tel" class="form-control" id="phone_number_id"
-                                           name="phone_number" placeholder="mobile no. (incl. prefix)"
-                                           value="{{ phone_number.value }}">
+                        <input type="tel" class="form-control" id="phone_number_id"
+                               name="phone_number" placeholder="mobile no. (incl. prefix)"
+                               value="{{ phone_number.value }}">
 
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
-                        <div class="button_stripe row">
-                            <div class="form-group stripe_button row">
+                <div class="button_stripe row">
+                    <div class="form-group stripe_button row">
 
-
-
-                                    <script src="https://checkout.stripe.com/checkout.js"></script>
+                        <script src="https://checkout.stripe.com/checkout.js"></script>
                                       
-                                    <input type="hidden" name="single_team" id="single_team_id" value="False" />
-                                    <input type="hidden" name="stripeToken" id="stripeToken" />
-                                    <input type="hidden" name="stripeEmail" id="stripeEmail" />
-                                    <input type="hidden" name="stripeName" id="stripeName" />
+                        <input type="hidden" name="single_team" id="single_team_id" value="False" />
+                        <input type="hidden" name="stripeToken" id="stripeToken" />
+                        <input type="hidden" name="stripeEmail" id="stripeEmail" />
+                        <input type="hidden" name="stripeName" id="stripeName" />
 
-                                    <input type="hidden" name="service_chosen" id="service_chosen" value="" />
-                                    <input type="hidden" name="service-amount" id="service-amount" value="" />
-                                    <input type="hidden" name="currency" id="currency" value="" />
+                        <input type="hidden" name="service_chosen" id="service_chosen" value="" />
+                        <input type="hidden" name="service_amount" id="service_amount" value="" />
+                        <input type="hidden" name="currency" id="currency" value="" />
 
-                                    <input name="box" id="box_id" value="" />
+                        <input name="box" id="league_chosen_id" value="" />
+                        <input name="box" id="team_chosen_id" value="" />
                                 
-                                    <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
-                                        Pay
-                                    </button>
+                        <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
+                            Pay
+                        </button>
                                       
+                        <script>
+                            var handler = StripeCheckout.configure({
+                                key: '{{ key }}',
+                                token: function(token, args) {
+                                    document.getElementById("stripeToken").value = token.id;
+                                    document.getElementById("stripeEmail").value = token.email;
+                                    document.getElementById("stripeName").value = args.billing_name;
+                                    document.getElementById("chargeForm").submit();
+                                    // Use the token to create the charge with a server-side script.
+                                    // You can access the token ID with `token.id`
+                                }
+                            });
 
-                                    <script>
-                                              var handler = StripeCheckout.configure({
-                                                key: '{{ key }}',
-                                                token: function(token, args) {
-                                                  document.getElementById("stripeToken").value = token.id;
-                                                  document.getElementById("stripeEmail").value = token.email;
-                                                  document.getElementById("stripeName").value = args.billing_name;
-                                                  document.getElementById("chargeForm").submit();
-                                                  // Use the token to create the charge with a server-side script.
-                                                  // You can access the token ID with `token.id`
-                                                }
-                                              });
+                            document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
 
-                                              document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
-                                                // Open Checkout with further options
-                                                var amount = parseInt($("#service-amount").val());
-                                                var currency= $("#currency").val();
-                                                handler.open({
-                                                  name: '{{ company }}',
-                                                  description: 'Please enter your details',
-                                                  amount: amount,
-                                                  currency: currency,
-                                                  billingAddress: true
-                                                });
-                                                e.preventDefault();
-                                              });
+                                // Open Checkout with further options
+                                var amount = parseInt($("#service_amount").val());
+                                var currency= $("#currency").val();
+                                handler.open({
+                                    name: '{{ company }}',
+                                    description: 'Please enter your details',
+                                    amount: amount,
+                                    currency: currency,
+                                    billingAddress: true
+                                });
+                                e.preventDefault();
+                            });
 
-                                              {% for payment in payments %}
-                                              document.getElementById('{{ payment.name }}').addEventListener('click', function(a) {
-                                                    document.getElementById("service_chosen").value = '{{ payment.name }}';
-                                                    document.getElementById("currency").value = '{{ payment.currency }}';
-                                                    document.getElementById("service-amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
-                                                    var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00
-                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
-                                                    document.getElementById("CustomStripeButton").disabled = false;
-                                               });
-                                               {% endfor %}
+                            // FUNCTION FOR RADIO BUTTONS SERVICE CHOICE
+                            {% for payment in payments %}
+                            document.getElementById('{{ payment.name }}').addEventListener('click', function() {
 
-                                               {% for entry in leagues %}
-                                               document.getElementById('{{ entry.league_id }}'.concat('_team_id')).addEventListener('change', function() {
-                                                    val = document.getElementById("league_id").value;
+                                document.getElementById("service_chosen").value = '{{ payment.name }}';
+                                document.getElementById("currency").value = '{{ payment.currency }}';
+                                document.getElementById("service_amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
 
-                                                    team = document.getElementById('{{ entry.league_id }}'.concat('_team_id')).value;
-                                                    document.getElementById('box_id').value = team;
+                                var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00
+                                document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
+                                document.getElementById("CustomStripeButton").disabled = false;
+                            });
+                            {% endfor %}
 
-                                                    {% for entry in leagues %}
-                                                    document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
-                                                    {% endfor %}
-                                                    if (team != '') {
-                                                    document.getElementById(val.concat('_price_id')).style.display = 'block';
-                                                    }
+                            // FUNCTION FOR TEAM DROPDOWN CHANGE
+                            {% for entry in leagues %}
+                            document.getElementById('{{ entry.league_id }}'.concat('_team_id')).addEventListener('change', function() {
 
+                                team = document.getElementById('{{ entry.league_id }}'.concat('_team_id')).value;
+                                document.getElementById('team_chosen_id').value = team;
 
-                                               });
-                                               {% endfor %}
+                                {% for entry in leagues %}
+                                document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
+                                {% endfor %}
 
-                                                document.getElementById('league_id').addEventListener('change', function() {
+                                if (team != '') {
+                                    document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'block';
+                                }
+                            });
+                            {% endfor %}
 
-                                                    {% for entry in leagues %}
-                                                    document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
-                                                    document.getElementById('{{ entry.league_id }}'.concat('_team_id')).style.display = 'none';
-                                                    document.getElementById('{{ entry.league_id }}'.concat('_team_id')).value = "";
-                                                    {% endfor %}
+                            // FUNCTION FOR LEAGUE DROPDOWN CHANGE
+                            document.getElementById('league_id').addEventListener('change', function() {
 
-                                                    val = document.getElementById('league_id').value;
-                                                    document.getElementById(val.concat('_team_id')).style.display = 'block';
-                                                    document.getElementById('box_id').value= val;
+                                {% for entry in leagues %}
+                                document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
+                                document.getElementById('{{ entry.league_id }}'.concat('_team_id')).style.display = 'none';
+                                document.getElementById('{{ entry.league_id }}'.concat('_team_id')).value = "";
+                                {% endfor %}
 
-                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay";
-                                                    document.getElementById("CustomStripeButton").disabled = true;
+                                league = document.getElementById('league_id').value;
+                                document.getElementById(league.concat('_team_id')).style.display = 'block';
+                                document.getElementById('league_chosen_id').value= league;
+                                document.getElementById('team_chosen_id').value = "";
 
+                                document.getElementById("CustomStripeButton").innerHTML = "Pay";
+                                document.getElementById("CustomStripeButton").disabled = true;
+                            });
 
-
-                                               });
-
-
-
-                                </script>
-
-
-                            </div>
-                        </div>
-
-
+                        </script>
+                    </div>
+                </div>
             </form>
         </div>
 
         <div class="col-md-5 col-xs-2">
         </div>
     </div>
-
 </div>
-
-
 {% endblock %}

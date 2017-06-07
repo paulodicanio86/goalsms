@@ -108,7 +108,7 @@ def verify_post():
             return single_team(request.form['team'], **reload_values_dic)
 
     # take card payment
-    payment = {'amount_integer': request.form['service-amount'],
+    payment = {'amount_integer': request.form['service_amount'],
                'currency': request.form['currency']}
 
     charge_successful = charge_stripe(payment=payment,
