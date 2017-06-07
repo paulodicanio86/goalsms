@@ -51,6 +51,7 @@ def single_team(team_value,
     if team_value not in teams_dic.keys():
         return redirect(url_for('page_not_found_manual'))
 
+    # Find out the right league
     league_value = ''
     for league_name in country_leagues:
         if team_value in team_data[league_name]:
@@ -61,7 +62,6 @@ def single_team(team_value,
                            company=company,
                            year=year,
                            payments=payments,
-                           currencies=currencies,
                            key=key,
                            phone_number=phone_number_dic,
                            team=teams_dic[team_value],

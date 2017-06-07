@@ -23,12 +23,14 @@ for league_key in leagues_order:
              'league_name': leagues_dic[league_key]}
     leagues_list.append(entry)
 
-# Create a team list dictionary to be passed to the templates
+# Create a team list dictionary to be passed to the templates. It includes currency values by native league
 teams_list = []
 for league_key in leagues_dic:
     team_keys = team_data[league_key]
     team_keys.sort()
     for team_id in team_keys:
+
+        # Find native league
         native_league = ''
         if league_key in country_leagues:
             native_league = league_key
@@ -37,6 +39,7 @@ for league_key in leagues_dic:
                 if team_id in team_data[entry]:
                     native_league = entry
 
+        # Make entry and append
         entry = {'league_id': league_key,
                  'team_id': team_id,
                  'team_name': teams_dic[team_id],

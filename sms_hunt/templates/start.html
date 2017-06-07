@@ -150,7 +150,7 @@
                                 document.getElementById("currency").value = '{{ payment.currency }}';
                                 document.getElementById("service_amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
 
-                                var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00
+                                var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00;
                                 document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
                                 document.getElementById("CustomStripeButton").disabled = false;
                             });
