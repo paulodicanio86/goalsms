@@ -29,22 +29,24 @@
 
                 <div class="service row">
 
-                        <div id="{{ league_value }}_price_id" style="display: block;">
+                    <div id="{{ league_value }}_price_id" style="display: block;">
 
                         {% for payment in payments %}
-                            {% if payment.league == league_value %}
+                        {% if payment.league == league_value %}
+
                         <div class="input-group checkbox text-left">
-                            <label><input id={{ payment.name }} type="radio"
+                            <label>
+                                <input id={{ payment.name }} type="radio"
                                    name="service"
-                                   value="{{ payment.value_int }}"/> {{ payment.title }} </label>
+                                   value="{{ payment.value_int }}"/>
+                                {{ payment.title }}
+                            </label>
                         </div>
-                            {% endif %}
+                        {% endif %}
                         {% endfor %}
-                        </div>
 
                     </div>
-
-
+                </div>
 
                 <div class="space row">
                     <div class="col-md-12 col-xs-12">
@@ -55,91 +57,84 @@
                 <div class="phone_number row">
                     {% if phone_number.valid==True %}
                     <div class="form-group">
-                        {% elif phone_number.valid==False %}
-                        <div class="form-group has-error">
-                            {% endif %}
-                                <input type="tel" class="form-control" id="phone_number_id"
-                                       name="phone_number" placeholder="mobile no. (incl. prefix)"
-                                       value="{{ phone_number.value }}">
-                        </div>
+                    {% elif phone_number.valid==False %}
+                    <div class="form-group has-error">
+                    {% endif %}
+
+                        <input type="tel" class="form-control" id="phone_number_id"
+                               name="phone_number" placeholder="mobile no. (incl. prefix)"
+                               value="{{ phone_number.value }}">
                     </div>
+                </div>
 
-                    <div class="button_stripe row">
-                        <div class="form-group stripe_button row">
-                            <div class="col-md-12 col-xs-12">
+                <div class="button_stripe row">
+                    <div class="form-group stripe_button row">
+                        <div class="col-md-12 col-xs-12">
 
+                            <script src="https://checkout.stripe.com/checkout.js"></script>
+                                  
+                            <input type="hidden" name="single_team" id="single_team_id" value="True" />
+                            <input type="hidden" name="stripeToken" id="stripeToken" />
+                            <input type="hidden" name="stripeEmail" id="stripeEmail" />
+                            <input type="hidden" name="stripeName" id="stripeName" />
 
-                                <script src="https://checkout.stripe.com/checkout.js"></script>
+                            <input type="hidden" name="service_chosen" id="service_chosen" value="" />
+                            <input type="hidden" name="service-amount" id="service-amount" value="" />
+                            <input type="hidden" name="currency" id="currency" value="" />
+
+                            <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
+                                Pay
+                            </button>
                                   
 
-                                <input type="hidden" name="single_team" id="single_team_id" value="True" />
-                                <input type="hidden" name="stripeToken" id="stripeToken" />
-                                <input type="hidden" name="stripeEmail" id="stripeEmail" />
-                                <input type="hidden" name="stripeName" id="stripeName" />
 
-                                <input type="hidden" name="service_chosen" id="service_chosen" value="" />
-                                <input type="hidden" name="service-amount" id="service-amount" value="" />
-                                <input type="hidden" name="currency" id="currency" value="" />
+                            <script>
+	                        var handler = StripeCheckout.configure({
+	                            key: '{{ key }}',
+	                            token: function(token, args) {
+	                                document.getElementById("stripeToken").value = token.id;
+                                    document.getElementById("stripeEmail").value = token.email;
+                                    document.getElementById("stripeName").value = args.billing_name;
+                                    document.getElementById("chargeForm").submit();
+	                                // Use the token to create the charge with a server-side script.
+	                                // You can access the token ID with `token.id`
+	                            }
+	                        });
 
-                                <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
-                                    Pay
-                                </button>
-                                  
+                            document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
+	                            // Open Checkout with further options
+	                            var amount = parseInt($("#service-amount").val());
+                                var currency= $("#currency").val();
+	                            handler.open({
+	                                name: '{{ company }}',
+	                                description: 'Please enter your details',
+	                                amount: amount,
+	                                currency: currency,
+	                                billingAddress: true
+	                            });
+	                            e.preventDefault();
+	                        });
 
+                            {% for payment in payments %}
+                            document.getElementById('{{ payment.name }}').addEventListener('click', function(a) {
+                                document.getElementById("service_chosen").value = '{{ payment.name }}';
+                                document.getElementById("currency").value = '{{ payment.currency }}';
+                                document.getElementById("service-amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
+                                var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00
+                                document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
+                                document.getElementById("CustomStripeButton").disabled = false;
+                            });
+                            {% endfor %}
+                            </script>
 
-                                <script>
-	      var handler = StripeCheckout.configure({
-	        key: '{{ key }}',
-	        token: function(token, args) {
-	          document.getElementById("stripeToken").value = token.id;
-                  document.getElementById("stripeEmail").value = token.email;
-                  document.getElementById("stripeName").value = args.billing_name;
-                  document.getElementById("chargeForm").submit();
-	          // Use the token to create the charge with a server-side script.
-	          // You can access the token ID with `token.id`
-	        }
-	      });
-
-              document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
-	        // Open Checkout with further options
-	        var amount = parseInt($("#service-amount").val());
-            var currency= $("#currency").val();
-	        handler.open({
-	          name: '{{ company }}',
-	          description: 'Please enter your details',
-	          amount: amount,
-	          currency: currency,
-	          billingAddress: true
-	        });
-	        e.preventDefault();
-	      });
-
-            {% for payment in payments %}
-                                              document.getElementById('{{ payment.name }}').addEventListener('click', function(a) {
-                                                    document.getElementById("service_chosen").value = '{{ payment.name }}';
-                                                    document.getElementById("currency").value = '{{ payment.currency }}';
-                                                    document.getElementById("service-amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
-                                                    var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00
-                                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
-                                                    document.getElementById("CustomStripeButton").disabled = false;
-                                               });
-            {% endfor %}
-
-
-
-                                </script>
-
-
-                            </div>
                         </div>
                     </div>
-
-
+                </div>
             </form>
         </div>
 
-        <div class="col-md-5 col-xs-2">
-        </div>
+        <div class="col-md-5 col-xs-2"></div>
+
     </div>
 
     <br>
@@ -147,14 +142,15 @@
     <div class="footer row 1">
         <div class="col-lg-2 col-xs-2">
         </div>
+
         <div class="col-lg-8 col-xs-8">
             <p align="center">
                 <img src="/static/logos/{{ team_value }}.png" alt="{{ team }}" title="{{ team }}"/>
             </p>
         </div>
+
         <div class="col-lg-2 col-xs-2">
         </div>
     </div>
-
 </div>
 {% endblock %}

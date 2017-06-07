@@ -27,8 +27,7 @@ title = app_config['title']
 # / start page
 #######################################
 @app.route('/')
-def start(phone_number_dic=default_dic,
-          team_valid=True):
+def start(phone_number_dic=default_dic):
     return render_template('start.html',
                            title=title,
                            company=company,
@@ -38,8 +37,7 @@ def start(phone_number_dic=default_dic,
                            key=key,
                            phone_number=phone_number_dic,
                            leagues=leagues_list,
-                           teams=teams_list,
-                           team_valid=team_valid
+                           teams=teams_list
                            )
 
 
@@ -100,7 +98,6 @@ def verify_post():
     if False in valid_dic.values() or not team_selected:
         reload_values_dic = {}
         for entry in variable_names:
-            reload_values_dic['team_valid'] = team_selected
             reload_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
                                                  'value': values_dic[entry]}
 
