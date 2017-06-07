@@ -6,7 +6,7 @@ from sms_hunt import app, db_config, stripe_config, team_data, app_config
 
 from sms import Sms
 from models_tour import follow_tour
-from models_goals import (default_dic, payments, leagues_list, teams_list, teams_dic,
+from models_goals import (default_dic, payments, currencies, leagues_list, teams_list, teams_dic,
                           country_leagues, variable_names, default_country_code, country_codes,
                           add_data_and_send_sms, charge_stripe)
 from functions.validation_functions import convert_entries, validate_entries
@@ -34,6 +34,7 @@ def start(phone_number_dic=default_dic,
                            company=company,
                            year=year,
                            payments=payments,
+                           currencies=currencies,
                            key=key,
                            phone_number=phone_number_dic,
                            leagues=leagues_list,
@@ -62,6 +63,7 @@ def single_team(team_value,
                            company=company,
                            year=year,
                            payments=payments,
+                           currencies=currencies,
                            key=key,
                            phone_number=phone_number_dic,
                            team=teams_dic[team_value],

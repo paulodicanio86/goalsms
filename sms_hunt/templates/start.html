@@ -18,8 +18,8 @@
                     <div class="form-group">
                         <select class="form-control" name="league" id="league_id">
                             <option value="">Choose League</option>
-                            {% for entry in leagues %}
-                            <option value="{{ entry.league_id }}">{{ entry.league_name }}</option>
+                            {% for league in leagues %}
+                            <option value="{{ league.league_id }}">{{ league.league_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -27,12 +27,7 @@
 
 
                 <div class="team row">
-                    {% if team_valid==True %}
                     <div class="form-group">
-                    {% elif team_valid==False %}
-                    <div class="form-group has-error">
-                    {% endif %}
-
                         {% for league in leagues %}
                         <select class="form-control" name="team" id="{{ league.league_id }}_team_id"
                                 style="display: none;" >
@@ -49,11 +44,12 @@
 
                 <div class="service row">
                     {% for league in leagues %}
-                    <div id="{{ league.league_id }}_price_id" style="display: none;" >
+                    {% for currency in currencies %}
+                    <div id="{{ league.league_id }}_{{ currency }}_price_id" style="display: none;" >
 
                         {% for payment in payments %}
 
-                        {% if league.league_id==payment.league %}
+                        {% if league.league_id+currency==payment.league + payment.currency %}
                         <div class="input-group checkbox text-left" >
                             <label>
                                 <input id={{ payment.name }} type="radio"
@@ -66,6 +62,7 @@
 
                         {% endfor %}
                     </div>
+                    {% endfor %}
                     {% endfor %}
                 </div>
 
@@ -103,6 +100,12 @@
                         <input type="hidden" name="service_chosen" id="service_chosen" value="" />
                         <input type="hidden" name="service_amount" id="service_amount" value="" />
                         <input type="hidden" name="currency" id="currency" value="" />
+
+                        {% for team in teams %}
+                        <input type="hidden" name="{{ team.team_id }}_currency"
+                               id="{{ team.team_id }}_currency" value="{{ team.currency }}" />
+                        {% endfor %}
+
 
                         <input name="box" id="league_chosen_id" value="" />
                         <input name="box" id="team_chosen_id" value="" />
@@ -154,29 +157,44 @@
                             {% endfor %}
 
                             // FUNCTION FOR TEAM DROPDOWN CHANGE
-                            {% for entry in leagues %}
-                            document.getElementById('{{ entry.league_id }}'.concat('_team_id')).addEventListener('change', function() {
+                            {% for league in leagues %}
+                            document.getElementById('{{ league.league_id }}'.concat('_team_id')).addEventListener('change', function() {
 
-                                team = document.getElementById('{{ entry.league_id }}'.concat('_team_id')).value;
+                                team = document.getElementById('{{ league.league_id }}'.concat('_team_id')).value;
                                 document.getElementById('team_chosen_id').value = team;
+                                currency = document.getElementById(team.concat('_currency')).value;
 
-                                {% for entry in leagues %}
-                                document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
+                                {% for league2 in leagues %}
+                                {% for currency2 in currencies %}
+                                document.getElementById('{{ league2.league_id }}_{{ currency2 }}_price_id').style.display = 'none';
+                                {% endfor %}
                                 {% endfor %}
 
                                 if (team != '') {
-                                    document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'block';
+                                    document.getElementById('{{ league.league_id }}'.concat('_', currency ,'_price_id')).style.display = 'block';
                                 }
+
+                                document.getElementById("CustomStripeButton").innerHTML = "Pay";
+                                document.getElementById("CustomStripeButton").disabled = true;
+
+                                //Make all radio buttons deselected:
+                                {% for payment in payments %}
+                                document.getElementById('{{ payment.name }}').checked = false;
+                                {% endfor %}
+
+
                             });
                             {% endfor %}
 
                             // FUNCTION FOR LEAGUE DROPDOWN CHANGE
                             document.getElementById('league_id').addEventListener('change', function() {
 
-                                {% for entry in leagues %}
-                                document.getElementById('{{ entry.league_id }}'.concat('_price_id')).style.display = 'none';
-                                document.getElementById('{{ entry.league_id }}'.concat('_team_id')).style.display = 'none';
-                                document.getElementById('{{ entry.league_id }}'.concat('_team_id')).value = "";
+                                {% for league in leagues %}
+                                {% for currency in currencies %}
+                                document.getElementById('{{ league.league_id }}_{{ currency }}_price_id').style.display = 'none';
+                                document.getElementById('{{ league.league_id }}'.concat('_team_id')).style.display = 'none';
+                                document.getElementById('{{ league.league_id }}'.concat('_team_id')).value = "";
+                                {% endfor %}
                                 {% endfor %}
 
                                 league = document.getElementById('league_id').value;

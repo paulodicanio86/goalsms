@@ -16,6 +16,7 @@ teams.sort()
 # Create an ordered league list to be passed to the templates
 leagues_order = team_data['leagues_order']
 country_leagues = team_data['country_leagues']
+league_currencies = app_config['league_currencies']
 leagues_list = []
 for league_key in leagues_order:
     entry = {'league_id': league_key,
@@ -27,10 +28,20 @@ teams_list = []
 for league_key in leagues_dic:
     team_keys = team_data[league_key]
     team_keys.sort()
-    for team in team_keys:
+    for team_id in team_keys:
+        native_league = ''
+        if league_key in country_leagues:
+            native_league = league_key
+        else:
+            for entry in country_leagues:
+                if team_id in team_data[entry]:
+                    native_league = entry
+
         entry = {'league_id': league_key,
-                 'team_id': team,
-                 'team_name': teams_dic[team]}
+                 'team_id': team_id,
+                 'team_name': teams_dic[team_id],
+                 'currency': league_currencies[native_league]
+                 }
         teams_list.append(entry)
 
 # goal sms configuration settings
@@ -38,6 +49,7 @@ variable_names = ['phone_number']  # used to contain 'names', but that's now obt
 country_codes = app_config['country_codes'].split(',')  # all accepted codes
 default_country_code = country_codes[0]  # default code, used to complete numbers
 payments = app_config['payments']
+currencies = app_config['currencies']
 
 default_dic = {'valid': True,
                'value': ''
