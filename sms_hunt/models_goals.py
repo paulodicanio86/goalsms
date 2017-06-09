@@ -2,10 +2,9 @@ from datetime import datetime
 import stripe
 
 from sms import Sms
-from sms_hunt import sms_content, db_config
+from sms_hunt import sms_content
 from backend.db_functions import insert_array_to_table, get_table_columns
 from sms_hunt import team_data, app_config
-from backend.db_class import DB
 
 sign_up_sms_text = sms_content['sign_up_sms_text']
 teams_dic = team_data['club_teams']
