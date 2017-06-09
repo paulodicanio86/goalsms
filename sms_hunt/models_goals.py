@@ -1,11 +1,11 @@
 from datetime import datetime
-
 import stripe
 
 from sms import Sms
-from sms_hunt import sms_content
+from sms_hunt import sms_content, db_config
 from backend.db_functions import insert_array_to_table, get_table_columns
 from sms_hunt import team_data, app_config
+from backend.db_class import DB
 
 sign_up_sms_text = sms_content['sign_up_sms_text']
 teams_dic = team_data['club_teams']
@@ -59,9 +59,10 @@ default_dic = {'valid': True,
                }
 
 
-def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name, service):
+def add_data_and_send_sms(db, name, email, phone_number, team_id_name, team_name, league_id, service_id):
     # Add to data base and send sms.
     table_name = 'goalsms'
+    service = service_id.split('_')[1]
 
     mode = 0
     if service == 'bronze':
@@ -75,9 +76,9 @@ def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name
     text_row = [str(phone_number),
                 str(email),
                 dt,
-                str(team),
-                str(league),
-                str(name),
+                str(team_id_name),
+                str(league_id),
+                str(name.encode('utf-8')),
                 mode]
 
     # Add message to table
@@ -85,12 +86,13 @@ def add_data_and_send_sms(db, phone_number, email, team, league, name, team_name
                           get_table_columns('tables/' + table_name + '_table.json'),
                           text_row)
 
-    # Send message that it is over now
-    sign_up_sms = Sms(content=sign_up_sms_text.format(name=str(name),
-                                                      team=str(team_name)),
+    # Convert unicode to utf-8 string
+    content = sign_up_sms_text.format(name=name, team=team_name).encode('utf-8')
+
+    # Send message that you are signed up
+    sign_up_sms = Sms(content=content,
                       receiver=str(phone_number))
     sign_up_sms.send()
-    return None
 
 
 def charge_stripe(payment, email, secret_key, stripe_token, phone_number):

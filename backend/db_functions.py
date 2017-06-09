@@ -1,6 +1,5 @@
 import os
 import json
-import pandas as pd
 
 
 def add_brackets(string):
@@ -48,8 +47,8 @@ def encode_value(value):
 
 
 # Execute any SQL statement
-def execute_statement(statement, db):
-    return pd.read_sql(statement, con=db)
+def execute_statement(sql_query, db):
+    return db.get(sql_query)
 
 
 # Query db to select all
@@ -60,26 +59,22 @@ def select_all(table_name, db):
 
 # Delete table
 def delete_table(table_name, db):
-    cursor = db.cursor()
     sql_query = 'DROP TABLE {table_name};'.format(table_name=table_name)
-    cursor.execute(sql_query)
+    db.execute(sql_query)
     db.commit()
 
 
 # Create table
 def create_table(table_name, db, columns_types):
-    cursor = db.cursor()
     sql_query = '''CREATE TABLE {table_name} {columns_types};
                 '''.format(table_name=table_name,
                            columns_types=columns_types)
-    cursor.execute(sql_query)
+    db.execute(sql_query)
     db.commit()
 
 
 # Update row
 def update_row(table_name, db, column_name, column_value, condition_1, condition_2):
-    cursor = db.cursor()
-
     sql_query = '''SET SQL_SAFE_UPDATES = 0;
                    UPDATE {table_name}
                    SET {column_name}={column_value}
@@ -90,13 +85,12 @@ def update_row(table_name, db, column_name, column_value, condition_1, condition
                               condition_1=condition_1,
                               condition_2=condition_2
                               )
-    cursor.execute(sql_query)
+    db.execute(sql_query)
+    db.commit()
 
 
 # Delete row
 def delete_row(table_name, db, condition_1, condition_2):
-    cursor = db.cursor()
-
     sql_query = '''SET SQL_SAFE_UPDATES = 0;
                    DELETE FROM {table_name}
                    WHERE {condition_1} and {condition_2};
@@ -104,19 +98,18 @@ def delete_row(table_name, db, condition_1, condition_2):
                               condition_1=condition_1,
                               condition_2=condition_2
                               )
-    cursor.execute(sql_query)
+    db.execute(sql_query)
+    db.commit()
 
 
 # Insert into table
 def insert_into_table(table_name, db, columns, values):
-    cursor = db.cursor()
-
     sql_query = '''INSERT INTO {table_name} {columns}
                     VALUES {values};
                 '''.format(table_name=table_name,
                            columns=columns,
                            values=values)
-    cursor.execute(sql_query)
+    db.execute(sql_query)
     db.commit()
 
 

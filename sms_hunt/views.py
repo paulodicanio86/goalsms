@@ -1,14 +1,13 @@
-import MySQLdb
 import os
+
 from flask import request, send_from_directory, render_template, url_for, redirect
-
 from sms_hunt import app, db_config, stripe_config, team_data, app_config
-
 from sms import Sms
 from models_tour import follow_tour
 from models_goals import (default_dic, payments, currencies, leagues_list, teams_list, teams_dic,
                           country_leagues, variable_names, default_country_code, country_codes,
                           add_data_and_send_sms, charge_stripe)
+from backend.db_class import DB
 from functions.validation_functions import convert_entries, validate_entries
 
 if stripe_config['stripe_test_flag'] == 0:
@@ -80,63 +79,100 @@ def verify_get():
 
 @app.route('/verify', methods=['POST'])
 def verify_post():
-    # get the values from the post
+    # get the values from the POST request
+    phone_number = request.form['phone_number']
+    email = request.form['stripeEmail']
+    name = request.form['stripeName']
+    stripe_token = request.form['stripeToken']
+    service_amount = request.form['service_amount']
+    currency = request.form['currency']
+
+    team_id = request.form['team_chosen']
+    team_name = teams_dic[team_id]
+    league_id = request.form['league_chosen']
+    service_id = request.form['service_chosen']
+
+    single_team_value = request.form['single_team']
+
+    # check if a team was chosen
+    if team_name == '':
+        team_selected_bool = False
+    else:
+        team_selected_bool = True
+
+    #print(name,
+    #      email,
+    #      phone_number,
+    #      team_id,
+    #      team_name,
+    #      league_id,
+    #      service_id,
+    #      stripe_token,
+    #      service_amount,
+    #      currency,
+    #      team_selected_bool)
+
+    # fill, convert and validate entries
     values_dic = {}
     valid_dic = {}
 
-    # fill, convert and validate entries
     for entry in variable_names:
         values_dic[entry] = request.form[entry]
         values_dic[entry] = convert_entries(entry, values_dic[entry], default_country_code)
         valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
-    if request.form['team'] == '':
-        team_selected = False
-    else:
-        team_selected = True
 
     # reload if non-validated entries exist
-    if False in valid_dic.values() or not team_selected:
+    if False in valid_dic.values() or not team_selected_bool:
         reload_values_dic = {}
         for entry in variable_names:
             reload_values_dic[entry + '_dic'] = {'valid': valid_dic[entry],
                                                  'value': values_dic[entry]}
 
-        if request.form['single_team'] == 'False':
+        if single_team_value == 'False':
             return start(**reload_values_dic)
         else:
-            return single_team(request.form['team'], **reload_values_dic)
+            return single_team(team_id, **reload_values_dic)
+
+    # all entries are valid now, re-assign:
+    phone_number = values_dic['phone_number']
+
+    #print(name,
+    #      email,
+    #      phone_number,
+    #      team_id,
+    #      team_name,
+    #      league_id,
+    #      service_id,
+    #      team_selected_bool)
 
     # take card payment
-    payment = {'amount_integer': request.form['service_amount'],
-               'currency': request.form['currency']}
+    # payment = {'amount_integer': service_amount,
+    #           'currency': currency}
 
-    charge_successful = charge_stripe(payment=payment,
-                                      email=request.form['stripeEmail'],
-                                      secret_key=secret_key,
-                                      stripe_token=request.form['stripeToken'],
-                                      phone_number=values_dic['phone_number'])
-    if not charge_successful:
-        print(request.form['service_chosen'])
-        print(request.form['stripeName'])
-        return redirect(url_for('failure'))
+    # charge_successful = charge_stripe(payment=payment,
+    #                                  email=email,
+    #                                  secret_key=secret_key,
+    #                                  stripe_token=stripe_token,
+    #                                  phone_number=phone_number)
+    # if not charge_successful:
+    #    print(service_chosen)
+    #    print(name)
+    #    return redirect(url_for('failure'))
 
     # Establish database connection
-    db = MySQLdb.connect(host=db_config['host'],
-                         user=db_config['user'],
-                         passwd=db_config['password'],
-                         db=db_config['database'])
+    db = DB(db_config)
 
+    # Add data to DB and send sms
     add_data_and_send_sms(db,
-                          values_dic['phone_number'],
-                          request.form['stripeEmail'],
-                          request.form['team'],
-                          request.form['league'],
-                          request.form['stripeName'],
-                          teams_dic[request.form['team']],
-                          request.form['service_chosen'])
+                          name,
+                          email,
+                          phone_number,
+                          team_id,
+                          team_name,
+                          league_id,
+                          service_id)
 
-    # Commit and close database connection
-    db.commit()
+    # Close database connection
     db.close()
 
     # go to success page
@@ -203,10 +239,7 @@ def sms_tour():
     sms.validate_sender()
 
     # Establish database connection
-    db = MySQLdb.connect(host=db_config['host'],
-                         user=db_config['user'],
-                         passwd=db_config['password'],
-                         db=db_config['database'])
+    db = DB(db_config)
 
     sms.validate_sms_and_get_tour(db)
     # Is the message valid?
@@ -218,7 +251,6 @@ def sms_tour():
     follow_tour(db, sms)
 
     # Commit and close database connection
-    db.commit()
     db.close()
     return ''
 
@@ -231,14 +263,10 @@ def show_sms_entries():
     from backend.db_functions import select_all
 
     # Establish database connection
-    db = MySQLdb.connect(host=db_config['host'],
-                         user=db_config['user'],
-                         passwd=db_config['password'],
-                         db=db_config['database'])
+    db = DB(db_config)
     df = select_all('messages', db)
 
     # Commit and close database connection
-    db.commit()
     db.close()
 
     return str(df)
