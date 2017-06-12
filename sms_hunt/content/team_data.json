@@ -37,15 +37,15 @@
     "chelsea": "Chelsea",
     "crystal_palace": "Crystal Palace",
     "everton": "Everton",
-    "hull_city": "Hull City",
+    "newcastle": "Newcastle United",
     "leicester": "Leicester",
     "liverpool": "Liverpool",
     "manchester_city": "Manchester City",
     "manchester_united": "Manchester United",
-    "middlesbrough": "Middlesbrough",
+    "brighton": "Brighton & Hove Albion",
     "southampton": "Southampton",
     "stoke_city": "Stoke City",
-    "sunderland": "Sunderland",
+    "huddersfield": "Huddersfield Town",
     "swansea": "Swansea",
     "tottenham": "Tottenham",
     "watford": "Watford",
@@ -57,7 +57,6 @@
     "bayern_munich": "Bayern München",
     "b_monchengladbach": "Borussia Mönchengladbach",
     "fc_koeln": "1. FC Köln",
-    "ingolstadt": "FC Ingolstadt 04",
     "augsburg": "FC Augsburg",
     "schalke": "FC Schalke 04",
     "hoffenheim": "TSG 1899 Hoffenheim",
@@ -66,9 +65,10 @@
     "sv_werder_bremen": "SV Werder Bremen",
     "bayer_leverkusen": "Bayer 04 Leverkusen",
     "mainz": "Mainz",
-    "darmstadt": "Darmstadt",
     "wolfsburg": "Wolfsburg",
-    "leipzig": "RB Leipzig"
+    "leipzig": "RB Leipzig",
+    "stuttgart": "VfB Stuttgart",
+    "hannover": "Hannover 96"
   },
   "team_name_lookup": {
     "Arsenal": "arsenal",
@@ -79,7 +79,6 @@
     "B. Monchengladbach": "b_monchengladbach",
     "1. FC Koln": "fc_koeln",
     "FC Koln": "fc_koeln",
-    "Ingolstadt": "ingolstadt",
     "Augsburg": "augsburg",
     "Schalke": "schalke",
     "Hoffenheim": "hoffenheim",
@@ -91,7 +90,9 @@
     "Leicester City": "leicester",
     "West Ham United": "west_ham",
     "Tottenham Hotspur": "tottenham",
-    "1. FSV Mainz 05": "mainz"
+    "1. FSV Mainz 05": "mainz",
+    "VfB Stuttgart": "stuttgart",
+    "Hannover 96": "hannover"
   },
   "bundesliga": [
     "dortmund",
@@ -100,7 +101,6 @@
     "bayern_munich",
     "b_monchengladbach",
     "fc_koeln",
-    "ingolstadt",
     "augsburg",
     "schalke",
     "hoffenheim",
@@ -109,9 +109,10 @@
     "sv_werder_bremen",
     "bayer_leverkusen",
     "mainz",
-    "darmstadt",
     "wolfsburg",
-    "leipzig"
+    "leipzig",
+    "stuttgart",
+    "hannover"
   ],
   "premier_league": [
     "bournemouth",
@@ -120,15 +121,15 @@
     "chelsea",
     "crystal_palace",
     "everton",
-    "hull_city",
+    "newcastle",
     "leicester",
     "liverpool",
     "manchester_city",
     "manchester_united",
-    "middlesbrough",
+    "brighton",
     "southampton",
     "stoke_city",
-    "sunderland",
+    "huddersfield",
     "swansea",
     "tottenham",
     "watford",
@@ -136,15 +137,22 @@
     "west_ham"
   ],
   "champions_league": [
-    "arsenal",
+    "tottenham",
     "chelsea",
+    "manchester_city",
+    "manchester_united",
+    "liverpool",
     "dortmund",
-    "bayern_munich"
+    "bayern_munich",
+    "leipzig",
+    "hoffenheim"
   ],
   "europa_league": [
-    "wolfsburg",
-    "mainz",
-    "tottenham",
+    "arsenal",
+    "everton",
+    "fc_koeln",
+    "hertha_berlin",
+    "freiburg",
     "southampton"
   ]
 }
