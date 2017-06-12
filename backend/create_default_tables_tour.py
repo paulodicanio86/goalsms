@@ -1,17 +1,14 @@
 import json
-import MySQLdb
-from IPython import embed
-
+from db_class import DB
 from db_functions import *
 from make_default_tables import *
+
+from IPython import embed
 
 with open('config_files/db_config.json') as data_file:
     data_config = json.load(data_file)
 
-db = MySQLdb.connect(host=data_config['host'],
-                     user=data_config['user'],
-                     passwd=data_config['password'],
-                     db=data_config['database'])
+db = DB(data_config)
 
 # delete_table('messages', db)
 # delete_table('valid', db)
@@ -24,8 +21,10 @@ db = MySQLdb.connect(host=data_config['host'],
 
 delete_table('goalsms', db)
 make_default_table(db, 'tables/goalsms_table.json')
-# delete_table('matches', db)
-# make_default_tables_goalsms(db)
+delete_table('matches', db)
+make_default_table(db, 'tables/matches_table.json')
 
-db.commit()
+# make_default_tables_goalsms(db)
+# make_default_tables_tour(db)
+
 db.close()

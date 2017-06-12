@@ -4,7 +4,9 @@
     "VARCHAR(255)",
     "DATETIME",
     "VARCHAR(255)",
-    "VARCHAR(255)"
+    "VARCHAR(255)",
+    "VARCHAR(255)",
+    "INT"
   ],
   "name": "goalsms",
   "columns": [
@@ -12,29 +14,28 @@
     "email",
     "date",
     "team",
-    "name"
+    "league",
+    "name",
+    "mode"
   ],
   "default_rows": [
     [
-      "447776131607",
-      "ps@gmail.com",
+      "447000000000",
+      "test@test.com",
       "2016-09-03 08:00:12",
       "arsenal",
-      "Peter Staff"
+      "premier_league",
+      "made by me",
+      0
     ],
     [
-      "447776131607",
-      "ps@gmail.com",
-      "2016-09-10 08:00:12",
-      "southampton_",
-      "Peter Staff"
-    ],
-    [
-      "447776131907",
-      "ps@gmail.com",
+      "447111111111",
+      "test2@test.com",
       "2016-09-03 08:00:12",
-      "west_ham_",
-      "Peter Staff"
+      "dortmund",
+      "bundesliga",
+      "made by me 2",
+      0
     ]
   ]
 }
