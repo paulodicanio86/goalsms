@@ -100,7 +100,7 @@ def verify_post():
     else:
         team_selected_bool = True
 
-    #print(name,
+    # print(name,
     #      email,
     #      phone_number,
     #      team_id,
@@ -136,7 +136,7 @@ def verify_post():
     # all entries are valid now, re-assign:
     phone_number = values_dic['phone_number']
 
-    #print(name,
+    # print(name,
     #      email,
     #      phone_number,
     #      team_id,
@@ -146,18 +146,20 @@ def verify_post():
     #      team_selected_bool)
 
     # take card payment
-    # payment = {'amount_integer': service_amount,
-    #           'currency': currency}
+    payment = {'amount_integer': service_amount,
+               'currency': currency}
 
-    # charge_successful = charge_stripe(payment=payment,
-    #                                  email=email,
-    #                                  secret_key=secret_key,
-    #                                  stripe_token=stripe_token,
-    #                                  phone_number=phone_number)
-    # if not charge_successful:
-    #    print(service_chosen)
-    #    print(name)
-    #    return redirect(url_for('failure'))
+    charge = False
+    if charge:
+        charge_successful = charge_stripe(payment=payment,
+                                          email=email,
+                                          secret_key=secret_key,
+                                          stripe_token=stripe_token,
+                                          phone_number=phone_number)
+        if not charge_successful:
+            print(service_id)
+            print(name)
+            return redirect(url_for('failure'))
 
     # Establish database connection
     db = DB(db_config)
