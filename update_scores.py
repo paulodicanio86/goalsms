@@ -3,12 +3,12 @@ import datetime as datetime
 import os
 import json
 
-import MySQLdb
-# from IPython import embed
-
 from sms_hunt import db_config
+from backend.db_class import DB
 from match_updates.matchday import MatchDay
 from match_updates.get_daily_matches import (check_for_daily_file, get_live_matches)
+
+# from IPython import embed
 
 # Open app data file
 app_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -26,10 +26,7 @@ with open(api_json_path) as api_connection_file:
 login_goal_api = api_config['login_goal_api']
 
 # Establish database connection
-db = MySQLdb.connect(host=db_config['host'],
-                     user=db_config['user'],
-                     passwd=db_config['password'],
-                     db=db_config['database'])
+db = DB(db_config)
 
 # Calculate current date and time
 i = datetime.datetime.now()
@@ -40,15 +37,10 @@ hour_str = i.strftime('%H')
 # hour_str = '17'
 # minute_str = i.strftime('%M')
 
-# Set competition
+# Set competitions
 # 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
 # 1198 = Fa Cup, 1205 = Championship (2nd league)
 comp_id = '1204,1229,1005,1007'
-PL = MatchDay(db, date_str, '1204')
-BL = MatchDay(db, date_str, '1229')
-CL = MatchDay(db, date_str, '1005')
-EL = MatchDay(db, date_str, '1007')
-match_days = [PL, BL, CL, EL]
 
 # Check if daily file exists. If not create one. Retrieve trigger times.
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -63,6 +55,13 @@ else:
 # We have a match day today, and a valid hours and minute. Let's check the score
 if match_day and (hour_str in trigger_times):  # or True:
 
+    # Create MatchDay objects
+    PL = MatchDay(db, date_str, '1204')
+    BL = MatchDay(db, date_str, '1229')
+    CL = MatchDay(db, date_str, '1005')
+    EL = MatchDay(db, date_str, '1007')
+    match_days = [PL, BL, CL, EL]
+
     # Get live matches
     live_matches = get_live_matches(date_str, comp_id, login_goal_api)
     if len(live_matches) == 0:
@@ -75,6 +74,5 @@ if match_day and (hour_str in trigger_times):  # or True:
         league.find_updated_matches()
         league.send_sms_updates()
 
-# Commit and close database connection
-db.commit()
+# Close database connection
 db.close()
