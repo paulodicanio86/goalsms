@@ -41,6 +41,12 @@ hour_str = i.strftime('%H')
 # 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
 # 1198 = Fa Cup, 1205 = Championship (2nd league)
 comp_id = '1204,1229,1005,1007'
+# Create MatchDay objects
+PL = MatchDay(db, date_str, '1204')
+BL = MatchDay(db, date_str, '1229')
+CL = MatchDay(db, date_str, '1005')
+EL = MatchDay(db, date_str, '1007')
+match_days = [PL, BL, CL, EL]
 
 # Check if daily file exists. If not create one. Retrieve trigger times.
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -54,13 +60,6 @@ else:
 
 # We have a match day today, and a valid hours and minute. Let's check the score
 if match_day and (hour_str in trigger_times):  # or True:
-
-    # Create MatchDay objects
-    PL = MatchDay(db, date_str, '1204')
-    BL = MatchDay(db, date_str, '1229')
-    CL = MatchDay(db, date_str, '1005')
-    EL = MatchDay(db, date_str, '1007')
-    match_days = [PL, BL, CL, EL]
 
     # Get live matches
     live_matches = get_live_matches(date_str, comp_id, login_goal_api)
