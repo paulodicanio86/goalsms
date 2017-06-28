@@ -45,7 +45,7 @@ def send_sms(number, content, config):
 
 class Sms:
     def __init__(self, content, sender=None, receiver=None):
-        self.content = str(content)
+        self.content = content  # not defined as str here because of unicode characters. Use encode function instead.
         self.sender = str(sender)
 
         self.multiple_receivers = False
@@ -55,6 +55,9 @@ class Sms:
         self.is_valid = False
         self.is_start_sms = False
         self.is_keyword = False
+
+    def encode_content(self, encoding='utf-8'):
+        self.content = self.content.encode(encoding)
 
     def set_receiver(self, receiver):
         # check if
@@ -74,6 +77,8 @@ class Sms:
         self.sender = validate_number(self.sender)
 
     def validate_content(self):
+        # This function should only be used if the content is for sure a string (not unicode encoded, as special
+        # character are removed..!
         self.content = validate_content(self.content)
         if start_keyword in self.content:
             self.is_start_sms = True

@@ -63,10 +63,6 @@ def add_data_and_send_sms(db, name, email, phone_number, team_id_name, team_name
     table_name = 'goalsms'
     service = service_id.split('_')[1]
 
-    # Convert unicode to utf-8 string
-    name = str(name.encode('utf-8'))
-    team_name = team_name.encode('utf-8')
-
     mode = 0
     if service == 'bronze':
         mode = 1
@@ -81,7 +77,7 @@ def add_data_and_send_sms(db, name, email, phone_number, team_id_name, team_name
                 dt,
                 str(team_id_name),
                 str(league_id),
-                name,
+                str(name.encode('utf-8')),
                 mode]
 
     # Add message to table
@@ -89,12 +85,13 @@ def add_data_and_send_sms(db, name, email, phone_number, team_id_name, team_name
                           get_table_columns('tables/' + table_name + '_table.json'),
                           text_row)
 
-    # Get content string
+    # Convert unicode to utf-8 string
     content = sign_up_sms_text.format(name=name, team=team_name)
 
     # Send message that you are signed up
     sign_up_sms = Sms(content=content,
                       receiver=str(phone_number))
+    sign_up_sms.encode_content()
     sign_up_sms.send()
 
 
