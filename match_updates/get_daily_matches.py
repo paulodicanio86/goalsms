@@ -44,26 +44,26 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     test_timer = '5'  # Minute or FT
     test_comp_id = '1204'
 
-    test_result = '''[{"id":"1921980","comp_id":"{test_comp_id}","formatted_date":"{date_str}","season":"2015\\/2016",
+    test_result = '''[{{"id":"1921980","comp_id":"{test_comp_id}","formatted_date":"{date_str}","season":"2015\\/2016",
     "week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"{test_timer}",
     "timer":"{test_timer}","time":"12:30","localteam_id":"9127","localteam_name":"{test_localteam}","localteam_score":
-    "{test_localteam_score}","visitorteam_id":"9092","visitorteam_name":"{test_visitorteam }","visitorteam_score":
+    "{test_localteam_score}","visitorteam_id":"9092","visitorteam_name":"{test_visitorteam}","visitorteam_score":
     "{test_visitorteam_score}","ht_score":"[0-1]","ft_score":"[0-3]","et_score":null,"penalty_local":null,
-    "penalty_visitor":null,"events":[{"id":"21583631","type":"yellowcard","minute":"13","extra_min":"","team":
-    "localteam","player":"D. Delaney","player_id":"15760","assist":"","assist_id":"","result":""},
-    {"id":"21583632","type":"goal","minute":"29","extra_min":"","team":"visitorteam",
-    "player":"Oscar","player_id":"57860","assist":"D. Costa","assist_id":"60977","result":"[0-1]"},
-    {"id":"21583633","type":"yellowcard","minute":"57","extra_min":"","team":"localteam","player":"M. Jedinak",
-    "player_id":"17515","assist":"","assist_id":"","result":""},{"id":"21583634","type":"goal","minute":"60",
+    "penalty_visitor":null,"events":[{{"id":"21583631","type":"yellowcard","minute":"13","extra_min":"","team":
+    "localteam","player":"D. Delaney","player_id":"15760","assist":"","assist_id":"","result":""}},
+    {{"id":"21583632","type":"goal","minute":"29","extra_min":"","team":"visitorteam",
+    "player":"Oscar","player_id":"57860","assist":"D. Costa","assist_id":"60977","result":"[0-1]"}},
+    {{"id":"21583633","type":"yellowcard","minute":"57","extra_min":"","team":"localteam","player":"M. Jedinak",
+    "player_id":"17515","assist":"","assist_id":"","result":""}},{{"id":"21583634","type":"goal","minute":"60",
     "extra_min":"","team":"visitorteam","player":"Willian","player_id":"9051","assist":"Oscar",
-    "assist_id":"57860","result":"[0-2]"},{"id":"21583635","type":"goal","minute":"66","extra_min":"",
+    "assist_id":"57860","result":"[0-2]"}},{{"id":"21583635","type":"goal","minute":"66","extra_min":"",
     "team":"visitorteam","player":"D. Costa","player_id":"60977","assist":"Willian","assist_id":"9051",
-    "result":"[0-3]"},{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam",
-    "player":"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}]}]'''
+    "result":"[0-3]"}},{{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam",
+    "player":"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}}]}}]'''
 
     test_result = test_result.format(test_comp_id=test_comp_id, date_str=date_str, test_timer=test_timer,
                                      test_localteam=test_localteam, test_localteam_score=test_localteam_score,
-                                     test_visitorteam=test_visitorteam, test_visitorteam_score=test_visitorteam_score,
+                                     test_visitorteam=test_visitorteam, test_visitorteam_score=test_visitorteam_score
                                      )
 
     test_result2 = '[{"id":"1921980","comp_id":"' + test_comp_id + '","formatted_date":"' + date_str + \
@@ -171,38 +171,46 @@ def get_trigger_times(db, date_str):
         return 'False - no trigger times found'
 
 
-def check_for_daily_file(db, file_path, date_str, comp_id, login_goal_api):
-    match_day = False
-    trigger_times = []
-    false_string = 'False - no matches today'
-
+def daily_file_exists(file_path):
     # File exists
     if os.path.isfile(file_path):
-        f = open(file_path, 'r')
-        content = f.readline()
-
-        if content != false_string:
-            match_day = True
-            trigger_times = content.split(';')
-            # print('Kick of times are: ', content)
-        f.close()
-    # File does not exist
+        # print('File exists')
+        return True
     else:
-        f = open(file_path, 'w')
+        # File does not exist
+        return False
 
-        if not date_in_table(db, date_str):
-            add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
 
-        # Now check if there are any matches today:
-        if date_in_table(db, date_str):
-            # Write extra information here, separated by ';'
-            f.write(get_trigger_times(db, date_str))
-        else:
-            f.write(false_string)
+def read_daily_file(file_path, false_string):
+    match_day = False
+    trigger_times = []
 
-        f.close()
+    # File exists
+    f = open(file_path, 'r')
+    content = f.readline()
 
+    if content != false_string:
+        match_day = True
+        trigger_times = content.split(';')
+        # print('Kick of times are: ', content)
+    f.close()
     return match_day, trigger_times
+
+
+def write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string):
+    f = open(file_path, 'w')
+
+    if not date_in_table(db, date_str):
+        add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
+
+    # Now check if there are any matches today:
+    if date_in_table(db, date_str):
+        # Write extra information here, separated by ';'
+        f.write(get_trigger_times(db, date_str))
+    else:
+        f.write(false_string)
+
+    f.close()
 
 
 def format_teams(match):

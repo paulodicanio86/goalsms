@@ -6,7 +6,7 @@ import json
 from sms_hunt import db_config
 from backend.db_class import DB
 from match_updates.matchday import MatchDay
-from match_updates.get_daily_matches import (check_for_daily_file, get_live_matches)
+from match_updates.get_daily_matches import (daily_file_exists, read_daily_file, write_daily_file, get_live_matches)
 
 # from IPython import embed
 
@@ -25,8 +25,6 @@ with open(api_json_path) as api_connection_file:
     api_config = json.load(api_connection_file)
 login_goal_api = api_config['login_goal_api']
 
-# Establish database connection
-db = DB(db_config)
 
 # Calculate current date and time
 i = datetime.datetime.now()
@@ -37,29 +35,44 @@ hour_str = i.strftime('%H')
 # hour_str = '17'
 # minute_str = i.strftime('%M')
 
-# Set competitions
-# 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
-# 1198 = Fa Cup, 1205 = Championship (2nd league)
-comp_id = '1204,1229,1005,1007'
-# Create MatchDay objects
-PL = MatchDay(db, date_str, '1204')
-BL = MatchDay(db, date_str, '1229')
-CL = MatchDay(db, date_str, '1005')
-EL = MatchDay(db, date_str, '1007')
-match_days = [PL, BL, CL, EL]
-
 # Check if daily file exists. If not create one. Retrieve trigger times.
 file_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(os.sep, file_path, 'match_updates/daily_files', date_str + '.txt')
 
-if stop_updates == 1:
-    match_day = False
-    trigger_times = []
-else:
-    match_day, trigger_times = check_for_daily_file(db, file_path, date_str, comp_id, login_goal_api)
+# Set competitions
+# 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
+# 1198 = Fa Cup, 1205 = Championship (2nd league)
+comp_id = '1204,1229,1005,1007'
+false_string = 'False - no matches today'
 
-# We have a match day today, and a valid hours and minute. Let's check the score
+match_day = False
+trigger_times = []
+
+# If updates are allowed read the file to check
+if stop_updates == 0:
+
+    if daily_file_exists(file_path):
+        # Daily file exists, so let's read the content
+        match_day, trigger_times = read_daily_file(file_path, false_string)
+    else:
+        # Daily file doesn't exist, so let's create one
+        # Establish database connection
+        db = DB(db_config)
+        write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string)
+        # Close database connection
+        db.close()  # We have a match day today, and a valid hours and minute. Let's check the score
+
 if match_day and (hour_str in trigger_times):  # or True:
+
+    # Establish database connection
+    db = DB(db_config)
+
+    # Create MatchDay objects
+    PL = MatchDay(db, date_str, '1204')
+    BL = MatchDay(db, date_str, '1229')
+    CL = MatchDay(db, date_str, '1005')
+    EL = MatchDay(db, date_str, '1007')
+    match_days = [PL, BL, CL, EL]
 
     # Get live matches
     live_matches = get_live_matches(date_str, comp_id, login_goal_api)
@@ -73,5 +86,5 @@ if match_day and (hour_str in trigger_times):  # or True:
         league.find_updated_matches()
         league.send_sms_updates()
 
-# Close database connection
-db.close()
+    # Close database connection
+    db.close()
