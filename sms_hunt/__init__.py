@@ -2,6 +2,7 @@ import json
 import os
 
 from flask import Flask
+from flask_sslify import SSLify
 
 ######################
 # Load settings from json files
@@ -68,6 +69,7 @@ with open(email_json_path) as email_config_file:
 
 # Flask initialisation
 app = Flask(__name__)
+sslify = SSLify(app)
 
 # set the secret key. keep this really secret:
 app.secret_key = stripe_config['app_secret_key']
