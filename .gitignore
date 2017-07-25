@@ -8,6 +8,10 @@ other/
 venv/
 .idea/
 goalsms.com/
+files_pythonanywhere/
+files_aws/
+send_test_sms.py
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

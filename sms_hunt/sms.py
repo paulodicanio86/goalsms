@@ -78,7 +78,10 @@ def send_sms_messagebird(number, content, config):
         print error.reason
 
 
-def send_sms(number, content, config, service='txtlocal'):
+def send_sms(number, content, config, service=None):
+    if not service:
+        service = config['service']
+
     if service == 'txtlocal':
         send_sms_txtlocal(number, content, config[service])
     elif service == 'messagebird':
@@ -155,7 +158,7 @@ class Sms:
         # Add message to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
 
-    def send(self, service='txtlocal'):
+    def send(self, service=None):
         # Function to send a sms
         if self.multiple_receivers:
             receiver = ','.join(self.receiver)
