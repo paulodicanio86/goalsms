@@ -14,6 +14,7 @@ app_json_path = os.path.abspath(os.path.join(os.sep, app_json_path, os.pardir, '
 
 with open(app_json_path) as app_config_file:
     app_config = json.load(app_config_file)
+    sslify_flag = app_config['sslify_flag']
 
 # Open team data file
 team_json_path = os.path.dirname(os.path.abspath(__file__))
@@ -69,7 +70,8 @@ with open(email_json_path) as email_config_file:
 
 # Flask initialisation
 app = Flask(__name__)
-sslify = SSLify(app)
+if sslify_flag == 1:
+    sslify = SSLify(app)
 
 # set the secret key. keep this really secret:
 app.secret_key = stripe_config['app_secret_key']
