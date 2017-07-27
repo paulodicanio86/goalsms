@@ -48,7 +48,7 @@ match_day = False
 trigger_times = []
 
 # Activate Test mode here
-test_mode = True  # TEST MODE
+test_mode = False  # TEST MODE
 if test_mode:
     date_str = '26.07.2017'
 
@@ -78,10 +78,10 @@ if (match_day and (hour_str in trigger_times)) or test_mode:  # or True:
     db.init()
 
     # Create MatchDay objects
-    PL = MatchDay(date_str, '1204')
-    BL = MatchDay(date_str, '1229')
-    CL = MatchDay(date_str, '1005')
-    EL = MatchDay(date_str, '1007')
+    PL = MatchDay(date_str, '1204', 'premier_league')
+    BL = MatchDay(date_str, '1229', 'bundesliga')
+    CL = MatchDay(date_str, '1005', 'champions_league')
+    EL = MatchDay(date_str, '1007', 'europa_league')
     match_days = [PL, BL, CL, EL]
 
     # Get live matches
@@ -95,6 +95,7 @@ if (match_day and (hour_str in trigger_times)) or test_mode:  # or True:
             league.set_live_matches(live_matches)
             league.find_updated_matches(db)
             league.send_sms_updates(db)
+            league.send_sms_eod_ft(db)
 
     # Close DB connection
     db.close()

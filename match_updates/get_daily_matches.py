@@ -3,7 +3,8 @@ import json
 import os as os
 
 from match_updates.functions.db_functions import (get_matches, date_in_table,
-                                                  get_kick_off_times, get_phone_numbers)
+                                                  get_kick_off_times, get_phone_numbers,
+                                                  get_phone_numbers_league)
 from match import Match, compare_matches
 from sms_hunt.sms import Sms
 from sms_hunt import team_data
@@ -38,10 +39,10 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
         result = '{}'
 
     test_localteam = 'Hamburger SV'
-    test_localteam_score = '7'
     test_visitorteam = 'Arsenal'
-    test_visitorteam_score = '72'
-    test_timer = '6'  # Minute or FT
+    test_localteam_score = '1'
+    test_visitorteam_score = '2'
+    test_timer = 'FT'  # Minute or FT
     test_comp_id = '1204'
 
     test_result = '''[{{"id":"1921980","comp_id":"{test_comp_id}","formatted_date":"{date_str}","season":"2015\\/2016",
@@ -98,7 +99,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
 def get_event_details(match_json):
     player = 'no_player'
 
-    if len(match_json['events']) > 0:
+    if len(match_json['events']) > 0 and match_json['timer'] != 'FT':
 
         events = match_json['events']
         timer = int(match_json['timer'])
@@ -241,7 +242,7 @@ def format_content(match):
     return content, msg_type
 
 
-def format_message_and_send_sms(db, match):
+def format_message_and_send_sms(db, match, league):
     teams = format_teams(match)
     content, msg_type = format_content(match)
     sms = Sms(content)
@@ -251,21 +252,21 @@ def format_message_and_send_sms(db, match):
         # make string readable by SQL
         teams_formatted = str(teams)[1:-1]
 
-        check_cases_and_send(db, match, teams_formatted, sms, msg_type)
+        check_cases_and_send(db, match, teams_formatted, sms, msg_type, league)
     else:
         print('No teams found for this match')
 
 
-def get_numbers(db, teams_formatted, mode):
-    phone_numbers = get_phone_numbers(db, teams_formatted, mode)
+def get_numbers(db, teams_formatted, mode, league):
+    phone_numbers = get_phone_numbers(db, teams_formatted, mode, league)
     phone_numbers_list = list(phone_numbers['phone_number'].values)
-    # only send one sms if a user is subscribed to two teams
+    # only send one sms if a user is subscribed to two teams that play each other
     phone_numbers_list = list(set(phone_numbers_list))
     return phone_numbers_list
 
 
-def get_numbers_and_send_sms(db, teams_formatted, sms, mode):
-    phone_numbers_list = get_numbers(db, teams_formatted, mode)
+def get_numbers_and_send_sms(db, teams_formatted, sms, mode, league):
+    phone_numbers_list = get_numbers(db, teams_formatted, mode, league)
 
     # In future, if there are many many users, the list can be split here and several requests to send sms
     # can me made here.
@@ -278,16 +279,32 @@ def get_numbers_and_send_sms(db, teams_formatted, sms, mode):
 
 
 # send sms to all relevant modes
-def check_cases_and_send(db, match, teams_formatted, sms, msg_type):
-    mode = 0
-
+def check_cases_and_send(db, match, teams_formatted, sms, msg_type, league):
     # Here special cases can be defined, of whom to send which message depending on message type and league
     # The mode needs to be set in the flask module when signing up
     # mode = 0, all messages
     if msg_type in [1, 2, 3] and match.comp_id == '1204':
         mode = 0
-        get_numbers_and_send_sms(db, teams_formatted, sms, mode)
+        get_numbers_and_send_sms(db, teams_formatted, sms, mode, league)
 
     if msg_type in [3] and match.comp_id == '1204':
         mode = 1
-        get_numbers_and_send_sms(db, teams_formatted, sms, mode)
+        get_numbers_and_send_sms(db, teams_formatted, sms, mode, league)
+
+
+def eod_ft_message_and_send(league, ft_standings_str, db):
+    mode = 0
+
+    phone_numbers = get_phone_numbers_league(db, league, mode)
+    phone_numbers_list = list(phone_numbers['phone_number'].values)
+    # only send one sms if a user is subscribed to two teams in the same league
+    phone_numbers_list = list(set(phone_numbers_list))
+
+    # In future, if there are many many users, the list can be split here and several requests to send sms
+    # can me made here.
+
+    if len(phone_numbers_list) > 0:
+        sms = Sms(ft_standings_str)
+        sms.set_receiver(phone_numbers_list)
+        sms.send()
+        # print('eod FT Sms have been sent')
