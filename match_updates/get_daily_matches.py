@@ -37,11 +37,11 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     except urllib2.HTTPError:
         result = '{}'
 
-    test_localteam = 'Arsenal'
+    test_localteam = 'Hamburger SV'
     test_localteam_score = '7'
-    test_visitorteam = 'Burnley'
-    test_visitorteam_score = '69'
-    test_timer = '5'  # Minute or FT
+    test_visitorteam = 'Arsenal'
+    test_visitorteam_score = '72'
+    test_timer = '6'  # Minute or FT
     test_comp_id = '1204'
 
     test_result = '''[{{"id":"1921980","comp_id":"{test_comp_id}","formatted_date":"{date_str}","season":"2015\\/2016",
@@ -56,8 +56,8 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     {{"id":"21583633","type":"yellowcard","minute":"57","extra_min":"","team":"localteam","player":"M. Jedinak",
     "player_id":"17515","assist":"","assist_id":"","result":""}},{{"id":"21583634","type":"goal","minute":"60",
     "extra_min":"","team":"visitorteam","player":"Willian","player_id":"9051","assist":"Oscar",
-    "assist_id":"57860","result":"[0-2]"}},{{"id":"21583635","type":"goal","minute":"66","extra_min":"",
-    "team":"visitorteam","player":"D. Costa","player_id":"60977","assist":"Willian","assist_id":"9051",
+    "assist_id":"57860","result":"[0-2]"}},{{"id":"21583635","type":"goal","minute":"{test_timer}","extra_min":"",
+    "team":"visitorteam","player":"Brgermeister Olaf","player_id":"60977","assist":"Willian","assist_id":"9051",
     "result":"[0-3]"}},{{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam",
     "player":"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}}]}}]'''
 
@@ -65,35 +65,19 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
                                      test_localteam=test_localteam, test_localteam_score=test_localteam_score,
                                      test_visitorteam=test_visitorteam, test_visitorteam_score=test_visitorteam_score
                                      )
-
-    test_result2 = '[{"id":"1921980","comp_id":"' + test_comp_id + '","formatted_date":"' + date_str + \
-                   '","season":"2015\\/2016",' \
-                   '"week":"20","venue":"Selhurst Park (London)","venue_id":"1265","venue_city":"London","status":"' + test_timer + '",' \
-                                                                                                                                    '"timer":"' + test_timer + '","time":"12:30","localteam_id":"9127","localteam_name":"' + test_localteam + '",' \
-                                                                                                                                                                                                                                              '"localteam_score":"' + test_localteam_score + '","visitorteam_id":"9092","visitorteam_name":"' + test_visitorteam + '","visitorteam_score":"' + test_visitorteam_score + '",' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"ht_score":"[0-1]","ft_score":"[0-3]","et_score":null,"penalty_local":null,' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"penalty_visitor":null,"events":[{"id":"21583631","type":"yellowcard","minute":"13",' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"extra_min":"","team":"localteam","player":"D. Delaney","player_id":"15760","assist":"",' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"assist_id":"","result":""},{"id":"21583632","type":"goal","minute":"29","extra_min":"",' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"team":"visitorteam","player":"Oscar","player_id":"57860","assist":"D. Costa","assist_id":"60977",' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"result":"[0-1]"},{"id":"21583633","type":"yellowcard","minute":"57","extra_min":' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"","team":"localteam","player":"M. Jedinak","player_id":"17515","assist":"","assist_id":""' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        ',"result":""},{"id":"21583634","type":"goal","minute":"60","extra_min":"","team":"visitorteam",' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"player":"Willian","player_id":"9051","assist":"Oscar","assist_id":"57860","result":"[0-2]"},' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '{"id":"21583635","type":"goal","minute":"66","extra_min":"","team":"visitorteam","player":' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"D. Costa","player_id":"60977","assist":"Willian","assist_id":"9051","result":"[0-3]"},' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '{"id":"21583636","type":"yellowcard","minute":"80","extra_min":"","team":"localteam","player":' \
-                                                                                                                                                                                                                                                                                                                                                                                                                        '"S. Dann","player_id":"26006","assist":"","assist_id":"","result":""}]}]'
-
     if test:
         result = test_result
 
     # Make Match objects
     matches_json = json.loads(result)
+
     matches = []
     if (len(matches_json) > 0) and ('code' not in matches_json):  # 'code' was sometimes returned so taking this out.
         for entry in matches_json:
             # add events somewhere here to extract event with highest minute and the player field?
+
+            player = get_event_details(entry)
+
             match = Match(entry['localteam_name'],
                           entry['visitorteam_name'],
                           entry['time'],
@@ -102,12 +86,28 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
                           entry['timer'],
                           entry['localteam_score'],
                           entry['visitorteam_score'],
-                          entry['comp_id'])
+                          entry['comp_id'],
+                          player)
             # match.change_time()  # Not required as time on server is same as football API times...
             match.change_names(team_data)  # change team names according to dict keys
             matches.append(match)
 
     return matches
+
+
+def get_event_details(match_json):
+    player = 'no_player'
+
+    if len(match_json['events']) > 0:
+
+        events = match_json['events']
+        timer = int(match_json['timer'])
+
+        for event in events:
+            if (int(event['minute']) == timer) and (str(event['type']) == 'goal'):
+                player = event['player'].encode('utf8')
+
+    return player
 
 
 def get_comp_standing(comp_id, login_goal_api):
@@ -133,8 +133,6 @@ def add_daily_matches_to_db(db, date_str, comp_id, login_goal_api):
     # Save matches to db
     for match in matches:
         match.save_to_db(db)
-        # Do a commit here to update table in this moment
-        db.commit()
 
 
 def compare_matches_and_update(db, db_matches, live_matches):
@@ -143,8 +141,6 @@ def compare_matches_and_update(db, db_matches, live_matches):
     # Update matches on db
     for match in changed_matches:
         match.update_on_db(db)
-        # Do a commit here to update table in this moment
-        db.commit()
 
     return changed_matches
 
@@ -285,7 +281,7 @@ def get_numbers_and_send_sms(db, teams_formatted, sms, mode):
 def check_cases_and_send(db, match, teams_formatted, sms, msg_type):
     mode = 0
 
-    # Here special cases can be defined, of whome to send which message depending on message type and league
+    # Here special cases can be defined, of whom to send which message depending on message type and league
     # The mode needs to be set in the flask module when signing up
     # mode = 0, all messages
     if msg_type in [1, 2, 3] and match.comp_id == '1204':

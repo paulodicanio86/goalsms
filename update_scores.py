@@ -44,9 +44,14 @@ file_path = os.path.join(os.sep, file_path, 'match_updates/daily_files', date_st
 # 1198 = Fa Cup, 1205 = Championship (2nd league)
 comp_id = '1204,1229,1005,1007'
 false_string = 'False - no matches today'
-
 match_day = False
 trigger_times = []
+
+# Activate Test mode here
+test_mode = True  # TEST MODE
+if test_mode:
+    date_str = '26.07.2017'
+
 
 # If updates are allowed read the file to check
 if stop_updates == 0:
@@ -56,35 +61,40 @@ if stop_updates == 0:
         match_day, trigger_times = read_daily_file(file_path, false_string)
     else:
         # Daily file doesn't exist, so let's create one
-        # Establish database connection
+
+        # Initiate DB connection
         db = DB(db_config)
+        db.init()
         write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string)
-        # Close database connection
-        db.close()  # We have a match day today, and a valid hours and minute. Let's check the score
+        # Close DB connection
+        db.close()
 
-if match_day and (hour_str in trigger_times):  # or True:
 
-    # Establish database connection
+# We have a match day today, and a valid hours and minute. Let's check the score
+if (match_day and (hour_str in trigger_times)) or test_mode:  # or True:
+
+    # Initiate DB connection
     db = DB(db_config)
+    db.init()
 
     # Create MatchDay objects
-    PL = MatchDay(db, date_str, '1204')
-    BL = MatchDay(db, date_str, '1229')
-    CL = MatchDay(db, date_str, '1005')
-    EL = MatchDay(db, date_str, '1007')
+    PL = MatchDay(date_str, '1204')
+    BL = MatchDay(date_str, '1229')
+    CL = MatchDay(date_str, '1005')
+    EL = MatchDay(date_str, '1007')
     match_days = [PL, BL, CL, EL]
 
     # Get live matches
-    live_matches = get_live_matches(date_str, comp_id, login_goal_api)
+    live_matches = get_live_matches(date_str, comp_id, login_goal_api, test_mode)
     if len(live_matches) == 0:
         print('no live matches found')
+    else:
+        # Update leagues and send sms
+        for league in match_days:
+            league.get_db_matches(db)
+            league.set_live_matches(live_matches)
+            league.find_updated_matches(db)
+            league.send_sms_updates(db)
 
-    # Update leagues and send sms
-    for league in match_days:
-        league.get_db_matches()
-        league.set_live_matches(live_matches)
-        league.find_updated_matches()
-        league.send_sms_updates()
-
-    # Close database connection
+    # Close DB connection
     db.close()

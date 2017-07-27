@@ -14,6 +14,12 @@ class DB:
 
     def __init__(self, db_config):
         self._config_dic = db_config
+
+    def init(self):
+        self._tunnel = None
+        self._db = None
+        self._cursor = None
+
         self._tunnel = sshtunnel.SSHTunnelForwarder(
             (self._config_dic['ssh_server']),
             ssh_username=self._config_dic['user'],
@@ -34,6 +40,7 @@ class DB:
     def execute(self, sql_query):
         self._cursor = self._db.cursor()
         self._cursor.execute(sql_query)
+        self._cursor.close()
 
     def commit(self):
         self._db.commit()

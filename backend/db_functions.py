@@ -48,7 +48,8 @@ def encode_value(value):
 
 # Execute any SQL statement
 def execute_statement(sql_query, db):
-    return db.get(sql_query)
+    result = db.get(sql_query)
+    return result
 
 
 # Query db to select all
