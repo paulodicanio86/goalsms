@@ -4,7 +4,7 @@ from match_updates.functions.db_functions import update_matches_table
 
 class Match:
     def __init__(self, localteam_name, visitorteam_name, time_str, date_str, status, timer,
-                 localteam_score, visitorteam_score, comp_id):
+                 localteam_score, visitorteam_score, comp_id, player='no_player'):
         self.localteam_name = str(localteam_name)
         self.visitorteam_name = str(visitorteam_name)
         self.localteam_name_print = str(localteam_name)
@@ -18,6 +18,7 @@ class Match:
 
         self.status = str(status)  # "FT"
         self.timer = str(timer)
+        self.player = str(player)
 
         self.comp_id = str(comp_id)
 
@@ -35,7 +36,7 @@ class Match:
     def save_to_db(self, db, table_name='matches'):
         text_row = [self.date_str, self.localteam_name, self.visitorteam_name,
                     self.localteam_score, self.visitorteam_score, self.time_str,
-                    self.status, self.timer, self.comp_id]
+                    self.status, self.timer, self.player, self.comp_id]
 
         # Add match to table
         insert_array_to_table(table_name, db, get_table_columns('tables/' + table_name + '_table.json'), text_row)
@@ -45,11 +46,13 @@ class Match:
         update_matches_table(db, 'visitorteam_score', self.visitorteam_score, self.date_str, self.localteam_name)
         update_matches_table(db, 'status_str', self.status, self.date_str, self.localteam_name)
         update_matches_table(db, 'timer_str', self.timer, self.date_str, self.localteam_name)
+        update_matches_table(db, 'player_str', self.player, self.date_str, self.localteam_name)
 
     def get_score_message_text(self):
-        message = '{timer}. New score: {localteam_name_print} {localteam_score} -'
+        message = '{timer}. {player}. New score: '
+        message += '{localteam_name_print} {localteam_score} -'
         message += ' {visitorteam_score} {visitorteam_name_print}'
-        message = message.format(timer=self.timer,
+        message = message.format(timer=self.timer, player=self.player,
                                  localteam_name_print=self.localteam_name_print,
                                  localteam_score=self.localteam_score,
                                  visitorteam_name_print=self.visitorteam_name_print,
