@@ -27,7 +27,7 @@ class MatchDay:
 
         self.comp_id = comp_id
         self.league = league
-        self.all_games_finished = False
+        self.all_games_finished = None
 
     def get_db_matches(self, db):
         self.db_matches = get_matches_from_db(db, self.date_str, self.comp_id)
@@ -50,7 +50,6 @@ class MatchDay:
             results['visitorteam_name'] = results['visitorteam_name'].apply(look_up_teams_print, team_data=team_data)
             return format_ft_string(results)
         else:
-            self.all_games_finished = False
             return ''
 
     def send_sms_updates(self, db):

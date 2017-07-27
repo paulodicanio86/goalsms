@@ -57,7 +57,7 @@ def all_games_finished(db, date_str, comp_id, table_name='matches'):
     no_ft_matches = int(no_ft_matches['ft_matches'].values[0])
 
     no_live_matches = no_total_matches - no_ft_matches
-    if no_live_matches == 0 and total_matches > 0:
+    if no_live_matches == 0 and no_total_matches > 0:
         return True
     else:
         return False
