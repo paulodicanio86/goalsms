@@ -22,10 +22,10 @@ def valid_name(name):
 
 def valid_phone_number(number, country_codes):
     """
-    Checks if account_number is valid and a string.
+    Checks if phone number is valid and a string.
     Valid: 12345678
     """
-    return is_integer_string(number) and (number[:2] in country_codes)
+    return is_integer_string(number) and (len(number) > 4) and (number[:2] in country_codes)
 
 
 #######################################
@@ -33,7 +33,7 @@ def valid_phone_number(number, country_codes):
 #######################################
 def convert_entries(entry, value, country_code):
     if entry == 'phone_number':
-        return validate_number(value, code=country_code)
+        return validate_number(value)
     if entry == 'name':
         return convert_special_characters(value)
     else:

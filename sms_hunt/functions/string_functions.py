@@ -75,27 +75,35 @@ def add_country_code(number, code):
         return code + number
 
 
-def strip_number_str(number, code):
+def prefix_number_str(number):
     number = number.replace(' ', '')
+
+    # if number is not long enough then exit here.
     if len(number) < 4:
         return number
 
-    # +44777xxxxxxx cases
+    # +44777xxxxxxx cases DE, UK
     if number[0] == '+':
         return number[1:]
-    # 0044777xxxxxxx cases
+    # 0044777xxxxxxx cases and 0049172xxxxx cases DE, UK
     if number[:2] == '00':
         return number[2:]
-    # 0777xxxxxxx cases
-    if number[0] == '0':
-        return add_country_code(number, code)
-    # 777xxxxxxx cases
+    # 0777xxxxxxx cases UK
+    if number[0] == '0' and number[1] == '7':
+        return add_country_code(number, '44')
+    # 0172xxxxxxx cases DE
+    if number[0] == '0' and number[1] == '1':
+        return add_country_code(number, '49')
+    # 777xxxxxxx cases UK
     if number[0] == '7':  # valid for UK numbers, fix for international numbers
-        return add_country_code(number, code)
+        return add_country_code(number, '44')
+    # 172xxxxxxx cases DE
+    if number[0] == '1':  # valid for DE numbers, fix for international numbers
+        return add_country_code(number, '49')
     return number
 
 
-def validate_number(number, code='44'):
+def validate_number(number):
     if type(number) == int:
         number = str(number)
-    return strip_number_str(number, code)
+    return prefix_number_str(number)

@@ -160,10 +160,6 @@ class Sms:
 
     def send(self, service=None):
         # Function to send a sms
-        if self.multiple_receivers:
-            receiver = ','.join(self.receiver)
-        else:
-            receiver = self.receiver
 
         # Check if one number or multiple, and turn multiple into tuple, then send
         if self.multiple_receivers:
