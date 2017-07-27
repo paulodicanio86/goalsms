@@ -8,6 +8,7 @@
     "VARCHAR(255)",
     "VARCHAR(255)",
     "VARCHAR(255)",
+    "VARCHAR(255)",
     "VARCHAR(255)"
   ],
   "name": "matches",
@@ -20,11 +21,12 @@
     "time_str",
     "status_str",
     "timer_str",
+    "player_str",
     "comp_id_str"
   ],
   "default_rows": [
     [
-      "22.09.2016",
+      "26.07.2017",
       "hsv",
       "arsenal",
       "0",
@@ -32,6 +34,7 @@
       "12:30",
       "FT",
       "31",
+      "Dieter H",
       "1204"
     ],
     [
@@ -43,6 +46,7 @@
       "12:30",
       "FT",
       "50",
+      "Dieter A",
       "1204"
     ]
   ]
