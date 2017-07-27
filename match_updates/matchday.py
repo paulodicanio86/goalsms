@@ -14,7 +14,6 @@ def format_ft_string(results):
     ft_string = results.to_string(header=False, index=False)
     ft_string = re.sub(' +', ' ', ft_string)
     ft_string = ft_string.replace(' \n', '\n')
-    print(ft_string)
     return ft_string
 
 
@@ -29,7 +28,6 @@ class MatchDay:
         self.comp_id = comp_id
         self.league = league
         self.all_games_finished = False
-        self.ft_standings_str = ''
 
     def get_db_matches(self, db):
         self.db_matches = get_matches_from_db(db, self.date_str, self.comp_id)
@@ -39,9 +37,10 @@ class MatchDay:
 
     def find_updated_matches(self, db):
         self.updated_matches = compare_matches_and_update(db, self.db_matches, self.live_matches)
+
+    def check_all_games_finished(self, db):
         self.all_games_finished = all_games_finished(db, self.date_str, self.comp_id)
-        if self.all_games_finished:
-            self.ft_standings_str = self.ft_standings(db)
+        return self.all_games_finished
 
     def ft_standings(self, db):
         results = get_ft_standings(db, self.date_str, self.comp_id)
@@ -55,7 +54,7 @@ class MatchDay:
             return ''
 
     def send_sms_updates(self, db):
-        if len(self.updated_matches) > 0:
+        if len(self.updated_matches) > 0 and not self.all_games_finished:
             print('matches with an update found!')
             for match in self.updated_matches:
                 format_message_and_send_sms(db, match, self.league)
@@ -65,12 +64,5 @@ class MatchDay:
     def send_sms_eod_ft(self, db):
         # If all matches are finished, then send end of day full time standings.
         if self.all_games_finished:
-            eod_ft_message_and_send(self.league, self.ft_standings_str, db)
-
-    def is_eligible(self):
-        # Need a function to see if a match day is eligible (see stop_update_function)
-        pass
-
-    def stop_updates(self):
-        # Need a function to stop updates when EOD FT is reached. How about saving to a file?
-        pass
+            ft_standings_str = self.ft_standings(db)
+            eod_ft_message_and_send(self.league, ft_standings_str, db)

@@ -48,7 +48,7 @@ match_day = False
 trigger_times = []
 
 # Activate Test mode here
-test_mode = False  # TEST MODE
+test_mode = True  # TEST MODE
 if test_mode:
     date_str = '26.07.2017'
 
@@ -91,11 +91,13 @@ if (match_day and (hour_str in trigger_times)) or test_mode:  # or True:
     else:
         # Update leagues and send sms
         for league in match_days:
-            league.get_db_matches(db)
-            league.set_live_matches(live_matches)
-            league.find_updated_matches(db)
-            league.send_sms_updates(db)
-            league.send_sms_eod_ft(db)
+            if not league.check_all_games_finished(db):
+                league.get_db_matches(db)
+                league.set_live_matches(live_matches)
+                league.find_updated_matches(db)
+                league.send_sms_updates(db)
+                if league.check_all_games_finished(db):
+                    league.send_sms_eod_ft(db)
 
     # Close DB connection
     db.close()
