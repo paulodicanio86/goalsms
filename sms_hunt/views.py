@@ -17,6 +17,8 @@ else:
     key = stripe_config['stripe_test_publishable_key']
     secret_key = stripe_config['stripe_test_secret_key']
 
+charge_stripe_flag = stripe_config['charge_stripe_flag']
+
 company = app_config['company']
 year = app_config['year']
 title = app_config['title']
@@ -149,8 +151,7 @@ def verify_post():
     payment = {'amount_integer': service_amount,
                'currency': currency}
 
-    charge = False
-    if charge:
+    if charge_stripe_flag == 1:
         charge_successful = charge_stripe(payment=payment,
                                           email=email,
                                           secret_key=secret_key,
