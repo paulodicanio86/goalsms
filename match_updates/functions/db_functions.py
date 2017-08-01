@@ -38,8 +38,7 @@ def get_ft_standings(db, date_str, comp_id, table_name='matches'):
     return execute_statement(sql_query, db)
 
 
-# Test if all matches are finished (and there were some in the first place
-def all_games_finished(db, date_str, comp_id, table_name='matches'):
+def get_no_total_matches(db, date_str, comp_id, table_name='matches'):
     comp_id = str(comp_id)
 
     total_matches = '''SELECT count(*) AS total_matches FROM {table_name}
@@ -49,12 +48,27 @@ def all_games_finished(db, date_str, comp_id, table_name='matches'):
     no_total_matches = execute_statement(total_matches, db)
     no_total_matches = int(no_total_matches['total_matches'].values[0])
 
+    return no_total_matches
+
+
+def get_no_ft_matches(db, date_str, comp_id, table_name='matches'):
+    comp_id = str(comp_id)
+
     ft_matches = '''SELECT count(*) AS ft_matches FROM {table_name}
                     WHERE date_str = '{date_str}' AND comp_id_str='{comp_id}' AND status_str = 'FT';'''
 
     ft_matches = ft_matches.format(table_name=table_name, date_str=date_str, comp_id=comp_id)
     no_ft_matches = execute_statement(ft_matches, db)
     no_ft_matches = int(no_ft_matches['ft_matches'].values[0])
+
+    return no_ft_matches
+
+
+# Test if all matches are finished (and there were some in the first place
+def all_games_finished(db, date_str, comp_id, table_name='matches'):
+    no_total_matches = get_no_total_matches(db, date_str, comp_id, table_name)
+
+    no_ft_matches = get_no_ft_matches(db, date_str, comp_id, table_name='matches')
 
     no_live_matches = no_total_matches - no_ft_matches
     if no_live_matches == 0 and no_total_matches > 0:
