@@ -163,6 +163,7 @@ def verify_post():
 
     # Establish database connection
     db = DB(db_config)
+    db.init()
 
     # Add data to DB and send sms
     add_data_and_send_sms(db,
