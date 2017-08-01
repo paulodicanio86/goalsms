@@ -1,6 +1,7 @@
 import re
 
 from match_updates.get_daily_matches import (get_matches_from_db,
+                                             get_team_names,
                                              compare_matches_and_update,
                                              format_message_and_send_sms,
                                              eod_ft_message_and_send)
@@ -25,12 +26,15 @@ class MatchDay:
         self.live_matches = []
         self.updated_matches = []
 
+        self.team_names = []
+
         self.comp_id = comp_id
         self.league = league
         self.all_games_finished = None
 
     def get_db_matches(self, db):
         self.db_matches = get_matches_from_db(db, self.date_str, self.comp_id)
+        self.team_names = get_team_names(db, self.date_str, self.comp_id)
 
     def set_live_matches(self, live_matches):
         self.live_matches = live_matches

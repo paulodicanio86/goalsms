@@ -29,6 +29,14 @@ def get_matches_from_db(db, date_str, comp_id=''):
     return result.values
 
 
+def get_team_names(db, date_str, comp_id=''):
+    matches = get_matches(db, date_str, comp_id)
+    if len(matches) > 0:
+        return matches.localteam_name.values.tolist() + matches.visitorteam_name.values.tolist()
+    else:
+        return None
+
+
 def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     # Web query matches
     query = ("http://api.football-api.com/2.0/matches?comp_id=" + comp_id + "&match_date=" + date_str +
