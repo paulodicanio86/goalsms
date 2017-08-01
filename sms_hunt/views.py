@@ -5,7 +5,7 @@ from sms_hunt import app, db_config, stripe_config, team_data, app_config
 from sms import Sms
 from models_tour import follow_tour
 from models_goals import (default_dic, payments, currencies, leagues_list, teams_list, teams_dic,
-                          country_leagues, variable_names, default_country_code, country_codes,
+                          country_leagues, variable_names, country_codes,
                           add_data_and_send_sms, charge_stripe)
 from backend.db_class import DB
 from functions.validation_functions import convert_entries, validate_entries
@@ -118,7 +118,7 @@ def verify_post():
 
     for entry in variable_names:
         values_dic[entry] = request.form[entry]
-        values_dic[entry] = convert_entries(entry, values_dic[entry], default_country_code)
+        values_dic[entry] = convert_entries(entry, values_dic[entry])
         valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
 
     # reload if non-validated entries exist

@@ -1,6 +1,6 @@
 import string
 
-from string_functions import validate_number, convert_special_characters, is_integer_string, matches_reg_ex
+from string_functions import convert_number, convert_special_characters, is_integer_string, matches_reg_ex
 
 
 def convert_white_space_in_link(input_string):
@@ -31,9 +31,9 @@ def valid_phone_number(number, country_codes):
 #######################################
 # combining the above functions in two
 #######################################
-def convert_entries(entry, value, country_code):
+def convert_entries(entry, value):
     if entry == 'phone_number':
-        return validate_number(value)
+        return convert_number(value)
     if entry == 'name':
         return convert_special_characters(value)
     else:

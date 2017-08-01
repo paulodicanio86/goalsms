@@ -103,7 +103,7 @@ def prefix_number_str(number):
     return number
 
 
-def validate_number(number):
+def convert_number(number):
     if type(number) == int:
         number = str(number)
     return prefix_number_str(number)

@@ -49,7 +49,6 @@ for league_key in leagues_dic:
 # goal sms configuration settings
 variable_names = ['phone_number']  # used to contain 'names', but that's now obtained from stripe checkout.
 country_codes = app_config['country_codes'].split(',')  # all accepted codes
-default_country_code = country_codes[0]  # default code, used to complete numbers
 payments = app_config['payments']
 currencies = app_config['currencies']
 

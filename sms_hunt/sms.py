@@ -4,7 +4,7 @@ from datetime import datetime
 
 from sms_hunt import sms_config, sms_content
 
-from functions.string_functions import validate_content, validate_number
+from functions.string_functions import validate_content, convert_number
 from functions.db_functions import (get_tour_from_active_table,
                                     select_number_from_valid_table)
 from backend.db_functions import insert_array_to_table, get_table_columns
@@ -119,7 +119,7 @@ class Sms:
                 self.receiver = receiver
 
     def validate_sender(self):
-        self.sender = validate_number(self.sender)
+        self.sender = convert_number(self.sender)
 
     def validate_content(self):
         # This function should only be used if the content is for sure a string (not unicode encoded, as special
