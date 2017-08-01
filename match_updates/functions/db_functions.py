@@ -31,7 +31,7 @@ def get_matches(db, date_str, comp_id='', table_name='matches'):
 # Query to return all results of a given day for a given competition
 def get_ft_standings(db, date_str, comp_id, table_name='matches'):
     sql_query = '''
-    SELECT localteam_name, localteam_score,' - ' as separator_str, visitorteam_score, visitorteam_name
+    SELECT localteam_name, localteam_score,'-' as separator_str, visitorteam_score, visitorteam_name
     FROM {table_name} WHERE status_str = 'FT' AND date_str = '{date_str}' AND comp_id_str = '{comp_id}';
     '''
     sql_query = sql_query.format(table_name=table_name, date_str=date_str, comp_id=comp_id)
