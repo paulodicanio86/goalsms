@@ -290,26 +290,31 @@ def check_cases_and_send(db, teams_formatted, sms, msg_type, league):
     # Here special cases can be defined, of whom to send which message depending on message type and league
     # The mode needs to be set in the flask module when signing up
     # mode = 0, all messages
-    if msg_type in [1, 2, 3]:
-        mode = 0
-        get_numbers_and_send_sms(db, teams_formatted, sms, mode, league)
-
     if msg_type in [3]:
         mode = 1
         get_numbers_and_send_sms(db, teams_formatted, sms, mode, league)
 
+    if msg_type in [1, 3]:
+        mode = 2
+        get_numbers_and_send_sms(db, teams_formatted, sms, mode, league)
+
+    if msg_type in [1, 2, 3]:
+        mode = 3
+        get_numbers_and_send_sms(db, teams_formatted, sms, mode, league)
+
 
 def eod_ft_message_and_send(league, teams, ft_standings_str, db):
-    mode = 0
+    modes = [2, 3]
 
-    teams_formatted = str(teams)[1:-1]
-    phone_numbers_list = get_numbers(db, teams_formatted, mode, league)
+    for mode in modes:
+        teams_formatted = str(teams)[1:-1]
+        phone_numbers_list = get_numbers(db, teams_formatted, mode, league)
 
-    # In future, if there are many many users, the list can be split here and several requests to send sms
-    # can me made here.
+        # In future, if there are many many users, the list can be split here and several requests to send sms
+        # can me made here.
 
-    if len(phone_numbers_list) > 0:
-        sms = Sms(ft_standings_str)
-        sms.set_receiver(phone_numbers_list)
-        sms.send()
-        # print('eod FT Sms have been sent')
+        if len(phone_numbers_list) > 0:
+            sms = Sms(ft_standings_str)
+            sms.set_receiver(phone_numbers_list)
+            sms.send()
+            # print('eod FT Sms have been sent')
