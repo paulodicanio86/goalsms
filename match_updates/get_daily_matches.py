@@ -46,7 +46,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
         result = '{}'
 
     test_localteam = 'Hamburger SV'
-    test_visitorteam = 'Arsenal'
+    test_visitorteam = 'Schalke'
     test_localteam_score = '1'
     test_visitorteam_score = '2'
     test_timer = 'FT'  # Minute or FT
