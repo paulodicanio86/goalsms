@@ -48,10 +48,12 @@ match_day = False
 trigger_times = []
 
 # Activate Test mode here
-test_mode = True  # TEST MODE
+test_mode = False  # TEST MODE
 if test_mode:
     date_str = '26.07.2017'
 
+# from IPython import embed
+# embed()
 
 # If updates are allowed read the file to check
 if stop_updates == 0:
