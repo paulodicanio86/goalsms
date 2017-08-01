@@ -103,13 +103,3 @@ def get_phone_numbers(db, teams, mode, league, table_name='goalsms'):
     sql_query = sql_query.format(table_name=table_name, teams=teams, mode=mode, league=league)
 
     return execute_statement(sql_query, db)
-
-
-# Get user phone numbers who are signed up for a specific league
-def get_phone_numbers_league(db, league, mode, table_name='goalsms'):
-    mode = str(mode)
-    league = str(league)
-    sql_query = '''SELECT phone_number FROM {table_name} WHERE league = '{league}' AND mode = {mode};'''
-    sql_query = sql_query.format(table_name=table_name, league=league, mode=mode)
-
-    return execute_statement(sql_query, db)

@@ -68,4 +68,4 @@ class MatchDay:
         # If all matches are finished, then send end of day full time standings.
         if self.all_games_finished:
             ft_standings_str = self.ft_standings(db)
-            eod_ft_message_and_send(self.league, ft_standings_str, db)
+            eod_ft_message_and_send(self.league, self.team_names, ft_standings_str, db)
