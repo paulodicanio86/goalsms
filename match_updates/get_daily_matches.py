@@ -45,10 +45,10 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     except urllib2.HTTPError:
         result = '{}'
 
-    test_localteam = 'Hamburger SV'
-    test_visitorteam = 'Schalke'
+    test_localteam = 'Leicester City'
+    test_visitorteam = 'Arsenal'
     test_localteam_score = '1'
-    test_visitorteam_score = '2'
+    test_visitorteam_score = '0'
     test_timer = 'FT'  # Minute or FT
     test_comp_id = '1204'
 

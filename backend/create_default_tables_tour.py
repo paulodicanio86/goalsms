@@ -20,8 +20,8 @@ db.init()
 # make_default_tables_tour(db)
 # embed()
 
-delete_table('goalsms', db)
-make_default_table(db, 'tables/goalsms_table.json')
+# delete_table('goalsms', db)
+# make_default_table(db, 'tables/goalsms_table.json')
 delete_table('matches', db)
 make_default_table(db, 'tables/matches_table.json')
 
