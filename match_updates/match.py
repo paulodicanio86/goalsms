@@ -28,9 +28,9 @@ class Match:
         self.localteam_name_print = look_up_teams_print(self.localteam_name, team_data)
         self.visitorteam_name_print = look_up_teams_print(self.visitorteam_name, team_data)
 
-    def change_time(self):
+    def change_time(self, adjustment):
         # Function to convert kick off times back by one hour for BST from ECT
-        adjusted_time = int(self.time_str[:-3]) + 1
+        adjusted_time = int(self.time_str[:-3]) + adjustment
         self.time_str = str(adjusted_time) + self.time_str[-3:]
 
     def save_to_db(self, db, table_name='matches'):
