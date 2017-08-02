@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 {% block title %} - Success{% endblock %}
 {% block content %}
+
+<script>
+fbq('track', 'Purchase', {
+value: {{ value }},
+currency: '{{ currency }}'
+});
+</script>
+
 <div class="starter-template">
     <h1>Success!</h1>
 

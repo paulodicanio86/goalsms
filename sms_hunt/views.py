@@ -180,15 +180,17 @@ def verify_post():
     db.close()
 
     # go to success page
-    return redirect(url_for('success'))
+    return success(service_amount, currency)
 
 
 #######################################
 # /success
 #######################################
 @app.route('/success/')
-def success():
+def success(value=0, currency='gbp'):
     return render_template('success.html',
+                           value=(float(value) / 100.00),
+                           currency=currency,
                            title=title,
                            company=company,
                            year=year
