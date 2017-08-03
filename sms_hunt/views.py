@@ -187,7 +187,7 @@ def verify_post():
 # /success
 #######################################
 @app.route('/success/')
-def success(value=0, currency='gbp'):
+def success(value=0, currency='GBP'):
     return render_template('success.html',
                            value=(float(value) / 100.00),
                            currency=currency.upper(),
