@@ -190,7 +190,7 @@ def verify_post():
 def success(value=0, currency='gbp'):
     return render_template('success.html',
                            value=(float(value) / 100.00),
-                           currency=currency,
+                           currency=currency.upper(),
                            title=title,
                            company=company,
                            year=year
