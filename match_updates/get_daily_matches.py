@@ -106,7 +106,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
 def get_event_details(match_json):
     player = 'no_player'
 
-    if len(match_json['events']) > 0 and match_json['timer'] != 'FT' and match_json['timer'] != '?':
+    if len(match_json['events']) > 0 and str(match_json['timer']).isdigit():
 
         events = match_json['events']
         timer = int(match_json['timer'])
