@@ -27,7 +27,8 @@ with open(api_json_path) as api_connection_file:
 login_goal_api = api_config['login_goal_api']
 
 seconds_wait = 57
-for i in range(0, 60):
+iterations = 60
+for i in range(0, iterations):
 
     # Calculate current date and time
     i = datetime.datetime.now()
@@ -106,4 +107,4 @@ for i in range(0, 60):
         # Close DB connection
         db.close()
 
-        time.sleep(seconds_wait)
+    time.sleep(seconds_wait)
