@@ -41,14 +41,17 @@ iterations = 60  # 60
 
 #########################################
 
-for i in range(0, iterations):
+for counter in range(0, iterations):
 
     # Calculate current date and time
-    i = datetime.datetime.now()
-    date_str = str(i.strftime('%d.%m.%Y'))
+    time_obj = datetime.datetime.now()
+    date_str = str(time_obj.strftime('%d.%m.%Y'))
+    # Activate Test mode here
+    if test_mode:
+        date_str = '26.07.2017'
     # time_str = str(i.strftime('%H:%M'))
-    hour_str = i.strftime('%H')
-    minute_str = i.strftime('%M')
+    hour_str = time_obj.strftime('%H')
+    minute_str = time_obj.strftime('%M')
 
     # Check if daily file exists. If not create one. Retrieve trigger times.
     file_path = os.path.dirname(os.path.abspath(__file__))
@@ -58,10 +61,6 @@ for i in range(0, iterations):
     false_string = 'False - no matches today'
     match_day = False
     trigger_times = []
-
-    # Activate Test mode here
-    if test_mode:
-        date_str = '26.07.2017'
 
     # If updates are allowed read the file to check
     if stop_updates == 0:
@@ -82,7 +81,7 @@ for i in range(0, iterations):
         # We have a match day today, and a valid hours and minute. Let's check the score
         if (match_day and (hour_str in trigger_times)) or test_mode:  # or True:
 
-            print(str(i), str(minute_str), str(hour_str), str(trigger_times), 'check matches')
+            print(str(counter), str(minute_str), str(hour_str), str(trigger_times), 'check matches')
 
             # Initiate DB connection
             db = DB(db_config)
@@ -114,9 +113,9 @@ for i in range(0, iterations):
             # Close DB connection
             db.close()
         else:
-            print(str(i), str(minute_str), str(hour_str), str(trigger_times), 'no check')
+            print(str(counter), str(minute_str), str(hour_str), str(trigger_times), 'no check')
 
         # Timer function here
         time.sleep(seconds_wait)
 
-print('Finished ' + str(iterations) + ' iterations.')
+print('Finished ' + str(iterations) + ' iteration(s).')
