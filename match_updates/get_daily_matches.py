@@ -104,7 +104,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
 
 
 def get_event_details(match_json):
-    player = 'no_player'
+    player = ' '
 
     if len(match_json['events']) > 0 and str(match_json['timer']).isdigit():
 
@@ -202,18 +202,22 @@ def read_daily_file(file_path, false_string):
 
 
 def write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string):
-    f = open(file_path, 'w')
+    date_in_table_bool = date_in_table(db, date_str)
 
-    if not date_in_table(db, date_str):
+    if not date_in_table_bool:
         add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
 
+    # Open file
+    f = open(file_path, 'w')
+
     # Now check if there are any matches today:
-    if date_in_table(db, date_str):
+    if date_in_table_bool:
         # Write extra information here, separated by ';'
         f.write(get_trigger_times(db, date_str))
     else:
         f.write(false_string)
 
+    # Close file
     f.close()
 
 
@@ -261,7 +265,7 @@ def format_message_and_send_sms(db, match, league):
 
         check_cases_and_send(db, teams_formatted, sms, msg_type, league)
     else:
-        print('No teams found for this match')
+        print('No users found for this match')
 
 
 def get_numbers(db, teams_formatted, mode, league):

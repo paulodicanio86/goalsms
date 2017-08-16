@@ -58,11 +58,8 @@ class MatchDay:
 
     def send_sms_updates(self, db):
         if len(self.updated_matches) > 0 and not self.all_games_finished:
-            print('matches with an update found!')
             for match in self.updated_matches:
                 format_message_and_send_sms(db, match, self.league)
-        else:
-            print('no update in any match')
 
     def send_sms_eod_ft(self, db):
         # If all matches are finished, then send end of day full time standings.
