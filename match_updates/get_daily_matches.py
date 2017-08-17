@@ -47,9 +47,9 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
 
     test_localteam = 'Leicester City'
     test_visitorteam = 'Arsenal'
-    test_localteam_score = '1'
+    test_localteam_score = '0'
     test_visitorteam_score = '0'
-    test_timer = 'FT'  # Minute or FT
+    test_timer = '0'  # Minute or FT
     test_comp_id = '1204'
 
     test_result = '''[{{"id":"1921980","comp_id":"{test_comp_id}","formatted_date":"{date_str}","season":"2015\\/2016",
@@ -284,9 +284,9 @@ def get_numbers_and_send_sms(db, teams_formatted, sms, mode, league):
     if len(phone_numbers_list) > 0:
         sms.set_receiver(phone_numbers_list)
         sms.send()
-        print('Sms have been sent')
+        print('Sms have been sent for mode ' + str(mode))
     else:
-        print('No subscribed users found')
+        print('No subscribed users found for mode ' + str(mode))
 
 
 # send sms to all relevant modes
