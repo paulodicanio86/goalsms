@@ -49,10 +49,14 @@ class Match:
         update_matches_table(db, 'player_str', self.player, self.date_str, self.localteam_name)
 
     def get_score_message_text(self):
-        message = '{timer}. {player}. New score: '
+        player_field = ''
+        if self.player != 'no_player':
+            player_field = " " + self.player + "."
+
+        message = '{timer}.{player_field} New score: '
         message += '{localteam_name_print} {localteam_score} -'
         message += ' {visitorteam_score} {visitorteam_name_print}'
-        message = message.format(timer=self.timer, player=self.player,
+        message = message.format(timer=self.timer, player_field=player_field,
                                  localteam_name_print=self.localteam_name_print,
                                  localteam_score=self.localteam_score,
                                  visitorteam_name_print=self.visitorteam_name_print,
