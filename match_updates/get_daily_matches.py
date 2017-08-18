@@ -96,7 +96,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
                           entry['visitorteam_score'],
                           entry['comp_id'],
                           player)
-            match.change_time(-2)  # Not required as time on server is same as football API times...
+            # match.change_time(-2)  # Not required as time on server is same as football API times...
             match.change_names(team_data)  # change team names according to dict keys
             matches.append(match)
 
