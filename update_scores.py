@@ -7,7 +7,7 @@ import json
 from sms_hunt import db_config
 from backend.db_class import DB
 from match_updates.matchday import MatchDay
-from match_updates.get_daily_matches import (daily_file_exists, read_daily_file, write_daily_file, get_live_matches)
+from match_updates.get_daily_matches import (daily_file_exists, read_daily_file, get_live_matches)
 
 # from IPython import embed
 
@@ -62,21 +62,10 @@ for counter in range(0, iterations):
     match_day = False
     trigger_times = []
 
-    # If updates are allowed read the file to check
-    if stop_updates == 0:
-
-        if daily_file_exists(file_path):
-            # Daily file exists, so let's read the content
-            match_day, trigger_times = read_daily_file(file_path, false_string)
-        else:
-            # Daily file doesn't exist, so let's create one
-            # Initiate DB connection
-            db = DB(db_config)
-            db.init()
-            write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string)
-            # Close DB connection
-            db.close()
-            print('Created daily file')
+    # If updates are allowed and a daily file exists then continue
+    if stop_updates == 0 and daily_file_exists(file_path):
+        # Daily file exists, so let's read the content
+        match_day, trigger_times = read_daily_file(file_path, false_string)
 
         # We have a match day today, and a valid hours and minute. Let's check the score
         if (match_day and (hour_str in trigger_times)) or test_mode:  # or True:

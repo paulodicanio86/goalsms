@@ -202,8 +202,9 @@ def read_daily_file(file_path, false_string):
 
 
 def write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string):
-    date_in_table_bool = date_in_table(db, date_str)
+    text = ''
 
+    date_in_table_bool = date_in_table(db, date_str)
     if not date_in_table_bool:
         add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
 
@@ -213,12 +214,16 @@ def write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_str
     # Now check if there are any matches today:
     if date_in_table_bool:
         # Write extra information here, separated by ';'
-        f.write(get_trigger_times(db, date_str))
+        text = get_trigger_times(db, date_str)
+        f.write(text)
     else:
-        f.write(false_string)
+        text = false_string
+        f.write(text)
 
     # Close file
     f.close()
+
+    return text
 
 
 def format_teams(match):
