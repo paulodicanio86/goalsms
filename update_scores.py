@@ -39,6 +39,9 @@ test_mode = False  # False
 seconds_wait = 57  # 57
 iterations = 60  # 60
 
+# Settings
+false_string = 'False - no matches today'
+
 #########################################
 
 for counter in range(0, iterations):
@@ -53,12 +56,10 @@ for counter in range(0, iterations):
     hour_str = time_obj.strftime('%H')
     minute_str = time_obj.strftime('%M')
 
-    # Check if daily file exists. If not create one. Retrieve trigger times.
     file_path = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(os.sep, file_path, 'match_updates/daily_files', date_str + '.txt')
 
-    # Settings
-    false_string = 'False - no matches today'
+    # Variables
     match_day = False
     trigger_times = []
 
