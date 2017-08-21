@@ -1,7 +1,7 @@
 import os
 import json
 
-from db_functions import make_table, insert_array_to_table, encode_value
+from db_functions import make_table, insert_array_to_table, encode_value, update_test_row
 
 
 def make_default_tables_goalsms(db):
@@ -52,4 +52,5 @@ def make_default_table(db, file_name):
         insert_array_to_table(name, db, columns, rows)
 
 
-
+def reset_test_mode_game(table_name, db):
+    update_test_row(table_name, db)

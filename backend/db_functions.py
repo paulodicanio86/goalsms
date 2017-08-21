@@ -90,6 +90,23 @@ def update_row(table_name, db, column_name, column_value, condition_1, condition
     db.commit()
 
 
+# Update test row
+def update_test_row(table_name, db):
+    set_values = 'status_str="12:30", timer_str="12:30", localteam_score = "?", visitorteam_score = "?"'
+    condition_values = 'localteam_name="leicester" and date_str="26.07.2017"'
+
+    sql_query = '''SET SQL_SAFE_UPDATES = 0;
+                   UPDATE {table_name}
+                   SET {set_values}
+                   WHERE {condition_values};
+                   '''.format(table_name=table_name,
+                              set_values=set_values,
+                              condition_values=condition_values
+                              )
+    db.execute(sql_query)
+    db.commit()
+
+
 # Delete row
 def delete_row(table_name, db, condition_1, condition_2):
     sql_query = '''SET SQL_SAFE_UPDATES = 0;
