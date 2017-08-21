@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from flask import request, send_from_directory, render_template, url_for, redirect
 from sms_hunt import app, db_config, stripe_config, team_data, app_config
@@ -79,13 +80,16 @@ def daily_file(daily_file):
     file_path = os.path.dirname('/home/pschaack/')
     file_path = os.path.abspath(os.path.join(os.sep, file_path, 'sms_hunt/match_updates/daily_files/', daily_file))
 
+    time_obj = datetime.datetime.now()
+    time_str = str(time_obj.strftime('%H:%M'))
+
     if os.path.isfile(file_path):
         f = open(file_path, 'r')
         content = f.readline()
         f.close()
-        return content
+        return content + ' at: ' + time_str
     else:
-        return 'file does not exist: ' + file_path
+        return 'file does not exist: ' + daily_file + ' at: ' + time_str
 
 
 #######################################
