@@ -49,7 +49,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     test_visitorteam = 'Arsenal'
     test_localteam_score = '0'
     test_visitorteam_score = '0'
-    test_timer = '0'  # Minute or FT
+    test_timer = '0'  # 0, Minute, or FT
     test_comp_id = '1204'
 
     test_result = '''[{{"id":"1921980","comp_id":"{test_comp_id}","formatted_date":"{date_str}","season":"2015\\/2016",

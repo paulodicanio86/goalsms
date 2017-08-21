@@ -15,6 +15,10 @@ def format_ft_string(results):
     ft_string = results.to_string(header=False, index=False)
     ft_string = re.sub(' +', ' ', ft_string)
     ft_string = ft_string.replace(' \n', '\n')
+    ft_string = ft_string.replace('\n ', '\n')
+    ft_string = ft_string.replace(' - ', '-')
+    ft_string = ft_string[1:]
+
     return ft_string
 
 
