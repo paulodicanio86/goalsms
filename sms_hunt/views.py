@@ -76,7 +76,7 @@ def single_team(team_value,
 #######################################
 @app.route('/daily/<daily_file>/')
 def daily_file(daily_file):
-    file_path = os.path.dirname('/home/pschaack')
+    file_path = os.path.dirname('/home/pschaack/')
     file_path = os.path.abspath(os.path.join(os.sep, file_path, 'sms_hunt/match_updates/daily_files/', daily_file))
 
     if os.path.isfile(file_path):
@@ -85,7 +85,7 @@ def daily_file(daily_file):
         f.close()
         return content
     else:
-        return 'file does not exist'
+        return 'file does not exist: ' + file_path
 
 
 #######################################
