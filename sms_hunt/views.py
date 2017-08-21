@@ -80,7 +80,7 @@ def daily_file_check(daily_file_name):
     file_path = os.path.dirname('/home/pschaack/')
     file_path = os.path.abspath(os.path.join(os.sep, file_path, 'sms_hunt/match_updates/daily_files/', daily_file_name))
 
-    time_obj = datetime.datetime.now()
+    time_obj = datetime.now()
     time_str = str(time_obj.strftime('%H:%M'))
 
     if os.path.isfile(file_path):
