@@ -50,8 +50,10 @@ class MatchDay:
         results = get_ft_standings(db, self.date_str, self.comp_id)
 
         if len(results) > 0:
-            results['localteam_name'] = results['localteam_name'].apply(look_up_teams_print, team_data=team_data)
-            results['visitorteam_name'] = results['visitorteam_name'].apply(look_up_teams_print, team_data=team_data)
+            results['localteam_name'] = results['localteam_name'].apply(look_up_teams_print, team_data=team_data,
+                                                                        team_field='club_team_codes')
+            results['visitorteam_name'] = results['visitorteam_name'].apply(look_up_teams_print, team_data=team_data,
+                                                                            team_field='club_team_codes')
             return format_ft_string(results)
         else:
             return ''
