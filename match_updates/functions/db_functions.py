@@ -2,7 +2,7 @@ from backend.db_functions import execute_statement, update_row
 
 
 # Query db to check if date is in table
-def date_in_table(db, date_str, table_name='matches'):
+def check_date_in_table(db, date_str, table_name='matches'):
     sql_query = '''SELECT DISTINCT date_str FROM {table_name} WHERE date_str='{date_str}';'''
     sql_query = sql_query.format(table_name=table_name, date_str=date_str)
     result = execute_statement(sql_query, db)
