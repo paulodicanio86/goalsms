@@ -52,7 +52,6 @@ for counter in range(0, iterations):
     # Activate Test mode here
     if test_mode:
         date_str = '26.07.2017'
-    # time_str = str(i.strftime('%H:%M'))
     hour_str = time_obj.strftime('%H')
     minute_str = time_obj.strftime('%M')
 
@@ -93,10 +92,14 @@ for counter in range(0, iterations):
                 # Update leagues and send sms
                 for league in match_days:
                     if not league.check_all_games_finished(db):
+
+                        # Check if match update messages should be sent
                         league.get_db_matches(db)
                         league.set_live_matches(live_matches)
                         league.find_updated_matches(db)
                         league.send_sms_updates(db)
+
+                        # Check if EOD FT messages should be sent:
                         if league.check_all_games_finished(db):
                             league.send_sms_eod_ft(db)
 
