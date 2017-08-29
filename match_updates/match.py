@@ -19,6 +19,7 @@ class Match:
         self.status = str(status)  # "FT"
         self.timer = str(timer)
         self.player = str(player)
+        self._no_player_list = ['no_player', ' ']
 
         self.comp_id = str(comp_id)
 
@@ -50,7 +51,7 @@ class Match:
 
     def get_score_message_text(self):
         player_field = ''
-        if self.player != 'no_player':
+        if self.player not in self._no_player_list:
             player_field = " " + self.player + "."
 
         message = '{timer}.{player_field} New score: '
