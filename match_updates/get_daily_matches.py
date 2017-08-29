@@ -214,10 +214,11 @@ def write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_str
     if check_date_in_table(db, date_str):
         # Write extra information here, separated by ';'
         text = get_trigger_times(db, date_str)
-        f.write(text)
     else:
         text = false_string
-        f.write(text)
+
+    # Write file
+    f.write(text)
 
     # Close file
     f.close()
