@@ -2,7 +2,7 @@ import urllib2
 import json
 import os as os
 
-from match_updates.functions.db_functions import (get_matches, date_in_table,
+from match_updates.functions.db_functions import (get_matches, check_date_in_table,
                                                   get_kick_off_times, get_phone_numbers)
 from match import Match, compare_matches
 from sms_hunt.sms import Sms
@@ -139,8 +139,9 @@ def add_daily_matches_to_db(db, date_str, comp_id, login_goal_api):
     matches = get_live_matches(date_str, comp_id, login_goal_api)
 
     # Save matches to db
-    for match in matches:
-        match.save_to_db(db)
+    if len(matches) > 0:
+        for match in matches:
+            match.save_to_db(db)
 
 
 def compare_matches_and_update(db, db_matches, live_matches):
@@ -202,17 +203,15 @@ def read_daily_file(file_path, false_string):
 
 
 def write_daily_file(db, file_path, date_str, comp_id, login_goal_api, false_string):
-    text = ''
-
-    date_in_table_bool = date_in_table(db, date_str)
-    if not date_in_table_bool:
-        add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
+    # Add daily matches to DB (if there are no games, no entries are added)
+    add_daily_matches_to_db(db, date_str, comp_id, login_goal_api)
 
     # Open file
     f = open(file_path, 'w')
+    text = ''
 
     # Now check if there are any matches today:
-    if date_in_table_bool:
+    if check_date_in_table(db, date_str):
         # Write extra information here, separated by ';'
         text = get_trigger_times(db, date_str)
         f.write(text)
