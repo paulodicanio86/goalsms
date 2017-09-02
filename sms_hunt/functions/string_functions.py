@@ -68,42 +68,35 @@ def convert_special_characters(input_string):
     return input_string
 
 
-def add_country_code(number, code):
+def add_country_code(number, prefix):
     if number[0] == '0':
-        return code + number[1:]
+        return prefix + number[1:]
     else:
-        return code + number
+        return prefix + number
 
 
-def prefix_number_str(number):
+def prefix_number_str(number, prefix='44'):
     number = number.replace(' ', '')
 
     # if number is not long enough then exit here.
     if len(number) < 4:
         return number
 
-    # +44777xxxxxxx cases DE, UK
+    # +yy777xxxxxxx cases DE, UK
     if number[0] == '+':
-        return number[1:]
-    # 0044777xxxxxxx cases and 0049172xxxxx cases DE, UK
+        return add_country_code(number[3:], prefix)
+    # 00yy777xxxxxxx cases and 00yy172xxxxx cases DE, UK
     if number[:2] == '00':
-        return number[2:]
-    # 0777xxxxxxx cases UK
-    if number[0] == '0' and number[1] == '7':
-        return add_country_code(number, '44')
-    # 0172xxxxxxx cases DE
-    if number[0] == '0' and number[1] == '1':
-        return add_country_code(number, '49')
-    # 777xxxxxxx cases UK
-    if number[0] == '7':  # valid for UK numbers, fix for international numbers
-        return add_country_code(number, '44')
-    # 172xxxxxxx cases DE
-    if number[0] == '1':  # valid for DE numbers, fix for international numbers
-        return add_country_code(number, '49')
-    return number
+        return add_country_code(number[4:], prefix)
+    # prefix+yyyyyyyyyyy cases
+    if number[:2] == prefix:
+        return number
+
+    # all other cases
+    return add_country_code(number, prefix)
 
 
-def convert_number(number):
+def convert_number(number, prefix):
     if type(number) == int:
         number = str(number)
-    return prefix_number_str(number)
+    return prefix_number_str(number, prefix)

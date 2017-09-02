@@ -5,8 +5,9 @@ from flask import request, send_from_directory, render_template, url_for, redire
 from sms_hunt import app, db_config, stripe_config, team_data, app_config
 from sms import Sms
 from models_tour import follow_tour
-from models_goals import (default_dic, payments, currencies, leagues_list, teams_list, teams_dic,
-                          country_leagues, variable_names, country_codes,
+from models_goals import (default_dic, payments, currencies, leagues_dic, leagues_list, prefixes_list, services_dic,
+                          teams_list, teams_dic,
+                          variable_names, country_codes,
                           add_data_and_send_sms, charge_stripe)
 from backend.db_class import DB
 from functions.validation_functions import convert_entries, validate_entries
@@ -39,6 +40,8 @@ def start(phone_number_dic=default_dic):
                            key=key,
                            phone_number=phone_number_dic,
                            leagues=leagues_list,
+                           services=services_dic,
+                           prefixes=prefixes_list,
                            teams=teams_list
                            )
 
@@ -50,12 +53,13 @@ def start(phone_number_dic=default_dic):
 def single_team(team_value,
                 phone_number_dic=default_dic):
     team_value = team_value.lower()
+
     if team_value not in teams_dic.keys():
         return redirect(url_for('page_not_found_manual'))
 
     # Find out the right league
     league_value = ''
-    for league_name in country_leagues:
+    for league_name in leagues_dic.keys():
         if team_value in team_data[league_name]:
             league_value = league_name
 
@@ -68,7 +72,8 @@ def single_team(team_value,
                            phone_number=phone_number_dic,
                            team=teams_dic[team_value],
                            team_value=team_value,
-                           league_value=league_value
+                           league_value=league_value,
+                           prefixes=prefixes_list
                            )
 
 
@@ -104,6 +109,7 @@ def verify_get():
 def verify_post():
     # get the values from the POST request
     phone_number = request.form['phone_number']
+    prefix = request.form['prefix']
     email = request.form['stripeEmail']
     name = request.form['stripeName']
     stripe_token = request.form['stripeToken']
@@ -141,7 +147,7 @@ def verify_post():
 
     for entry in variable_names:
         values_dic[entry] = request.form[entry]
-        values_dic[entry] = convert_entries(entry, values_dic[entry])
+        values_dic[entry] = convert_entries(entry, values_dic[entry], prefix)
         valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
 
     # reload if non-validated entries exist

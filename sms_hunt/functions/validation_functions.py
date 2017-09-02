@@ -31,9 +31,9 @@ def valid_phone_number(number, country_codes):
 #######################################
 # combining the above functions in two
 #######################################
-def convert_entries(entry, value):
+def convert_entries(entry, value, prefix='44'):
     if entry == 'phone_number':
-        return convert_number(value)
+        return convert_number(value, prefix)
     if entry == 'name':
         return convert_special_characters(value)
     else:

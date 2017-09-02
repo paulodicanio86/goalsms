@@ -14,43 +14,47 @@ teams.sort()
 
 # Create an ordered league list to be passed to the templates
 leagues_order = team_data['leagues_order']
-country_leagues = team_data['country_leagues']
-league_currencies = app_config['league_currencies']
 leagues_list = []
 for league_key in leagues_order:
     entry = {'league_id': league_key,
              'league_name': leagues_dic[league_key]}
     leagues_list.append(entry)
 
-# Create a team list dictionary to be passed to the templates. It includes currency values by native league
+
+# Create a team list dictionary to be passed to the templates.
 teams_list = []
 for league_key in leagues_dic:
     team_keys = team_data[league_key]
     team_keys.sort()
     for team_id in team_keys:
-
-        # Find native league
-        native_league = ''
-        if league_key in country_leagues:
-            native_league = league_key
-        else:
-            for entry in country_leagues:
-                if team_id in team_data[entry]:
-                    native_league = entry
-
         # Make entry and append
         entry = {'league_id': league_key,
                  'team_id': team_id,
-                 'team_name': teams_dic[team_id],
-                 'currency': league_currencies[native_league]
+                 'team_name': teams_dic[team_id]
                  }
         teams_list.append(entry)
 
-# goal sms configuration settings
+
+# Create a prefixes list
+prefixes_list = []
+country_codes = []
+prefixes = app_config['prefixes']
+prefix_currencies = app_config['prefix_currencies']
+currencies = prefix_currencies.values()
+for prefix in prefixes:
+    # Make entry and append
+    entry = {'prefix_value': prefix,
+             'prefix_name': prefixes[prefix],
+             'prefix_currency': prefix_currencies[prefix]}
+    prefixes_list.append(entry)
+    country_codes.append(prefix)
+
+
+# goal sms configuration and payment settings
 variable_names = ['phone_number']  # used to contain 'names', but that's now obtained from stripe checkout.
-country_codes = app_config['country_codes'].split(',')  # all accepted codes
 payments = app_config['payments']
-currencies = app_config['currencies']
+services_dic = app_config['services']
+
 
 default_dic = {'valid': True,
                'value': ''

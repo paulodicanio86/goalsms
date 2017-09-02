@@ -42,34 +42,22 @@
                     </div>
                 </div>
 
-                <div class="service row">
-                    {% for league in leagues %}
-                    {% for currency in currencies %}
-                    <div id="{{ league.league_id }}_{{ currency }}_price_id" style="display: none;" >
-
-                        {% for payment in payments %}
-
-                        {% if league.league_id+currency==payment.league + payment.currency %}
-                        <div class="input-group checkbox text-left" >
-                            <label>
-                                <input id={{ payment.name }} type="radio"
-                                       name="service"
-                                       value="{{ payment.value_int }}"/>
-                                {{ payment.title }}
-                            </label>
-                        </div>
-                        {% endif %}
-
-                        {% endfor %}
-                    </div>
-                    {% endfor %}
-                    {% endfor %}
-                </div>
-
-
                 <div class="space row">
                     <div class="col-md-12 col-xs-12">
                         &nbsp;
+                    </div>
+                </div>
+
+                <div class="prefix row">
+                    <div class="form-group">
+
+                        <select class="form-control" name="prefix" id="prefix_id">
+                            <option value="">Choose prefix</option>
+                            {% for prefix in prefixes %}
+                            <option value="{{ prefix.prefix_value }}">{{ prefix.prefix_name }}</option>
+                            {% endfor %}
+                        </select>
+
                     </div>
                 </div>
 
@@ -81,9 +69,23 @@
                     {% endif %}
 
                         <input type="tel" class="form-control" id="phone_number_id"
-                               name="phone_number" placeholder="mobile no. (incl. prefix)"
+                               name="phone_number" placeholder="mobile number"
                                value="{{ phone_number.value }}">
 
+                    </div>
+                </div>
+
+                <div class="service row">
+                    <div class="input-group checkbox text-left" id="service_id"
+                         style="display: none;">
+                        {% for service in services %}
+                        <label>
+                            <input id="{{ service }}_id" type="radio"
+                                   name="service"
+                                   value="{{ service }}">
+                                {{ services[service] }}
+                        </label>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -91,29 +93,33 @@
                     <div class="form-group stripe_button row">
 
                         <script src="https://checkout.stripe.com/checkout.js"></script>
+
+                        <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
+                            Pay
+                        </button>
                                       
                         <input type="hidden" name="single_team" id="single_team_id" value="False" />
                         <input type="hidden" name="stripeToken" id="stripeToken" />
                         <input type="hidden" name="stripeEmail" id="stripeEmail" />
                         <input type="hidden" name="stripeName" id="stripeName" />
 
-                        <input type="hidden" name="service_chosen" id="service_chosen" value="" />
-                        <input type="hidden" name="service_amount" id="service_amount" value="" />
-                        <input type="hidden" name="currency" id="currency" value="" />
-
-                        {% for team in teams %}
-                        <input type="hidden" name="{{ team.team_id }}_currency"
-                               id="{{ team.team_id }}_currency" value="{{ team.currency }}" />
-                        {% endfor %}
+                        <input type="hidden" name="service_chosen" id="service_chosen_id" value="" />
+                        <input type="hidden" name="service_amount" id="service_amount_id" value="" />
+                        <input type="hidden" name="currency" id="currency_id" value="" />
 
                         <input type="hidden" name="league_chosen" id="league_chosen_id" value="" />
                         <input type="hidden" name="team_chosen" id="team_chosen_id" value="" />
-                                
-                        <button id="CustomStripeButton" class="btn btn-success btn-block" disabled> 
-                            Pay
-                        </button>
-                                      
+                        <input type="hidden" name="prefix_chosen" id="prefix_chosen_id" value="" />
+
+                        {% for payment in payments %}
+                        <input type="hidden" name="{{ payment.name }}" id="{{ payment.name }}_id"
+                               value="{{ payment.value_int }}" />
+                        {% endfor %}
+
+                        <input type="hidden" name="box" id="box_id" value="" />
+                          
                         <script>
+
                             var handler = StripeCheckout.configure({
                                 key: '{{ key }}',
                                 token: function(token, args) {
@@ -129,8 +135,8 @@
                             document.getElementById('CustomStripeButton').addEventListener('click', function(e) {
 
                                 // Open Checkout with further options
-                                var amount = parseInt($("#service_amount").val());
-                                var currency= $("#currency").val();
+                                var amount = parseInt($("#service_amount_id").val());
+                                var currency= $("#currency_id").val();
                                 handler.open({
                                     name: '{{ company }}',
                                     description: 'Please enter your details',
@@ -141,69 +147,142 @@
                                 e.preventDefault();
                             });
 
-                            // FUNCTION FOR RADIO BUTTONS SERVICE CHOICE
-                            {% for payment in payments %}
-                            document.getElementById('{{ payment.name }}').addEventListener('click', function() {
 
-                                document.getElementById("service_chosen").value = '{{ payment.name }}';
-                                document.getElementById("currency").value = '{{ payment.currency }}';
-                                document.getElementById("service_amount").value = parseInt(document.getElementById('{{ payment.name }}').value);
+                            // FUNCTION FOR LEAGUE DROPDOWN CHANGE
+                            document.getElementById('league_id').addEventListener('change', function() {
 
-                                var value_amount = parseInt(document.getElementById('{{ payment.name }}').value) / 100.00;
-                                document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount.toFixed(2);
-                                document.getElementById("CustomStripeButton").disabled = false;
+                                document.getElementById('team_chosen_id').value = "";
+                                document.getElementById('service_chosen_id').value = "";
+                                document.getElementById('league_chosen_id').value = "";
+                                document.getElementById('service_amount_id').value = "";
+
+                                {% for league in leagues %}
+                                document.getElementById('{{ league.league_id }}'.concat('_team_id')).style.display = 'none';
+                                document.getElementById('{{ league.league_id }}'.concat('_team_id')).value = "";
+                                {% endfor %}
+
+                                {% for service in services %}
+                                document.getElementById('service_id').style.display = 'none';
+                                document.getElementById('{{ service }}_id').checked = false;
+                                {% endfor %}
+
+                                document.getElementById("CustomStripeButton").innerHTML = "Pay";
+                                document.getElementById("CustomStripeButton").disabled = true;
+
+                                league = document.getElementById('league_id').value;
+
+                                document.getElementById(league.concat('_team_id')).style.display = 'block';
+                                document.getElementById('league_chosen_id').value = league;
+
                             });
-                            {% endfor %}
+
 
                             // FUNCTION FOR TEAM DROPDOWN CHANGE
                             {% for league in leagues %}
                             document.getElementById('{{ league.league_id }}'.concat('_team_id')).addEventListener('change', function() {
 
-                                team = document.getElementById('{{ league.league_id }}'.concat('_team_id')).value;
-                                document.getElementById('team_chosen_id').value = team;
-                                currency = document.getElementById(team.concat('_currency')).value;
-
-                                {% for league2 in leagues %}
-                                {% for currency2 in currencies %}
-                                document.getElementById('{{ league2.league_id }}_{{ currency2 }}_price_id').style.display = 'none';
+                                {% for service in services %}
+                                document.getElementById('service_id').style.display = 'none';
+                                document.getElementById('{{ service }}_id').checked = false;
                                 {% endfor %}
-                                {% endfor %}
-
-                                if (team != '') {
-                                    document.getElementById('{{ league.league_id }}'.concat('_', currency ,'_price_id')).style.display = 'block';
-                                }
 
                                 document.getElementById("CustomStripeButton").innerHTML = "Pay";
                                 document.getElementById("CustomStripeButton").disabled = true;
 
-                                //Make all radio buttons deselected:
-                                {% for payment in payments %}
-                                document.getElementById('{{ payment.name }}').checked = false;
-                                {% endfor %}
+                                team = document.getElementById('{{ league.league_id }}'.concat('_team_id')).value;
+                                document.getElementById('team_chosen_id').value = team;
+
+                                var service_str = document.getElementById('service_chosen_id').value;
+                                var prefix_str = document.getElementById('prefix_id').value;
+
+                                if (prefix_str.length > 0) {
+
+                                    {% for service in services %}
+                                    document.getElementById('service_id').style.display = 'block';
+                                    document.getElementById('{{ service }}_id').checked = false;
+                                    {% endfor %}
+                                }
 
 
                             });
                             {% endfor %}
 
-                            // FUNCTION FOR LEAGUE DROPDOWN CHANGE
-                            document.getElementById('league_id').addEventListener('change', function() {
 
-                                {% for league in leagues %}
-                                {% for currency in currencies %}
-                                document.getElementById('{{ league.league_id }}_{{ currency }}_price_id').style.display = 'none';
-                                document.getElementById('{{ league.league_id }}'.concat('_team_id')).style.display = 'none';
-                                document.getElementById('{{ league.league_id }}'.concat('_team_id')).value = "";
-                                {% endfor %}
+                            // FUNCTION FOR PREFIX DROPDOWN CHANGE
+                            document.getElementById('prefix_id').addEventListener('change', function() {
+
+                                document.getElementById('currency_id').value = "";
+                                prefix = document.getElementById('prefix_id').value;
+                                document.getElementById('prefix_chosen_id').value = prefix;
+                                var service_str = document.getElementById('service_chosen_id').value;
+                                var team_str = document.getElementById('team_chosen_id').value;
+
+                                {% for prefix in prefixes %}
+                                    if ( '{{ prefix.prefix_value }}' == prefix) {
+                                        document.getElementById('currency_id').value = '{{ prefix.prefix_currency }}';
+                                    }
                                 {% endfor %}
 
-                                league = document.getElementById('league_id').value;
-                                document.getElementById(league.concat('_team_id')).style.display = 'block';
-                                document.getElementById('league_chosen_id').value= league;
-                                document.getElementById('team_chosen_id').value = "";
+
+                                if (team_str.length > 0) {
+                                    {% for service in services %}
+                                    document.getElementById('service_id').style.display = 'block';
+
+                                    {% endfor %}
+                                }
 
                                 document.getElementById("CustomStripeButton").innerHTML = "Pay";
                                 document.getElementById("CustomStripeButton").disabled = true;
+
+                                if (service_str.length > 0 & team_str.length > 0) {
+
+                                    var currency_str = document.getElementById('currency_id').value;
+                                    var service_str = service_str;
+                                    var league_str = document.getElementById('league_chosen_id').value;
+                                    var payment_str = currency_str + '_' + service_str + '_' + league_str;
+                                    var value_amount = parseInt(document.getElementById(payment_str + '_id').value);
+                                    var value_amount_dec = value_amount / 100.00;
+
+                                    document.getElementById("service_amount_id").value = parseInt(value_amount);
+
+                                    {% for payment in payments %}
+                                    if (payment_str == "{{ payment.name }}") {
+                                        document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount_dec.toFixed(2);
+                                        document.getElementById("CustomStripeButton").disabled = false;
+                                    }
+                                    {% endfor %}
+
+                                }
+
                             });
+
+                            // FUNCTION FOR RADIO BUTTONS SERVICE CHOICE
+
+                            {% for service in services %}
+                            document.getElementById('{{ service }}_id').addEventListener('click', function() {
+
+                                document.getElementById('service_chosen_id').value = '{{ service }}';
+
+                                var currency_str = document.getElementById('currency_id').value;
+                                var service_str = '{{ service }}';
+                                var league_str = document.getElementById('league_chosen_id').value;
+                                var payment_str = currency_str + '_' + service_str + '_' + league_str;
+                                var value_amount = parseInt(document.getElementById(payment_str + '_id').value);
+                                var value_amount_dec = value_amount / 100.00;
+
+                                document.getElementById("service_amount_id").value = parseInt(value_amount);
+
+                                {% for payment in payments %}
+                                if (payment_str == "{{ payment.name }}") {
+                                    document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount_dec.toFixed(2);
+                                    document.getElementById("CustomStripeButton").disabled = false;
+                                }
+                                {% endfor %}
+
+                            });
+                            {% endfor %}
+
+
 
                         </script>
                     </div>
