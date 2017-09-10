@@ -8,6 +8,7 @@ with open('config_files/db_config.json') as data_file:
     data_config = json.load(data_file)
 
 db = DB(data_config)
+db.init()
 
 i = datetime.datetime.now()
 date_str = str(i.strftime('%d.%m.%Y'))
