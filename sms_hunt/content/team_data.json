@@ -1,11 +1,21 @@
 {
   "leagues": {
     "premier_league": "Premier League",
-    "bundesliga": "Bundesliga"
+    "bundesliga": "Bundesliga",
+    "la_liga": "LaLiga",
+    "serie_a": "Serie A"
+  },
+  "game_days": {
+    "premier_league": 38,
+    "bundesliga": 34,
+    "la_liga": 34,
+    "serie_a": 34
   },
   "leagues_order": [
     "premier_league",
-    "bundesliga"
+    "bundesliga",
+    "la_liga",
+    "serie_a"
   ],
   "special_leagues": [
     "champions_league",
@@ -55,7 +65,9 @@
     "wolfsburg": "VfL Wolfsburg",
     "leipzig": "RB Leipzig",
     "stuttgart": "VfB Stuttgart",
-    "hannover": "Hannover 96"
+    "hannover": "Hannover 96",
+    "turin": "Juventus Turin",
+    "madrid": "Real Madrid"
   },
   "club_team_codes": {
     "bournemouth": "BOU",
@@ -175,6 +187,12 @@
     "watford",
     "west_brom",
     "west_ham"
+  ],
+  "la_liga": [
+    "turin"
+  ],
+  "serie_a": [
+    "madrid"
   ],
   "champions_league": [
     "tottenham",

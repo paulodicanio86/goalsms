@@ -40,11 +40,12 @@ prefixes_list = []
 country_codes = []
 prefixes = app_config['prefixes']
 prefix_currencies = app_config['prefix_currencies']
+prefix_label = app_config['prefix_label']
 currencies = prefix_currencies.values()
 for prefix in prefixes:
     # Make entry and append
     entry = {'prefix_value': prefix,
-             'prefix_name': prefixes[prefix],
+             'prefix_name': prefix_label[prefix],
              'prefix_currency': prefix_currencies[prefix]}
     prefixes_list.append(entry)
     country_codes.append(prefix)
@@ -52,9 +53,30 @@ for prefix in prefixes:
 
 # goal sms configuration and payment settings
 variable_names = ['phone_number']  # used to contain 'names', but that's now obtained from stripe checkout.
-payments = app_config['payments']
-services_dic = app_config['services']
+payment_matrix = app_config['payments']
+currency_html = app_config['currency_html']
+prefix_order = payment_matrix['prefix_order']
+service_order = payment_matrix['service_order']
+payments = []
 
+for league_key in leagues_order:
+    prices_order = payment_matrix[league_key]
+
+    for entry in range(0, len(prefix_order)):
+        entry_prefix = prefix_order[entry]
+        entry_currency = prefix_currencies[entry_prefix]
+        entry_service = service_order[entry]
+
+        entry_name = [entry_currency, entry_service, league_key, entry_prefix]
+
+        payment = {"name": "_".join(entry_name),
+                   "value_int": prices_order[entry],
+                   "currency_html": currency_html[entry_currency],
+                   "prefix": entry_prefix
+                   }
+        payments.append(payment)
+
+services_dic = app_config['services']
 
 default_dic = {'valid': True,
                'value': ''
