@@ -151,6 +151,7 @@
                             // FUNCTION FOR LEAGUE DROPDOWN CHANGE
                             document.getElementById('league_id').addEventListener('change', function() {
 
+                                // reset values
                                 document.getElementById('team_chosen_id').value = "";
                                 document.getElementById('service_chosen_id').value = "";
                                 document.getElementById('league_chosen_id').value = "";
@@ -180,6 +181,10 @@
                             // FUNCTION FOR TEAM DROPDOWN CHANGE
                             {% for league in leagues %}
                             document.getElementById('{{ league.league_id }}'.concat('_team_id')).addEventListener('change', function() {
+
+                                // reset values
+                                document.getElementById('service_chosen_id').value = "";
+                                document.getElementById('service_amount_id').value = "";
 
                                 {% for service in services %}
                                 document.getElementById('service_id').style.display = 'none';
@@ -266,11 +271,12 @@
                                 var payment_str = currency_str + '_' + service_str + '_' + league_str + '_' + prefix;
                                 var value_amount = parseInt(document.getElementById(payment_str + '_id').value);
                                 var value_amount_dec = value_amount / 100.00;
+                                var team_str = document.getElementById('team_chosen_id').value;
 
                                 document.getElementById("service_amount_id").value = parseInt(value_amount);
 
                                 {% for payment in payments %}
-                                if (payment_str == "{{ payment.name }}") {
+                                if (payment_str == "{{ payment.name }}" & team_str.length > 0) {
                                     document.getElementById("CustomStripeButton").innerHTML = "Pay {{ payment.currency_html|safe }}" + value_amount_dec.toFixed(2);
                                     document.getElementById("CustomStripeButton").disabled = false;
                                 }
