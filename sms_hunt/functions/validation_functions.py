@@ -20,12 +20,12 @@ def valid_name(name):
         return matches_reg_ex(name, reg_ex)
 
 
-def valid_phone_number(number, country_codes):
+def valid_phone_number(number, prefixes):
     """
     Checks if phone number is valid and a string.
     Valid: 12345678
     """
-    return is_integer_string(number) and (len(number) > 4) and (number[:2] in country_codes)
+    return is_integer_string(number) and (len(number) > 4) and (number[:2] in prefixes)
 
 
 #######################################
@@ -40,9 +40,9 @@ def convert_entries(entry, value, prefix='44'):
         return value
 
 
-def validate_entries(entry, value, country_codes):
+def validate_entries(entry, value, prefixes):
     if entry == 'phone_number':
-        return valid_phone_number(value, country_codes)
+        return valid_phone_number(value, prefixes)
     elif entry == 'name':
         return valid_name(value)
     else:

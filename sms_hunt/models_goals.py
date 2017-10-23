@@ -36,19 +36,17 @@ for league_key in leagues_dic:
 
 
 # Create a prefixes list
-prefixes_list = []
-country_codes = []
 prefixes = app_config['prefixes']
 prefix_currencies = app_config['prefix_currencies']
 prefix_label = app_config['prefix_label']
 currencies = prefix_currencies.values()
+prefixes_list = []
 for prefix in prefixes:
     # Make entry and append
     entry = {'prefix_value': prefix,
              'prefix_name': prefix_label[prefix],
              'prefix_currency': prefix_currencies[prefix]}
     prefixes_list.append(entry)
-    country_codes.append(prefix)
 
 
 # goal sms configuration and payment settings

@@ -5,10 +5,8 @@ from flask import request, send_from_directory, render_template, url_for, redire
 from sms_hunt import app, db_config, stripe_config, team_data, app_config
 from sms import Sms
 from models_tour import follow_tour
-from models_goals import (default_dic, payments, currencies, leagues_dic, leagues_list, prefixes_list, services_dic,
-                          teams_list, teams_dic,
-                          variable_names, country_codes,
-                          add_data_and_send_sms, charge_stripe)
+from models_goals import (default_dic, payments, currencies, leagues_dic, leagues_list, prefixes, prefixes_list,
+                          services_dic, teams_list, teams_dic, variable_names, add_data_and_send_sms, charge_stripe)
 from backend.db_class import DB
 from functions.validation_functions import convert_entries, validate_entries
 
@@ -149,7 +147,7 @@ def verify_post():
     for entry in variable_names:
         values_dic[entry] = request.form[entry]
         values_dic[entry] = convert_entries(entry, values_dic[entry], prefix)
-        valid_dic[entry] = validate_entries(entry, values_dic[entry], country_codes)
+        valid_dic[entry] = validate_entries(entry, values_dic[entry], prefixes)
 
     # reload if non-validated entries exist
     if False in valid_dic.values() or not team_selected_bool:
