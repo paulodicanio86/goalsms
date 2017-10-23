@@ -73,6 +73,7 @@ def single_team(team_value,
                            team=teams_dic[team_value],
                            team_value=team_value,
                            league_value=league_value,
+                           services=services_dic,
                            prefixes=prefixes_list
                            )
 
