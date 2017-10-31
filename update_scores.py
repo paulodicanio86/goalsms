@@ -29,10 +29,10 @@ login_goal_api = api_config['login_goal_api']
 #########################################
 
 # Set competitions
-# 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
+# 1204 = Premier League, 1229 = Bundesliga, 1269 = Serie A, 1399 = LaLiga
+# 1005 = UEFA Champions League, 1007 = UEFA Europa League
 # 1198 = Fa Cup, 1205 = Championship (2nd league)
-# comp_id = '1204,1229,1005,1007'
-comp_id = '1204,1229'
+comp_id = '1204,1229,1269,1399'
 
 # Run configuration settings
 test_mode = False  # False
@@ -79,10 +79,9 @@ for counter in range(0, iterations):
             # Create MatchDay objects
             PL = MatchDay(date_str, '1204', 'premier_league')
             BL = MatchDay(date_str, '1229', 'bundesliga')
-            # CL = MatchDay(date_str, '1005', 'champions_league')
-            # EL = MatchDay(date_str, '1007', 'europa_league')
-            # match_days = [PL, BL, CL, EL]
-            match_days = [PL, BL]
+            SA = MatchDay(date_str, '1269', 'serie_a')
+            LL = MatchDay(date_str, '1399', 'la_liga')
+            match_days = [PL, BL, SA, LL]
 
             # Get live matches
             live_matches = get_live_matches(date_str, comp_id, login_goal_api, test_mode)

@@ -25,10 +25,10 @@ login_goal_api = api_config['login_goal_api']
 #########################################
 
 # Set competitions
-# 1204 = Premier League, 1229 = Bundesliga, 1005 = UEFA Champions League, 1007 = UEFA Europa League
+# 1204 = Premier League, 1229 = Bundesliga, 1269 = Serie A, 1399 = LaLiga
+# 1005 = UEFA Champions League, 1007 = UEFA Europa League
 # 1198 = Fa Cup, 1205 = Championship (2nd league)
-# comp_id = '1204,1229,1005,1007'
-comp_id = '1204,1229'
+comp_id = '1204,1229,1269,1399'
 
 # Run configuration settings
 test_mode = False  # False
