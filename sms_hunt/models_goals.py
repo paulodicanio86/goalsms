@@ -81,10 +81,10 @@ default_dic = {'valid': True,
                }
 
 
-def add_data_and_send_sms(db, name, email, phone_number, team_id_name, team_name, league_id, service_id):
+def add_data_and_send_sms(db, name, email, phone_number, team_id_name, team_name, league_id, service_id,
+                          table_name='goalsms'):
     # Add to data base and send sms.
-    table_name = 'goalsms'
-    service = service_id.split('_')[1]
+    service = str(service_id)
 
     mode = 0
     if service == 'bronze':

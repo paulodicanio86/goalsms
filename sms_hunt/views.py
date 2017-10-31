@@ -177,7 +177,13 @@ def verify_post():
     payment = {'amount_integer': service_amount,
                'currency': currency}
 
+    # default table is the TEST table.
+    table_name = 'goalsms_test'
+
     if charge_stripe_flag == 1:
+        # only if a real charge happens, use the real table (and not TEST table)
+        table_name = 'goalsms'
+
         charge_successful = charge_stripe(payment=payment,
                                           email=email,
                                           secret_key=secret_key,
@@ -200,7 +206,8 @@ def verify_post():
                           team_id,
                           team_name,
                           league_id,
-                          service_id)
+                          service_id,
+                          table_name)
 
     # Close database connection
     db.close()
