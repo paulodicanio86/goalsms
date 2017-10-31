@@ -25,9 +25,13 @@ db.init()
 # delete_table('matches', db)
 # make_default_table(db, 'tables/matches_table.json')
 
+
 # make_default_tables_goalsms(db)
 # make_default_tables_tour(db)
 
+# TEST TABLES AND ROWS
+delete_table('goalsms_test', db)
+make_default_table(db, 'tables/goalsms_test_table.json')
 reset_test_mode_game('matches', db)
 
 
