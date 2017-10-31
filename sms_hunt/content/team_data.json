@@ -67,7 +67,27 @@
     "stuttgart": "VfB Stuttgart",
     "hannover": "Hannover 96",
     "turin": "Juventus Turin",
-    "madrid": "Real Madrid"
+    "madrid": "Real Madrid",
+    "atalanta": "Atalanta",
+    "benevento": "Benevento",
+    "bologna": "Bologna",
+    "cagliari": "Cagliari",
+    "chievo_verona": "Chievo Verona",
+    "crotone": "Crotone",
+    "fiorentina": "Fiorentina",
+    "genoa": "Genoa",
+    "hellas_verona": "Hellas Verona",
+    "internazionale": "Internazionale",
+    "juventus": "Juventus",
+    "lazio": "Lazio",
+    "milan": "Milan",
+    "napoli": "Napoli",
+    "roma": "Roma",
+    "sampdoria": "Sampdoria",
+    "sassuolo": "Sassuolo",
+    "spal": "SPAL",
+    "torino": "Torino",
+    "udinese": "Udinese"
   },
   "club_team_codes": {
     "bournemouth": "BOU",
@@ -192,7 +212,26 @@
     "turin"
   ],
   "serie_a": [
-    "madrid"
+    "atalanta",
+    "benevento",
+    "bologna",
+    "cagliari",
+    "chievo_verona",
+    "crotone",
+    "fiorentina",
+    "genoa",
+    "hellas_verona",
+    "internazionale",
+    "juventus",
+    "lazio",
+    "milan",
+    "napoli",
+    "roma",
+    "sampdoria",
+    "sassuolo",
+    "spal",
+    "torino",
+    "udinese"
   ],
   "champions_league": [
     "tottenham",
@@ -214,4 +253,3 @@
     "southampton"
   ]
 }
-
