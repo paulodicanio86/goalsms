@@ -40,6 +40,8 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
     # Web query matches
     query = ("http://api.football-api.com/2.0/matches?comp_id=" + comp_id + "&match_date=" + date_str +
              "&Authorization=" + login_goal_api)
+    #print(query)
+
     try:
         result = urllib2.urlopen(query).read()
     except urllib2.HTTPError:
@@ -75,6 +77,7 @@ def get_live_matches(date_str, comp_id, login_goal_api, test=False):
                                      )
     if test:
         result = test_result
+    #print(result)
 
     # Make Match objects
     matches_json = json.loads(result)
