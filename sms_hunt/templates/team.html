@@ -83,10 +83,10 @@
                             <input type="hidden" name="stripeEmail" id="stripeEmail" />
                             <input type="hidden" name="stripeName" id="stripeName" />
 
-                            <input name="service_chosen" id="service_chosen_id" value="" />
-                            <input name="service_amount" id="service_amount_id" value="" />
-                            <input name="currency" id="currency_id" value="" />
-                            <input name="prefix_chosen" id="prefix_chosen_id" value="" />
+                            <input type="hidden" name="service_chosen" id="service_chosen_id" value="" />
+                            <input type="hidden" name="service_amount" id="service_amount_id" value="" />
+                            <input type="hidden" name="currency" id="currency_id" value="" />
+                            <input type="hidden" name="prefix_chosen" id="prefix_chosen_id" value="" />
 
                             {% for payment in payments %}
                             <input type="hidden" name="{{ payment.name }}" id="{{ payment.name }}_id"
