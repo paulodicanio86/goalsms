@@ -107,7 +107,7 @@
     "real_sociedad": "Real Sociedad",
     "sevilla": "Sevilla",
     "valencia": "Valencia",
-    "Villarreal": "Villarreal"
+    "villarreal": "Villarreal"
   },
   "club_team_codes": {
     "bournemouth": "BOU",
@@ -184,7 +184,19 @@
     "Chelsea F.C.": "chelsea",
     "Hannover": "hannover",
     "SV Werder Bremen": "werder_bremen",
-    "Wolfsburg": "wolfsburg"
+    "Wolfsburg": "wolfsburg",
+    "Dep. La Coruna": "deportivo_la_coruna",
+    "West Ham": "west_ham",
+    "Atl. Madrid": "atletico_madrid",
+    "Ath Bilbao": "atletico_madrid",
+    "Leganes": "leganes",
+    "Alaves": "alaves",
+    "Betis": "real_betis",
+    "AS Roma": "roma",
+    "AC Milan": "milan",
+    "Chievo": "chievo_verona",
+    "Spal": "spal",
+    "Villarreal": "villarreal"
   },
   "bundesliga": [
     "dortmund",
@@ -248,7 +260,7 @@
     "real_sociedad",
     "sevilla",
     "valencia",
-    "Villarreal"
+    "villarreal"
   ],
   "serie_a": [
     "atalanta",
@@ -263,7 +275,7 @@
     "internazionale",
     "juventus",
     "lazio",
-    "milan",
+    "nmila",
     "napoli",
     "roma",
     "sampdoria",
