@@ -236,7 +236,9 @@
     "Spal": "spal",
     "Villarreal": "villarreal",
     "Malaga": "malaga",
-    "Newcastle": "newcastle"
+    "Newcastle": "newcastle",
+    "Stoke": "stoke_city",
+    "Verona": "hellas_verona"
   },
   "bundesliga": [
     "dortmund",
