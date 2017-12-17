@@ -19,7 +19,7 @@ class Match:
         self.status = str(status)  # "FT"
         self.timer = str(timer)
         self.player = str(player)
-        self._no_player_list = ['no_player', ' ']
+        self._no_player_list = ['no_player', ' ', '', None, False]
 
         self.comp_id = str(comp_id)
 
