@@ -239,7 +239,9 @@
     "Newcastle": "newcastle",
     "Stoke": "stoke_city",
     "Verona": "hellas_verona",
-    "Stuttgart": "stuttgart"
+    "Stuttgart": "stuttgart",
+    "Juventus": "juventus",
+    "Inter": "inter_milan"
   },
   "bundesliga": [
     "dortmund",
