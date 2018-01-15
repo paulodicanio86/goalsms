@@ -39,14 +39,6 @@ with open(sms_json_path) as sms_config_file:
     sms_config = json.load(sms_config_file)
 
 
-# Open sms content file
-content_json_path = os.path.dirname(os.path.abspath(__file__))
-content_json_path = os.path.join(os.sep, content_json_path, 'content', 'sms_content.json')
-
-with open(content_json_path) as sms_content_file:
-    sms_content = json.load(sms_content_file)
-
-
 # Open keys config file
 stripe_json_path = os.path.dirname(os.path.abspath(__file__))
 stripe_json_path = os.path.abspath(

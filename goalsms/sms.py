@@ -2,15 +2,10 @@ import urllib
 import urllib2
 from datetime import datetime
 
-from goalsms import sms_config, sms_content
+from goalsms import sms_config
 
 from functions.string_functions import validate_content, convert_number
-from functions.db_functions import (get_tour_from_active_table,
-                                    select_number_from_valid_table)
 from backend.db_functions import insert_array_to_table, get_table_columns
-
-keywords = sms_content['keywords']
-start_keyword = sms_content['start_keyword']
 
 
 def send_sms_txtlocal(number, content, config):
@@ -96,10 +91,6 @@ class Sms:
         self.multiple_receivers = False
         self.receiver = None
         self.set_receiver(receiver)
-        self.tour_id = None
-        self.is_valid = False
-        self.is_start_sms = False
-        self.is_keyword = False
 
     def encode_content(self, encoding='utf-8'):
         self.content = self.content.encode(encoding)
@@ -118,35 +109,10 @@ class Sms:
             else:
                 self.receiver = receiver
 
-    def validate_sender(self):
-        self.sender = convert_number(self.sender)
-
     def validate_content(self):
         # This function should only be used if the content is for sure a string (not unicode encoded, as special
         # character are removed..!
         self.content = validate_content(self.content)
-        if start_keyword in self.content:
-            self.is_start_sms = True
-        if self.content in keywords:
-            self.is_keyword = True
-
-    def validate_sms_and_get_tour(self, db):
-        df = select_number_from_valid_table(db, self.sender)
-        if len(df) == 0:
-            self.is_valid = False
-        else:
-            self.tour_id = df['tour_id'].values[0]
-            self.is_valid = True
-
-    def is_in_active_table(self, db):
-        df = get_tour_from_active_table(db, self.sender, self.tour_id)
-        if len(df) == 0:
-            return False
-        else:
-            return True
-
-    def get_message_array(self):
-        return [self.sender, self.content, self.tour_id]
 
     def save_message_to_db(self, db, table_name='message'):
         # Get date and datetime

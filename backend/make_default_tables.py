@@ -10,15 +10,6 @@ def make_default_tables_goalsms(db):
     make_default_table(db, 'tables/matches_table.json')
 
 
-def make_default_tables_tour(db):
-    make_default_table(db, 'tables/valid_table.json')
-    make_default_table(db, 'tables/tour_name_table.json')
-    make_default_table(db, 'tables/messages_table.json')
-    make_default_table(db, 'tables/tour_table.json')
-    make_default_table(db, 'tables/active_table.json')
-    make_default_table(db, 'tables/finished_tours_table.json')
-
-
 def make_default_table(db, file_name):
     # Open json file
     file_path = os.path.dirname(os.path.abspath(__file__))

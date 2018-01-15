@@ -3,8 +3,6 @@ from datetime import datetime
 
 from flask import request, send_from_directory, render_template, url_for, redirect
 from goalsms import app, db_config, stripe_config, team_data, app_config
-from sms import Sms
-from models_tour import follow_tour
 from models_goals import (default_dic, payments, currencies, leagues_dic, leagues_list, prefixes, prefixes_list,
                           services_dic, teams_list, teams_dic, variable_names, add_data_and_send_sms, charge_stripe)
 from backend.db_class import DB
@@ -265,33 +263,6 @@ def contact():
                            company=company,
                            year=year
                            )
-
-
-#######################################
-# /sms_tour POST
-#######################################
-@app.route('/sms_tour', methods=['POST'])
-def sms_tour():
-    # Get data from POST request, add to sms class and validate
-    sms = Sms(request.form['content'], request.form['sender'])
-    sms.validate_content()
-    sms.validate_sender()
-
-    # Establish database connection
-    db = DB(db_config)
-
-    sms.validate_sms_and_get_tour(db)
-    # Is the message valid?
-    if not sms.is_valid:
-        return ''
-
-    # Save sms and follow a tour
-    sms.save_message_to_db(db, 'messages')
-    follow_tour(db, sms)
-
-    # Commit and close database connection
-    db.close()
-    return ''
 
 
 #######################################
