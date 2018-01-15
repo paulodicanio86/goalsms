@@ -3,7 +3,7 @@ import time
 
 import pandas as pd
 
-from sms_hunt import sms_content
+from goalsms import sms_content
 from sms import Sms
 from tour import Tour
 from functions.db_functions import (get_tour_from_active_table, update_active_table, delete_from_active_table)

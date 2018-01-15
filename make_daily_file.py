@@ -3,7 +3,7 @@ import datetime as datetime
 import os
 import json
 
-from sms_hunt import db_config
+from goalsms import db_config
 from backend.db_class import DB
 from match_updates.get_daily_matches import (daily_file_exists, write_daily_file)
 

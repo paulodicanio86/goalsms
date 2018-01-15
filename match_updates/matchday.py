@@ -6,7 +6,7 @@ from match_updates.get_daily_matches import (get_matches_from_db,
                                              format_message_and_send_sms,
                                              eod_ft_message_and_send)
 from match_updates.functions.db_functions import all_games_finished, get_ft_standings
-from sms_hunt import team_data
+from goalsms import team_data
 from match_updates.match import look_up_teams_print
 
 

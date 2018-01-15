@@ -2,7 +2,7 @@ import urllib
 import urllib2
 from datetime import datetime
 
-from sms_hunt import sms_config, sms_content
+from goalsms import sms_config, sms_content
 
 from functions.string_functions import validate_content, convert_number
 from functions.db_functions import (get_tour_from_active_table,

@@ -5,8 +5,8 @@ import os as os
 from match_updates.functions.db_functions import (get_matches, check_date_in_table,
                                                   get_kick_off_times, get_phone_numbers)
 from match import Match, compare_matches
-from sms_hunt.sms import Sms
-from sms_hunt import team_data
+from goalsms.sms import Sms
+from goalsms import team_data
 
 
 def map_to_match_object(entry):

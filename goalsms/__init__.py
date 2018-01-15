@@ -77,4 +77,4 @@ if sslify_flag == 1:
 app.secret_key = stripe_config['app_secret_key']
 
 # activate/make views ready
-import sms_hunt.views
+import goalsms.views

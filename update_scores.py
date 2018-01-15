@@ -4,7 +4,7 @@ import time
 import os
 import json
 
-from sms_hunt import db_config
+from goalsms import db_config
 from backend.db_class import DB
 from match_updates.matchday import MatchDay
 from match_updates.get_daily_matches import (daily_file_exists, read_daily_file, get_live_matches)
