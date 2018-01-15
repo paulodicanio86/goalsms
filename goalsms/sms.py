@@ -4,7 +4,7 @@ from datetime import datetime
 
 from goalsms import sms_config
 
-from functions.string_functions import validate_content, convert_number
+from functions.string_functions import validate_content
 from backend.db_functions import insert_array_to_table, get_table_columns
 
 
