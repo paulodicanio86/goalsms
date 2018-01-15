@@ -13,8 +13,7 @@ def valid_name(name):
     Checks if email is valid and a string.
     """
     reg_ex = '[-0-9a-zA-Z.+_]+'
-    if (isinstance(name, basestring)
-        and len(name) == 0):
+    if isinstance(name, basestring) and len(name) == 0:
         return False
     else:
         return matches_reg_ex(name, reg_ex)

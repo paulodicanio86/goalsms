@@ -105,7 +105,6 @@ def verify_get():
 @app.route('/verify', methods=['POST'])
 def verify_post():
     # get the values from the POST request
-    phone_number = request.form['phone_number']
     prefix = request.form['prefix']
     email = request.form['stripeEmail']
     name = request.form['stripeName']
