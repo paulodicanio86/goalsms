@@ -1,1 +1,1 @@
-# sms_hunt
+# goalsms
